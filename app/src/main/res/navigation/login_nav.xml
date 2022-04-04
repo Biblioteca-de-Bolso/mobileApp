@@ -7,11 +7,11 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.bibliotecadebolso.app.ui.login.LoginFragment"
+        android:name="com.bibliotecadebolso.app.ui.appAccess.login.LoginFragment"
         android:label="LoginFragment" />
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.bibliotecadebolso.app.ui.login.SignUpFragment"
+        android:name="com.bibliotecadebolso.app.ui.appAccess.register.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
 </navigation>

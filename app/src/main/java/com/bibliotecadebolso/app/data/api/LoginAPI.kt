@@ -8,23 +8,23 @@ interface LoginAPI {
 
     // BASE URL: http://bibliotecadebolso.herokuapp.com/api/
 
+    @FormUrlEncoded
     @POST("auth/login")
     suspend fun login(
         @Field("email") email: String,
-        @Field("password") password: String
-    ) : Response<AuthTokens>
+        @Field("password") password: String,
+    ): Response<AuthTokens>
 
     @FormUrlEncoded
     @POST("user")
-    fun signUp(
+    suspend fun register(
         @Field("email") email: String,
         @Field("name") name: String,
-        @Field("password") password: String
-    ) : Response<String>
+        @Field("password") password: String,
+    ): Response<String>
 
     @GET("book/list")
     fun bookList(@Header("x-access-token") authToken: String)
-
 
 
 }

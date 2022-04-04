@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.data
+package com.bibliotecadebolso.app.util
 
 import okhttp3.ResponseBody
 

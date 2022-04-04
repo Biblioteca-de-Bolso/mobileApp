@@ -1,14 +1,13 @@
-package com.bibliotecadebolso.app.data
+package com.bibliotecadebolso.app.data.dataSource
 
-import android.util.Log
-import com.bibliotecadebolso.app.data.LoginRepository
-import com.bibliotecadebolso.app.data.Result
 import com.bibliotecadebolso.app.data.model.AuthTokens
+import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
+import com.bibliotecadebolso.app.util.Result
 
 class LoginDataSource {
 
     suspend fun login(email: String, password: String): Result<AuthTokens?> {
-        val response = LoginRepository.retrofit().login(email, password)
+        val response = BibliotecaDeBolsoRepository.retrofit().login(email, password)
 
         return if (response.isSuccessful) {
             Result.Success(response.body())
@@ -18,7 +17,7 @@ class LoginDataSource {
     }
 
     suspend fun register(username: String, email: String, password: String): Result<String?> {
-        val response = LoginRepository.retrofit().signUp(email, username, password)
+        val response = BibliotecaDeBolsoRepository.retrofit().register(email, username, password)
 
         return if (response.isSuccessful) {
             Result.Success(response.body())
