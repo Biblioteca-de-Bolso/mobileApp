@@ -2,42 +2,48 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/login_nav"
+    android:id="@+id/access_nav"
     app:startDestination="@id/accessFragment">
 
     <fragment
         android:id="@+id/accessFragment"
         android:name="com.bibliotecadebolso.app.ui.appAccess.access.AccessFragment"
-        android:label="fragment_access_activity"
+        android:label="Biblioteca de Bolso"
         tools:layout="@layout/fragment_access" >
         <action
             android:id="@+id/action_accessActivity_to_signUpFragment"
             app:destination="@id/signUpFragment"
-            app:popUpTo="@id/accessFragment"
-            app:popUpToInclusive="true" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
         <action
             android:id="@+id/action_accessActivity_to_loginFragment"
             app:destination="@id/loginFragment"
-            app:popUpTo="@id/accessFragment" />
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.bibliotecadebolso.app.ui.appAccess.login.LoginFragment"
-        android:label="LoginFragment" >
+        android:label="Logar" >
         <action
-            android:id="@+id/action_loginFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment"
-            app:popUpTo="@id/accessFragment" />
+            android:id="@+id/action_loginFragment_to_accessFragment"
+            app:destination="@id/accessFragment"
+            app:popUpTo="@id/accessFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.bibliotecadebolso.app.ui.appAccess.register.SignUpFragment"
-        android:label="fragment_sign_up"
+        android:label="Registrar"
         tools:layout="@layout/fragment_sign_up" >
         <action
-            android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
+            android:id="@+id/action_signUpFragment_to_accessFragment"
+            app:destination="@id/accessFragment"
             app:popUpTo="@id/accessFragment" />
     </fragment>
 

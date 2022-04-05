@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:text="@string/label_app_name"
         android:textSize="35sp"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:fontFamily="@font/glass_antiqua_regular"
         android:textStyle="bold"
         app:layout_constraintTop_toBottomOf="@id/iv_logo"

@@ -1,21 +1,27 @@
 package com.bibliotecadebolso.app.ui.appAccess.login
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.databinding.FragmentLoginBinding
 import com.bibliotecadebolso.app.data.model.SessionManager
+import com.bibliotecadebolso.app.databinding.FragmentLoginBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessViewModel
 import com.bibliotecadebolso.app.ui.home.HomeActivity
+import com.bibliotecadebolso.app.util.Result
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+
 
 class LoginFragment : Fragment() {
 
@@ -33,8 +39,8 @@ class LoginFragment : Fragment() {
             container,
             false
         )
-
         requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
+
         sessionManager = SessionManager(requireContext())
         setupLoginResponseObserver()
         setupOnClickLoginListener()
@@ -48,49 +54,49 @@ class LoginFragment : Fragment() {
             binding.pgLoading.visibility = View.GONE
             when (it) {
                 is Result.Success<*> -> {
+                    closeKeyboard()
                     showLongToast("You're logged")
                     //TODO need to save tokens on BD
                     sessionManager.saveAuthTokens(it.data as AuthTokens)
                     navigateToHome()
                 }
                 is Result.Error -> {
-                    showLongToast("Incorrect credentials")
+                    closeKeyboard()
+                    showLongSnackBar(it.errorBody.message)
                 }
             }
         }
     }
 
     private fun showLongToast(message: String) {
-        Toast.makeText(
-            requireContext(),
-            message,
-            Toast.LENGTH_LONG
-        ).show()
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+    }
+
+    private fun showLongSnackBar(message: String) {
+            Snackbar.make(binding.root, message, BaseTransientBottomBar.LENGTH_LONG)
+                .show()
     }
 
     private fun navigateToHome() {
-        val intent = Intent(
-            requireContext(),
-            HomeActivity::class.java
-        )
-
+        val intent = Intent(requireContext(), HomeActivity::class.java)
         startActivity(intent)
     }
 
     private fun setupOnClickLoginListener() {
-        val email = binding.etEmail
-        val password = binding.etPassword
+        val email = binding.etEmail.editText
+        val password = binding.etPassword.editText
         val buttonLogin = binding.btnLogin
         val loading = binding.pgLoading
 
         buttonLogin.setOnClickListener {
-            val emailText = email.text.toString().trim()
-            val passwordText = password.text.toString().trim()
+            val emailText = email?.text.toString().trim()
+            val passwordText = password?.text.toString().trim()
 
             val isValidParameters = appAccessViewModel.isEmailValid(emailText)
                     && appAccessViewModel.isPasswordValid(passwordText)
 
-            if (!isValidParameters) showLongToast("Your email or password is not a valid parameter")
+            if (!isValidParameters)
+                showLongSnackBar("Suas credenciais não são parâmetros válidos")
             else {
                 loading.visibility = View.VISIBLE
                 appAccessViewModel.login(emailText, passwordText)
@@ -107,5 +113,9 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun closeKeyboard() {
+        val imm: InputMethodManager? = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm?.hideSoftInputFromWindow((binding.root as View).windowToken, 0)
+    }
 
 }
