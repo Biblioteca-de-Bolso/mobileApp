@@ -34,9 +34,11 @@ class LoginFragment : Fragment() {
             false
         )
 
+        requireActivity().actionBar?.setDisplayHomeAsUpEnabled(true)
         sessionManager = SessionManager(requireContext())
         setupLoginResponseObserver()
         setupOnClickLoginListener()
+        setupOnClickRegisterListener()
 
         return binding.root
     }
@@ -80,7 +82,6 @@ class LoginFragment : Fragment() {
         val password = binding.etPassword
         val buttonLogin = binding.btnLogin
         val loading = binding.pgLoading
-        val buttonRegister = binding.btnRegister
 
         buttonLogin.setOnClickListener {
             val emailText = email.text.toString().trim()
@@ -95,6 +96,11 @@ class LoginFragment : Fragment() {
                 appAccessViewModel.login(emailText, passwordText)
             }
         }
+    }
+
+
+    private fun setupOnClickRegisterListener() {
+        val buttonRegister = binding.btnRegister
 
         buttonRegister.setOnClickListener {
             findNavController().navigate(R.id.signUpFragment)
