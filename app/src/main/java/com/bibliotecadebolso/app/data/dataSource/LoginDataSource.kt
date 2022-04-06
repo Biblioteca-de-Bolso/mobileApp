@@ -6,24 +6,33 @@ import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.Result
 import java.lang.Exception
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class LoginDataSource {
 
     suspend fun login(email: String, password: String): Result<AuthTokens?> {
         val response = BibliotecaDeBolsoRepository.retrofit().login(email, password)
+        var result: Result<AuthTokens?>
 
-        return try {
+        try {
             if (response.isSuccessful) {
-                Result.Success(response.body())
+                result = Result.Success(response.body())
             } else {
-                Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
+                result = Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
             }
         } catch (e: SocketTimeoutException) {
-            Result.Error(
+            result = Result.Error(
                 null,
-                ErrorResponse("error", "timedOutServer", "Server timed out")
+                ErrorResponse("error", "timedOutServer", "Tempo de resposta excedido")
+            )
+        } catch (e: UnknownHostException) {
+            result = Result.Error(
+                null,
+                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
             )
         }
+
+        return result;
     }
 
     suspend fun register(username: String, email: String, password: String): Result<String?> {
