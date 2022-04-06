@@ -65,20 +65,6 @@
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
-        <!--
-        <EditText
-            android:id="@+id/et_email"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="96dp"
-            android:hint="@string/prompt_email"
-            android:inputType="textEmailAddress"
-            android:minHeight="48dp"
-            android:selectAllOnFocus="true"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-            -->
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_password"
@@ -92,6 +78,7 @@
             android:textColorHint="@color/blue_700"
             android:minHeight="48dp"
             android:selectAllOnFocus="true"
+            app:endIconMode="password_toggle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_email"
@@ -99,25 +86,22 @@
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
+                android:inputType="textPassword"
                 android:layout_height="wrap_content" />
 
         </com.google.android.material.textfield.TextInputLayout>
-        <!--
-        <EditText
-            android:id="@+id/et_password"
-            android:layout_width="0dp"
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="@string/prompt_password"
-            android:imeActionLabel="@string/action_sign_in_short"
-            android:imeOptions="actionDone"
-            android:inputType="textPassword"
-            android:minHeight="48dp"
-            android:selectAllOnFocus="true"
+            android:text="@string/label_login"
+            app:layout_constraintBottom_toTopOf="@+id/btn_register"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_email" />
-            -->
+            app:layout_constraintTop_toBottomOf="@+id/et_password"
+            app:layout_constraintVertical_bias="0.509" />
+
 
         <Button
             android:id="@+id/btn_register"
@@ -137,22 +121,11 @@
             android:layout_marginTop="64dp"
             android:layout_marginBottom="64dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/et_password"
             app:layout_constraintEnd_toEndOf="@+id/et_password"
             app:layout_constraintStart_toStartOf="@+id/et_password"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toTopOf="@id/et_email"
             app:layout_constraintVertical_bias="0.3" />
-
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Login"
-            app:layout_constraintBottom_toTopOf="@+id/btn_register"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/et_password"
-            app:layout_constraintVertical_bias="0.509" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
