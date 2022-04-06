@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.appAccess.AppAccessActivity"
-    android:background="@drawable/img_library">
+    android:background="@drawable/bg_library">
 
     <fragment
         android:id="@+id/access_transaction_fragment"
