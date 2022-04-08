@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityLoginBinding
+import com.bumptech.glide.Glide
 
 class AppAccessActivity : AppCompatActivity() {
 
@@ -22,6 +23,8 @@ class AppAccessActivity : AppCompatActivity() {
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         appAccessViewModel = ViewModelProvider(this)[AppAccessViewModel::class.java]
+
+
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.access_transaction_fragment) as NavHostFragment
         navController = navHostFragment.navController

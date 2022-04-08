@@ -38,7 +38,6 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         binding = FragmentLoginBinding.inflate(inflater, container, false)
-        sessionManager = SessionManager(requireContext())
 
         setupLoginResponseObserver()
 
@@ -51,12 +50,10 @@ class LoginFragment : Fragment() {
     private fun setupLoginResponseObserver() {
         appAccessViewModel.loginResponse.observe(viewLifecycleOwner) {
             binding.pgLoading.visibility = View.GONE
-            closeKeyboard()
             when (it) {
                 is Result.Success<*> -> {
                     showLongToast(getString(R.string.label_user_logged))
                     //TODO need to save tokens on BD
-                    sessionManager.saveAuthTokens(it.data as AuthTokens)
                     navigateToHome()
                 }
                 is Result.Error -> {
@@ -68,8 +65,8 @@ class LoginFragment : Fragment() {
 
     private fun setupOnClickLoginListener() {
 
-        val email = binding.etEmail.editText
-        val password = binding.etPassword.editText
+        val email = binding.etEmail.editText?.text.toString().trim()
+        val password = binding.etPassword.editText?.text.toString().trim()
         val buttonLogin = binding.btnLogin
         val loading = binding.pgLoading
 
@@ -77,17 +74,14 @@ class LoginFragment : Fragment() {
             if (!RequestUtils.deviceIsConnected(requireContext())) {
                 showLongSnackBar(getString(R.string.label_you_dont_have_connection))
             } else {
-                val emailText = email?.text.toString().trim()
-                val passwordText = password?.text.toString().trim()
-
-                val isValidParameters = appAccessViewModel.isEmailValid(emailText)
-                        && appAccessViewModel.isPasswordValid(passwordText)
+                val isValidParameters = appAccessViewModel.isEmailValid(email)
+                        && appAccessViewModel.isPasswordValid(password)
 
                 if (!isValidParameters)
                     showLongSnackBar(getString(R.string.label_incorrect_credentials))
                 else {
                     loading.visibility = View.VISIBLE
-                    appAccessViewModel.login(emailText, passwordText)
+                    appAccessViewModel.login(email, password)
                 }
             }
         }
