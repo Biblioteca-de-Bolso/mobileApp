@@ -28,6 +28,7 @@ class AppAccessActivity : AppCompatActivity() {
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.access_transaction_fragment) as NavHostFragment
         navController = navHostFragment.navController
+        setTheme(R.style.Theme_MyApplication)
         setupActionBarWithNavController(navController)
         setContentView(binding.root)
     }

@@ -23,4 +23,5 @@
     <string name="label_user_logged">Você está logado</string>
     <string name="label_you_dont_have_connection">Você não tem conexão com a internet</string>
     <string name="label_incorrect_credentials">Suas credenciais não são parâmetros válidos</string>
+    <string name="label_loading">Carregando...</string>
 </resources>
