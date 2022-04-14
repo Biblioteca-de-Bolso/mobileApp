@@ -1,6 +1,7 @@
 package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
+import com.bibliotecadebolso.app.data.model.response.APIResponse
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -13,7 +14,7 @@ interface LoginAPI {
     suspend fun login(
         @Field("email") email: String,
         @Field("password") password: String,
-    ): Response<AuthTokens>
+    ): Response<APIResponse<AuthTokens>>
 
     @FormUrlEncoded
     @POST("user")

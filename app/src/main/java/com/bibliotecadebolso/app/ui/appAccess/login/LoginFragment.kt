@@ -1,16 +1,14 @@
 package com.bibliotecadebolso.app.ui.appAccess.login
 
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -20,6 +18,7 @@ import com.bibliotecadebolso.app.data.model.SessionManager
 import com.bibliotecadebolso.app.databinding.FragmentLoginBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessViewModel
 import com.bibliotecadebolso.app.ui.home.HomeActivity
+import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -42,6 +41,8 @@ class LoginFragment : Fragment() {
         setupLoginResponseObserver()
 
         setupOnClickLoginListener()
+
+        //create new register
         setupOnClickRegisterListener()
 
         return binding.root
@@ -51,10 +52,16 @@ class LoginFragment : Fragment() {
         appAccessViewModel.loginResponse.observe(viewLifecycleOwner) {
             binding.pgLoading.visibility = View.GONE
             when (it) {
-                is Result.Success<*> -> {
+                is Result.Success<AuthTokens?> -> {
                     showLongToast(getString(R.string.label_user_logged))
-                    //TODO need to save tokens on BD
-                    navigateToHome()
+
+                    if (it.response != null) {
+                        putTokensOnSharedPreferences(it.response)
+                        navigateToHome()
+                    } else {
+                        showLongSnackBar(getString(R.string.label_server_not_return_correctly))
+                    }
+
                 }
                 is Result.Error -> {
                     showLongSnackBar(it.errorBody.message)
@@ -63,14 +70,26 @@ class LoginFragment : Fragment() {
         }
     }
 
+    private fun putTokensOnSharedPreferences(authTokens: AuthTokens) {
+        val sharedPreferences = activity?.getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE) ?: return
+
+        with(sharedPreferences.edit()) {
+            putString(Constants.Prefs.Tokens.ACCESS_TOKEN, authTokens.accessToken)
+            putString(Constants.Prefs.Tokens.REFRESH_TOKEN, authTokens.refreshToken)
+
+            apply()
+        }
+    }
+
     private fun setupOnClickLoginListener() {
 
-        val email = binding.etEmail.editText?.text.toString().trim()
-        val password = binding.etPassword.editText?.text.toString().trim()
         val buttonLogin = binding.btnLogin
-        val loading = binding.pgLoading
-
         buttonLogin.setOnClickListener {
+
+            val email = binding.etEmail.editText?.text.toString().trim()
+            val password = binding.etPassword.editText?.text.toString().trim()
+            val loading = binding.pgLoading
+
             if (!RequestUtils.deviceIsConnected(requireContext())) {
                 showLongSnackBar(getString(R.string.label_you_dont_have_connection))
             } else {

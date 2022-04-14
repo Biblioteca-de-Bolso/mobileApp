@@ -15,7 +15,8 @@
         <activity
             android:name=".ui.init.InitActivity"
             android:exported="true"
-            android:label="@string/label_loading">
+            android:theme="@style/Theme.LoadingTheme"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
