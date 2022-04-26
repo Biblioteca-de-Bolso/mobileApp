@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -19,15 +21,26 @@ import com.bibliotecadebolso.app.util.Constants
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
+    private lateinit var bottomNavView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navView: BottomNavigationView = binding.navView
+        bottomNavView = binding.navView
+        drawerLayout = binding.container
 
+        setupBottomBarNavigation()
+        setupNavigationDrawer()
+
+
+
+    }
+
+    private fun setupBottomBarNavigation() {
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
@@ -39,24 +52,50 @@ class HomeActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
+        bottomNavView.setupWithNavController(navController)
+    }
+
+    private fun setupNavigationDrawer() {
+        actionBarDrawerToggle = ActionBarDrawerToggle(
+            this, drawerLayout, R.string.drawer_label_open,
+            R.string.drawer_label_close
+        )
+        drawerLayout.addDrawerListener(actionBarDrawerToggle)
+        actionBarDrawerToggle.syncState()
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        setupNavigationOptions()
+
+    }
+
+    private fun setupNavigationOptions() {
+        binding.navHomeView.setNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.mi_logout -> {
+                    removeTokensFromSharedPreferences()
+                    returnToLoginAccessActivity()
+                }
+                else -> {
+                }
+            }
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.topbar_main_menu, menu)
-
-        return true
+        return super.onCreateOptionsMenu(menu)
     }
 
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.topbar_main_menu, menu)
+//
+//        return true
+//    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.mi_logout -> {
-                removeTokensFromSharedPreferences()
-                returnToLoginAccessActivity()
-            }
-            else -> { }
-        }
-        return true
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) return true
+        return super.onOptionsItemSelected(item)
     }
 
     private fun removeTokensFromSharedPreferences() {

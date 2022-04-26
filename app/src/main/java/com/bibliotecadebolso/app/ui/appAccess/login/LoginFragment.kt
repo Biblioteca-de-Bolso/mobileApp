@@ -127,6 +127,7 @@ class LoginFragment : Fragment() {
     private fun navigateToHome() {
         val intent = Intent(requireContext(), HomeActivity::class.java)
         startActivity(intent)
+        requireActivity().finish()
     }
 
     private fun closeKeyboard() {
