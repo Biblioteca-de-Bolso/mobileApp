@@ -23,4 +23,9 @@
     <string name="label_user_logged">Você está logado</string>
     <string name="label_you_dont_have_connection">Você não tem conexão com a internet</string>
     <string name="label_incorrect_credentials">Suas credenciais não são parâmetros válidos</string>
+    <string name="label_loading">Carregando...</string>
+    <string name="label_server_not_return_correctly">Erro: não foi possível coletar os dados do servidor</string>
+    <string name="label_logout">Logout</string>
+    <string name="drawer_label_open">open</string>
+    <string name="drawer_label_close">close</string>
 </resources>
