@@ -10,4 +10,6 @@
 
     <color name="white_blue">#1EB9FF</color>
     <color name="blue_700">#1554F6</color>
+    <color name="gray">#C4C4C4</color>
+    <color name="gray_transparent_20">#33C4C4C4</color>
 </resources>

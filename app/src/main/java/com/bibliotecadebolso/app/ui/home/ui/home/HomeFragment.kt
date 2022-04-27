@@ -1,26 +1,22 @@
 package com.bibliotecadebolso.app.ui.home.ui.home
 
+import BookListDividerDecoration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.FragmentHomeBinding
+import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
-
-    override fun onStart() {
-        this.setMenuVisibility(false)
-        super.onStart()
-    }
+    private lateinit var fragmentAdapter: BookListAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +28,27 @@ class HomeFragment : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+        setupRecyclerView()
+
         return root
+    }
+
+    private fun setupRecyclerView() {
+        fragmentAdapter = BookListAdapter()
+        val layoutManager = GridLayoutManager(this.requireContext(), 2)
+
+        binding.rvListBook.apply {
+            setLayoutManager(layoutManager)
+            adapter = fragmentAdapter
+            addItemDecoration(
+                BookListDividerDecoration(
+                    resources.getDimensionPixelSize(R.dimen.book_list_spacing),
+                    resources.getInteger(R.integer.book_list_preview_columns)
+                )
+            )
+        }
+
+
     }
 
     override fun onDestroyView() {
