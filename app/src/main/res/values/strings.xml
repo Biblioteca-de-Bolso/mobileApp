@@ -28,4 +28,5 @@
     <string name="label_logout">Logout</string>
     <string name="drawer_label_open">open</string>
     <string name="drawer_label_close">close</string>
+    <string name="label_add_book">Add a book</string>
 </resources>

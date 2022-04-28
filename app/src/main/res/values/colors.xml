@@ -12,4 +12,32 @@
     <color name="blue_700">#1554F6</color>
     <color name="gray">#C4C4C4</color>
     <color name="gray_transparent_20">#33C4C4C4</color>
+
+    <!-- Gradient blue to yellow-->
+    <color name="gd_blue_yellow_0">#1eb9ff</color>
+    <color name="gd_blue_yellow_1">#00d0fa</color>
+    <color name="gd_blue_yellow_2">#00e3df</color>
+    <color name="gd_blue_yellow_3">#48f0b6</color>
+    <color name="gd_blue_yellow_4">#a9f88c</color>
+    <color name="gd_blue_yellow_5">#f9f871</color>
+
+    <!-- Gradient blue to purple-->
+    <color name="gd_blue_purple_0">#1eb9ff</color>
+    <color name="gd_blue_purple_1">#50a1f6</color>
+    <color name="gd_blue_purple_2">#7786e4</color>
+    <color name="gd_blue_purple_3">#9569c6</color>
+    <color name="gd_blue_purple_4">#a748a0</color>
+    <color name="gd_blue_purple_5">#ad2173</color>
+
+    <!-- natural pallet -->
+    <color name="natural_pallet_blue0">#1eb9ff</color>
+    <color name="natural_pallet_blue1">#6396ba</color>
+    <color name="natural_pallet_blue2">#eafcff</color>
+    <color name="natural_pallet_blue3">#e6f4f1</color>
+
+    <!-- highlight pallet -->
+    <color name="highlight_pallet_blue">#1eb9ff</color>
+    <color name="highlight_pallet_dark_blue">#0056b1</color>
+    <color name="highlight_pallet_light_gray">#e6f4f1</color>
+    <color name="highlight_pallet_light_yellow">#fcfcd4</color>
 </resources>

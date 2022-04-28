@@ -31,6 +31,7 @@ class AppAccessActivity : AppCompatActivity() {
         setTheme(R.style.Theme_MyApplication)
         setupActionBarWithNavController(navController)
         setContentView(binding.root)
+
     }
 
     override fun onSupportNavigateUp(): Boolean {
