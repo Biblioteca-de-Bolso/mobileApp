@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/optionsFragment">
+
+    <fragment
+        android:id="@+id/optionsFragment"
+        android:name="com.bibliotecadebolso.app.ui.add.book.AddBookOptionsFragment"
+        android:label="@string/add_book_options_fragment_label"
+        tools:layout="@layout/fragment_add_book_options">
+        <action
+            android:id="@+id/action_optionsFragment_to_AddOfflineBookFragment"
+            app:destination="@id/AddOfflineBookFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddOfflineBookFragment"
+        android:name="com.bibliotecadebolso.app.ui.add.book.AddOfflineBookFragment"
+        android:label="@string/add_book_offline_fragment_label"
+        tools:layout="@layout/fragment_add_book_offline_input">
+        <action
+            android:id="@+id/action_AddOfflineBookFragment_to_optionsFragment"
+            app:destination="@id/optionsFragment" />
+    </fragment>
+</navigation>

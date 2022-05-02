@@ -8,6 +8,8 @@
 
     <!-- inter spacing between RecyclerView's Item-->
     <dimen name="book_list_spacing">16dp</dimen>
-    <dimen name="default_toolbar_corner_radius">32dp</dimen>
+    <dimen name="default_toolbar_corner_radius">16dp</dimen>
+    <dimen name="default_bottombar_corner_radius">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 
 </resources>

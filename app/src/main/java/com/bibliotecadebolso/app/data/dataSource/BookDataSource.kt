@@ -1,27 +1,37 @@
 package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.data.model.response.APIResponse
+import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.Result
-import okhttp3.ResponseBody
 import retrofit2.Response
-import java.lang.Exception
-import java.net.SocketTimeoutException
+import retrofit2.http.Field
 import java.net.UnknownHostException
 
-class LoginDataSource {
+object BookDataSource {
 
     private val api = BibliotecaDeBolsoRepository.retrofit()
-    suspend fun login(email: String, password: String): Result<AuthTokens?> {
-        val response = api.login(email, password)
-        var result: Result<AuthTokens>
+
+    suspend fun create(
+        accessToken: String,
+        title: String,
+        author: String = "",
+        isbn: String = "",
+        publisher: String = "",
+        description: String = "",
+        thumbnail: String = ""
+    ): Result<Boolean> {
+        val bookResponse = BookResponse(title, author, isbn, publisher, description, thumbnail)
+        val response =
+            api.createBook("Bearer $accessToken", bookResponse)
+        var result: Result<Boolean>
 
         try {
             if (response.isSuccessful) {
                 if (response.body()?.status.equals("ok"))
-                    result = Result.Success(response.body()!!.response)
+                    result = Result.Success(true)
                 else
                     result = errorResponseTransformed(response)
             } else {
@@ -37,20 +47,7 @@ class LoginDataSource {
         return result;
     }
 
-    suspend fun register(username: String, email: String, password: String): Result<String?> {
-        val response = api.register(email, username, password)
-
-        return if (response.isSuccessful) {
-            Result.Success(response.body())
-        } else {
-            errorResponseTransformed(response)
-        }
-
-
-    }
-
     private fun errorResponseTransformed(response: Response<*>): Result.Error {
         return Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
     }
-
 }

@@ -41,11 +41,6 @@ class HomeActivity : AppCompatActivity() {
         setupBottomBarNavigation()
         setupNavigationDrawer()
 
-
-
-
-
-
     }
 
     private fun setupTopBarNavigation() {
@@ -53,9 +48,14 @@ class HomeActivity : AppCompatActivity() {
         setSupportActionBar(toolBar)
 
 
+        /*
+            BORDER TOOLBAR SETUṔ
+            In order to remove the margin between screen and toolbar, you must
+            remove android:layout_margin from AppBarLayout in Activity
+         */
         val radius: Float = resources.getDimension(R.dimen.default_toolbar_corner_radius)
         val materialShapeDrawable: MaterialShapeDrawable = toolBar.background as MaterialShapeDrawable
-        
+
         materialShapeDrawable.shapeAppearanceModel = materialShapeDrawable.shapeAppearanceModel
             .toBuilder()
             .setAllCorners(CornerFamily.ROUNDED, radius)

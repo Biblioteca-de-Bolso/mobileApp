@@ -12,6 +12,7 @@
     <color name="blue_700">#1554F6</color>
     <color name="gray">#C4C4C4</color>
     <color name="gray_transparent_20">#33C4C4C4</color>
+    <color name="gray_transparent_60">#9AC4C4C4</color>
 
     <!-- Gradient blue to yellow-->
     <color name="gd_blue_yellow_0">#1eb9ff</color>
@@ -40,4 +41,7 @@
     <color name="highlight_pallet_dark_blue">#0056b1</color>
     <color name="highlight_pallet_light_gray">#e6f4f1</color>
     <color name="highlight_pallet_light_yellow">#fcfcd4</color>
+    
+    <!-- splash screen colors -->
+    <color name="splash_screen_dark_purple">#472275</color>
 </resources>

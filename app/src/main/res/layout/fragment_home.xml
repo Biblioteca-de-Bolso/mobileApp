@@ -8,6 +8,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:paddingTop="60dp"
+        android:layout_marginHorizontal="16dp"
         android:id="@+id/rv_list_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -24,7 +25,7 @@
         tools:spanCount="2" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button"
+        android:id="@+id/fab_add_book"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

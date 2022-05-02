@@ -47,11 +47,28 @@
     </style>
 
     <style name="TintedNavigation" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
-    <item name="colorOnPrimary">@color/gd_blue_purple_4</item>
+        <item name="colorOnPrimary">@color/gd_blue_purple_4</item>
     </style>
 
     <style name="MyThemeOverlay_Toolbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
         <!-- color used by navigation icon and overflow icon -->
         <item name="colorOnPrimary">@color/white</item>
     </style>
+
+    <style name="Theme.MyApplication.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.MyApplication.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Theme.MyApplication.TextInputLayout.FilledGray" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_gray_stroke_color</item>
+        <item name="android:textColorHint">@color/gray_transparent_60</item>
+        <item name="android:editTextStyle">@style/TextInputEditTextFilledGray</item>
+    </style>
+
+    <style name="TextInputEditTextFilledGray" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:textColor" override="true">@color/gray_transparent_60</item>
+    </style>
+    
+
+
 </resources>
