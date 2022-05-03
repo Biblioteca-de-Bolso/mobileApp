@@ -16,7 +16,7 @@
             android:name=".ui.add.book.AddBookActivity"
             android:exported="false"
             android:label="@string/title_activity_add_book"
-            android:theme="@style/Theme.MyApplication.NoActionBar" />
+            android:theme="@style/Theme.MyApplication.PurpleTheme" />
         <activity
             android:name=".ui.init.InitActivity"
             android:exported="true"

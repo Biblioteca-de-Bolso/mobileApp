@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    tools:background="@color/splash_screen_dark_purple"
     android:layout_height="match_parent">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_would_like_add"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/btn_search_online"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -19,6 +21,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_search_online"
+        android:background="@color/gd_blue_purple_1"
         app:layout_constraintBottom_toTopOf="@id/btn_add_own_book"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,6 +34,7 @@
         android:layout_height="wrap_content"
         android:text="@string/label_add_your_own_book"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@color/gd_blue_purple_1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_search_online" />
