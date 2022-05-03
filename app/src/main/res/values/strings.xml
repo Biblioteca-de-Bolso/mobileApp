@@ -46,4 +46,5 @@
     <string name="error_must_be_beetween_1_128">Must be between 1 and 128</string>
     <string name="error_must_be_between_0_128">Must be between 0 and 128</string>
     <string name="error_must_be_between_0_5000">Must be between 0 and 5000</string>
+    <string name="label_isbn_10_or_13">isbn10 or isbn13</string>
 </resources>

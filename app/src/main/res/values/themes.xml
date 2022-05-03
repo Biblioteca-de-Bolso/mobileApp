@@ -58,6 +58,10 @@
     <style name="Theme.MyApplication.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MyApplication.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    <style name="purpleTopBarWithNoOverlay" parent="Widget.MaterialComponents.Toolbar.Primary" >
+        <item name="elevation">0dp</item>
+    </style>
 
     <style name="Theme.MyApplication.TextInputLayout.FilledGray" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="boxStrokeColor">@color/text_input_layout_gray_stroke_color</item>
@@ -65,8 +69,24 @@
         <item name="android:editTextStyle">@style/TextInputEditTextFilledGray</item>
     </style>
 
+    <style name="Theme.MyApplication.TextInputLayout.FilledBlack" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_black_stroke_color</item>
+        <item name="android:textColorHint">@color/gray_transparent_80</item>
+        <item name="android:editTextStyle">@style/TextInputEditTextFilledBlack</item>
+    </style>
+
+    <style name="Theme.MyApplication.TextInputLayout.FilledBlack.NoUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_black_stroke_color_no_underline</item>
+        <item name="android:textColorHint">@color/gray_transparent_80</item>
+        <item name="android:editTextStyle">@style/TextInputEditTextFilledBlack</item>
+    </style>
+
     <style name="TextInputEditTextFilledGray" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
         <item name="android:textColor" override="true">@color/gray_transparent_60</item>
+    </style>
+
+    <style name="TextInputEditTextFilledBlack" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:textColor" override="true">@color/gray_transparent_80</item>
     </style>
     
 

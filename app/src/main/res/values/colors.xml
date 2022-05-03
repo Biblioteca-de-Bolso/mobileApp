@@ -13,6 +13,7 @@
     <color name="gray">#C4C4C4</color>
     <color name="gray_transparent_20">#33C4C4C4</color>
     <color name="gray_transparent_60">#9AC4C4C4</color>
+    <color name="gray_transparent_80">#CC484848</color>
 
     <!-- Gradient blue to yellow-->
     <color name="gd_blue_yellow_0">#1eb9ff</color>
@@ -44,4 +45,5 @@
     
     <!-- splash screen colors -->
     <color name="splash_screen_dark_purple">#472275</color>
+    <color name="splash_screen_strong_orange">#FF662F</color>
 </resources>
