@@ -47,6 +47,32 @@ object BookDataSource {
         return result;
     }
 
+    suspend fun list(
+        accessToken: String,
+        pageNum: Int,
+    ): Result<List<Book>> {
+        val response = api.bookList("Bearer $accessToken", pageNum)
+        var result: Result<List<Book>>
+
+        try {
+            if (response.isSuccessful) {
+                if (response.body()?.status.equals("ok"))
+                    result = Result.Success(response.body()!!.response.books)
+                else
+                    result = errorResponseTransformed(response)
+            } else {
+                result = errorResponseTransformed(response)
+            }
+        } catch (e: UnknownHostException) {
+            result = Result.Error(
+                null,
+                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
+            )
+        }
+
+        return result;
+    }
+
     private fun errorResponseTransformed(response: Response<*>): Result.Error {
         return Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
     }

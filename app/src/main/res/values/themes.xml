@@ -57,7 +57,7 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
-        <item name="android:background">@color/splash_screen_dark_purple</item>
+        <item name="android:windowBackground">@color/splash_screen_dark_purple</item>
         <!-- Customize your theme here. -->
     </style>
 

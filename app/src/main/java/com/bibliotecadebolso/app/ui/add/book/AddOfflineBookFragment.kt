@@ -44,6 +44,7 @@ class AddOfflineBookFragment : Fragment() {
                 val author = binding.etBookAuthor.editText!!.text.toString()
                 val publisher = binding.etBookPublisher.editText!!.text.toString()
                 val description = binding.etBookDescription.editText!!.text.toString()
+                val isbn = binding.etBookIsbn10Or13.editText!!.text.toString()
                 val prefs = requireActivity().getSharedPreferences(
                     Constants.Prefs.USER_TOKENS,
                     AppCompatActivity.MODE_PRIVATE
@@ -56,6 +57,7 @@ class AddOfflineBookFragment : Fragment() {
                     title = title,
                     author = author,
                     publisher = publisher,
+                    isbn = isbn,
                     description = description
                 )
             }

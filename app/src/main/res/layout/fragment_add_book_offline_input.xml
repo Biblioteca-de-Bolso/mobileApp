@@ -31,6 +31,7 @@
             android:minWidth="120dp"
             android:minHeight="150dp"
             android:src="@drawable/ic_item_book"
+            android:contentDescription="@string/label_book_image"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/progress_sending" />
@@ -90,10 +91,11 @@
                 style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="16dp"
                 android:hint="@string/label_author"
                 app:boxBackgroundColor="@android:color/transparent"
-                app:layout_constraintEnd_toStartOf="@id/et_book_publisher"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -109,12 +111,14 @@
                 style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp"
+                android:layout_marginHorizontal="50dp"
+                android:layout_marginVertical="16dp"
                 android:hint="@string/label_publisher"
                 app:boxBackgroundColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/et_book_author"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@id/et_book_author"
+                app:layout_constraintStart_toStartOf="parent"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
@@ -140,6 +144,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:maxLength="13"
+                    android:inputType="number"
                     android:textColor="@color/gray_transparent_80" />
             </com.google.android.material.textfield.TextInputLayout>
 

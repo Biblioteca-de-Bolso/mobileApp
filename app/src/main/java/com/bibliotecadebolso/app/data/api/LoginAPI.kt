@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.BookOnObject
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import retrofit2.Response
@@ -27,13 +28,16 @@ interface LoginAPI {
     ): Response<String>
 
     @GET("book")
-    fun bookList(@Header("Authorization") accessToken: String)
+    suspend fun bookList(
+        @Header("Authorization") accessToken: String,
+        @Query("page") pageNum: Int
+    ): Response<APIResponse<BookOnObject>>
 
     @POST("book")
     suspend fun createBook(
         @Header("Authorization") accessToken: String,
         @Body bookResponse: BookResponse
-    ) : Response<APIResponse<Book>>
+    ): Response<APIResponse<Book>>
 
 
 }
