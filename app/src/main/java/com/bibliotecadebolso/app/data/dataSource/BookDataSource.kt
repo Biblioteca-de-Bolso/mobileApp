@@ -1,13 +1,11 @@
 package com.bibliotecadebolso.app.data.dataSource
 
-import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
+import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
-import retrofit2.Response
-import retrofit2.http.Field
 import java.net.UnknownHostException
 
 object BookDataSource {
@@ -22,21 +20,14 @@ object BookDataSource {
         publisher: String = "",
         description: String = "",
         thumbnail: String = ""
-    ): Result<Boolean> {
+    ): Result<Book> {
         val bookResponse = BookResponse(title, author, isbn, publisher, description, thumbnail)
         val response =
             api.createBook("Bearer $accessToken", bookResponse)
-        var result: Result<Boolean>
+        var result: Result<Book>
 
         try {
-            if (response.isSuccessful) {
-                if (response.body()?.status.equals("ok"))
-                    result = Result.Success(true)
-                else
-                    result = errorResponseTransformed(response)
-            } else {
-                result = errorResponseTransformed(response)
-            }
+            result = RequestUtils.isResponseSuccessful(response)
         } catch (e: UnknownHostException) {
             result = Result.Error(
                 null,
@@ -55,14 +46,12 @@ object BookDataSource {
         var result: Result<List<Book>>
 
         try {
-            if (response.isSuccessful) {
-                if (response.body()?.status.equals("ok"))
-                    result = Result.Success(response.body()!!.response.books)
-                else
-                    result = errorResponseTransformed(response)
-            } else {
-                result = errorResponseTransformed(response)
-            }
+            val resultNotFormatted = RequestUtils.isResponseSuccessful(response)
+
+            if (resultNotFormatted is Result.Success)
+                result = Result.Success(resultNotFormatted.response.books)
+            else
+                result = resultNotFormatted as Result.Error
         } catch (e: UnknownHostException) {
             result = Result.Error(
                 null,
@@ -71,9 +60,5 @@ object BookDataSource {
         }
 
         return result;
-    }
-
-    private fun errorResponseTransformed(response: Response<*>): Result.Error {
-        return Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
     }
 }

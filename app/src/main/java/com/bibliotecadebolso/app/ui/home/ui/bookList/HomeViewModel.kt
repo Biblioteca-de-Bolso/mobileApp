@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.home.ui.home
+package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

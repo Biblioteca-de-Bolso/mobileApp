@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.data.model.AuthTokens
+import com.bibliotecadebolso.app.data.validator.BookValidator
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOfflineInputBinding
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -30,82 +30,91 @@ class AddOfflineBookFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         _binding = FragmentAddBookOfflineInputBinding.inflate(inflater, container, false)
 
+        setupIsBookCreatedObserver()
+        setupOnClickAddBook()
+
+        return binding.root
+    }
+
+    private fun setupIsBookCreatedObserver() {
+        viewModel.isBookCreatedResponse.observe(viewLifecycleOwner) {
+            binding.progressSending.visibility = View.GONE
+
+            if (it is Result.Success) {
+                Toast.makeText(requireContext(), "Book Created", Toast.LENGTH_LONG).show()
+                requireActivity().finish()
+            } else {
+                val errorMessage = (it as Result.Error).errorBody.message
+                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    private fun setupOnClickAddBook() {
         val btnAddBook = binding.btnAddBook
 
         btnAddBook.setOnClickListener {
-            //Validation
-            val isValid: Boolean = isInputsValid()
-
+            val isValid: Boolean = validateInputs()
             if (isValid) {
-                val title = binding.etBookTitle.editText!!.text.toString()
-                val author = binding.etBookAuthor.editText!!.text.toString()
-                val publisher = binding.etBookPublisher.editText!!.text.toString()
-                val description = binding.etBookDescription.editText!!.text.toString()
-                val isbn = binding.etBookIsbn10Or13.editText!!.text.toString()
-                val prefs = requireActivity().getSharedPreferences(
-                    Constants.Prefs.USER_TOKENS,
-                    AppCompatActivity.MODE_PRIVATE
-                )
-                val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
-
-                binding.progressSending.visibility = View.VISIBLE
-                viewModel.apiCreateBook(
-                    accessToken = accessToken,
-                    title = title,
-                    author = author,
-                    publisher = publisher,
-                    isbn = isbn,
-                    description = description
-                )
+                createBook()
             }
-
-            viewModel.isBookCreatedResponse.observe(viewLifecycleOwner) {
-                binding.progressSending.visibility = View.GONE
-
-                Toast.makeText(requireContext(), "Book Created", Toast.LENGTH_LONG).show()
-                requireActivity().finish()
-            }
-
         }
-        return binding.root
-
     }
 
-    private fun isInputsValid(): Boolean {
+
+    private fun createBook() {
+        val title = binding.etBookTitle.editText!!.text.toString()
+        val author = binding.etBookAuthor.editText!!.text.toString()
+        val publisher = binding.etBookPublisher.editText!!.text.toString()
+        val description = binding.etBookDescription.editText!!.text.toString()
+        val isbn = binding.etBookIsbn10Or13.editText!!.text.toString()
+        val prefs = requireActivity().getSharedPreferences(
+            Constants.Prefs.USER_TOKENS,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
+
+        binding.progressSending.visibility = View.VISIBLE
+        viewModel.apiCreateBook(
+            accessToken = accessToken,
+            title = title,
+            author = author,
+            publisher = publisher,
+            isbn = isbn,
+            description = description
+        )
+    }
+
+    private fun validateInputs(): Boolean {
         val tilTitle = binding.etBookTitle
         val tilAuthor = binding.etBookAuthor
         val tilPublisher = binding.etBookPublisher
         val tilDescription = binding.etBookDescription
+        val bookValidator = BookValidator
 
-        if (tilTitle.editText!!.text.toString().length !in 1..128) {
+        if (bookValidator.isTitleValid(tilTitle.editText!!.text.toString())) {
             tilTitle.error = getString(R.string.error_must_be_beetween_1_128)
             return false
         }
 
-        if (tilAuthor.editText!!.text.toString().length !in 0..128) {
+        if (bookValidator.isAuthorNameValid(tilAuthor.editText!!.text.toString())) {
             tilAuthor.error = getString(R.string.error_must_be_between_0_128)
             return false
         }
 
-        if (tilPublisher.editText!!.text.toString().length !in 0..128) {
+        if (bookValidator.isPublisherNameValid(tilPublisher.editText!!.text.toString())) {
             tilPublisher.error = getString(R.string.error_must_be_between_0_128)
             return false
         }
 
-        if (tilDescription.editText!!.text.toString().length !in 0..5000) {
+        if (bookValidator.isDescriptionValid(tilDescription.editText!!.text.toString())) {
             tilDescription.error = getString(R.string.error_must_be_between_0_5000)
             return false
         }
 
         return true
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
     }
 
     override fun onDestroyView() {

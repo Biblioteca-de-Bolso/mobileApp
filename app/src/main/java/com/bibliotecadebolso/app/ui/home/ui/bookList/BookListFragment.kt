@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.home.ui.home
+package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import BookListDividerDecoration
 import android.content.Intent
@@ -11,9 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.Book
-import com.bibliotecadebolso.app.databinding.FragmentHomeBinding
+import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
 import com.bibliotecadebolso.app.util.Constants
@@ -21,9 +20,9 @@ import com.bibliotecadebolso.app.util.Result
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
-class HomeFragment : Fragment() {
+class BookListFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
+    private var _binding: FragmentBookListBinding? = null
     private val binding get() = _binding!!
     private lateinit var fragmentAdapter: BookListAdapter
     private lateinit var viewModel: HomeViewModel
@@ -35,7 +34,7 @@ class HomeFragment : Fragment() {
     ): View {
         viewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        _binding = FragmentBookListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         setupRecyclerView()
@@ -61,9 +60,11 @@ class HomeFragment : Fragment() {
         viewModel.bookList.observe(viewLifecycleOwner) {
             when (it) {
                 is Result.Success<List<Book>> -> {
-                    // TODO(make a if-else: if has content, show content, else)
-                        //TODO(else: show a text telling that doesn't have book)
+                    hideLoadingIcon()
                     fragmentAdapter.differ.submitList(it.response)
+                    if (it.response.isEmpty()) {
+                        //TODO make appear a text telling that doesn't have a book
+                    }
                     fragmentAdapter.notifyDataSetChanged()
                 }
                 is Result.Error -> {
@@ -108,4 +109,7 @@ class HomeFragment : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    private fun hideLoadingIcon(){ binding.pgLoading.visibility = View.GONE }
+    private fun showLoadingIcon(){ binding.pgLoading.visibility = View.VISIBLE }
 }
