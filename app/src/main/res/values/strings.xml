@@ -49,4 +49,5 @@
     <string name="label_isbn_10_or_13">isbn10 or isbn13</string>
     <string name="label_book_image">Book Image</string>
     <string name="label_loading_book_list">Loading book list</string>
+    <string name="label_search">Search</string>
 </resources>

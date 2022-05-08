@@ -4,14 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
-import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.util.Result
 import kotlinx.coroutines.launch
 
 class HomeViewModel : ViewModel() {
 
 
-    val bookList = MutableLiveData<Result<List<Book>>>()
+    val bookList = MutableLiveData<Result<List<CreatedBook>>>()
 
     fun apiListBook(accessToken: String, pageNum:Int = 1) {
         viewModelScope.launch {

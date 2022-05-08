@@ -10,4 +10,6 @@ object Constants {
         }
     }
 
+    const val SEARCH_NEWS_DELAY = 500L
+
 }

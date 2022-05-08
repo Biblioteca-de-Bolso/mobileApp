@@ -1,8 +1,9 @@
 package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.BookOnObject
+import com.bibliotecadebolso.app.data.model.SearchBookObject
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import retrofit2.Response
@@ -37,7 +38,12 @@ interface LoginAPI {
     suspend fun createBook(
         @Header("Authorization") accessToken: String,
         @Body bookResponse: BookResponse
-    ): Response<APIResponse<Book>>
+    ): Response<APIResponse<CreatedBook>>
 
-
+    @GET("googlebooks")
+    suspend fun searchBook(
+        @Header("Authorization") accessToken: String,
+        @Query("qstring") filter: String,
+        @Query("lang") lang: String
+    ) : Response<APIResponse<SearchBookObject>>
 }

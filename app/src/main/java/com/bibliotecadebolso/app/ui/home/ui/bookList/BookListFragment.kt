@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
@@ -59,7 +59,7 @@ class BookListFragment : Fragment() {
     private fun setupBookListObserver() {
         viewModel.bookList.observe(viewLifecycleOwner) {
             when (it) {
-                is Result.Success<List<Book>> -> {
+                is Result.Success<List<CreatedBook>> -> {
                     hideLoadingIcon()
                     fragmentAdapter.differ.submitList(it.response)
                     if (it.response.isEmpty()) {
@@ -88,7 +88,7 @@ class BookListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        fragmentAdapter = BookListAdapter()
+        fragmentAdapter = BookListAdapter(requireContext())
         val layoutManager = GridLayoutManager(this.requireContext(), 2)
 
         binding.rvListBook.apply {

@@ -1,17 +1,16 @@
 package com.bibliotecadebolso.app.data.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Book(
-    val bookId: Int,
-    val userId: Int,
-    val title: String,
+    val ISBN_10: String,
+    val ISBN_13: String,
     val author: String,
-    val isbn10: String,
-    val isbn13: String,
-    val publisher: String,
     val description: String,
+    val publisher: String,
+    val subtite: String,
     val thumbnail: String,
-    val readStatus: String,
-    val borrowStatus: String,
-    val createdAt: String,
-    val updatedAt: String,
-)
+    val title: String
+) : Parcelable
