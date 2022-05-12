@@ -6,18 +6,22 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.ItemBookBinding
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class BookListAdapter(private var context: Context) : RecyclerView.Adapter<BookListAdapter.BookViewHolder>(){
+class BookListAdapter(private var context: Context) :
+    RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
 
     /*
         BookViewHolder it's a template of each item.
      */
-    inner class BookViewHolder(val binding: ItemBookBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class BookViewHolder(val binding: ItemBookBinding) :
+        RecyclerView.ViewHolder(binding.root) {
     }
+
     /*
         DifferCallBack is a list that search the elements more faster than a default kotlin List.
         You should use only on Adapters to accelerate screen refresh.
@@ -26,6 +30,7 @@ class BookListAdapter(private var context: Context) : RecyclerView.Adapter<BookL
         override fun areItemsTheSame(oldItem: CreatedBook, newItem: CreatedBook): Boolean {
             return oldItem.id == newItem.id
         }
+
         override fun areContentsTheSame(oldItem: CreatedBook, newItem: CreatedBook): Boolean {
             return oldItem.id == newItem.id
         }
@@ -45,15 +50,18 @@ class BookListAdapter(private var context: Context) : RecyclerView.Adapter<BookL
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val CreatedBook: CreatedBook = differ.currentList[position]
+        val defaultThumbnailInt = R.drawable.ic_item_book
 
         holder.binding.tvTitle.text = CreatedBook.title
         holder.binding.tvAuthor.text = CreatedBook.author
-        if (CreatedBook.thumbnail.isNotEmpty()) {
-            Glide.with(context)
-                .load(CreatedBook.thumbnail)
-                .apply(RequestOptions().override(200,300))
-                .into(holder.binding.ivBookDefault)
-        }
+
+        Glide.with(context)
+            .load(
+                if (CreatedBook.thumbnail.isNotEmpty()) CreatedBook.thumbnail
+                else defaultThumbnailInt
+            )
+            .apply(RequestOptions().override(200, 300))
+            .into(holder.binding.ivBookDefault)
     }
 
     override fun getItemCount() = differ.currentList.size
