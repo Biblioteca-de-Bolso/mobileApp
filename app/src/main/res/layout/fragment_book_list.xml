@@ -12,13 +12,18 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/sr_book_list"
+            android:layout_width="match_parent"
+            android:layout_marginTop="60dp"
+            android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_list_book"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:clipToPadding="false"
-            android:paddingTop="60dp"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -29,6 +34,8 @@
             tools:listitem="@layout/item_book"
             tools:orientation="vertical"
             tools:spanCount="2" />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/pg_loading"

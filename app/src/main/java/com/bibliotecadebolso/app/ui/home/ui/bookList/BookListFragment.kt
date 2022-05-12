@@ -40,9 +40,16 @@ class BookListFragment : Fragment() {
         setupRecyclerView()
         setupBookListObserver()
         setupFabButtonListener()
+        setupSwipeRefreshLayout()
 
         getList()
         return root
+    }
+
+    private fun setupSwipeRefreshLayout() {
+        binding.srBookList.setOnRefreshListener {
+            getList()
+        }
     }
 
     private fun getList() {
@@ -61,6 +68,7 @@ class BookListFragment : Fragment() {
             when (it) {
                 is Result.Success<List<CreatedBook>> -> {
                     hideLoadingIcon()
+                    binding.srBookList.isRefreshing = false
                     fragmentAdapter.differ.submitList(it.response)
                     if (it.response.isEmpty()) {
                         //TODO make appear a text telling that doesn't have a book
