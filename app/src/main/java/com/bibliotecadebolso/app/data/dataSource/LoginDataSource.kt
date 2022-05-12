@@ -1,9 +1,12 @@
 package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
+import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
+import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
+import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -14,38 +17,37 @@ import java.net.UnknownHostException
 class LoginDataSource {
 
     private val api = BibliotecaDeBolsoRepository.retrofit()
-    suspend fun login(email: String, password: String): Result<AuthTokens?> {
-        val response = api.login(email, password)
-        var result: Result<AuthTokens>
+    suspend fun login(email: String, password: String ): Result<AuthTokens?> {
 
-        try {
-            if (response.isSuccessful) {
-                if (response.body()?.status.equals("ok"))
-                    result = Result.Success(response.body()!!.response)
-                else
-                    result = errorResponseTransformed(response)
-            } else {
-                result = errorResponseTransformed(response)
-            }
-        } catch (e: UnknownHostException) {
-            result = Result.Error(
-                null,
-                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
-            )
+        var result: Result<AuthTokens> = RequestUtils.validateErrors {
+            val response = api.login(email, password)
+            val validationResponse = RequestUtils.isResponseSuccessful(response)
+
+            if (validationResponse is Result.Success)
+                Result.Success(validationResponse.response)
+            else
+                validationResponse as Result.Error
         }
 
         return result;
     }
 
-    suspend fun register(username: String, email: String, password: String): Result<String?> {
-        val response = api.register(email, username, password)
+    suspend fun register(username: String, email: String, password: String): Result<UserObject?> {
 
-        return if (response.isSuccessful) {
-            Result.Success(response.body())
-        } else {
-            errorResponseTransformed(response)
+        var result: Result<UserObject> = RequestUtils.validateErrors {
+
+
+            val response = api.register(email, username, password)
+            val validationResponse = RequestUtils.isResponseSuccessful(response)
+
+            if (validationResponse is Result.Success)
+                Result.Success(validationResponse.response)
+            else
+                validationResponse as Result.Error
+
         }
 
+        return result
 
     }
 

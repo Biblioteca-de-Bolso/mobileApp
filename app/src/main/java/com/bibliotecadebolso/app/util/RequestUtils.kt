@@ -6,7 +6,9 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.APIResponse
+import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import retrofit2.Response
 
 
@@ -51,5 +53,16 @@ object RequestUtils {
         return Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
     }
 
+    suspend fun <T> validateErrors(function: suspend () -> Result<T>): Result<T> {
+        val result: Result<T> = try {
+            function()
+        } catch (e: NoInternetException) {
+            Result.Error(
+                null,
+                ErrorResponse("error", "noInternetConnection", e.message)
+            )
+        }
 
+        return result
+    }
 }

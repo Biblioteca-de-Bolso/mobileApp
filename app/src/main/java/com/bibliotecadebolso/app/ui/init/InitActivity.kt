@@ -4,11 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessActivity
 import com.bibliotecadebolso.app.ui.home.HomeActivity
 import com.bibliotecadebolso.app.util.Constants
+import com.bibliotecadebolso.app.util.RequestUtils
 
 class InitActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

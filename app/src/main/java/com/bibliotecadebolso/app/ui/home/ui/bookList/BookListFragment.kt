@@ -77,6 +77,7 @@ class BookListFragment : Fragment() {
                 }
                 is Result.Error -> {
                     showLongSnackBar(it.errorBody.message)
+                    binding.srBookList.isRefreshing = false
                 }
             }
         }

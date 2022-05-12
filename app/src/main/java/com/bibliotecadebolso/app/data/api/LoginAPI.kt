@@ -6,6 +6,7 @@ import com.bibliotecadebolso.app.data.model.BookOnObject
 import com.bibliotecadebolso.app.data.model.SearchBookObject
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.BookResponse
+import com.bibliotecadebolso.app.data.model.response.UserObject
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -26,7 +27,7 @@ interface LoginAPI {
         @Field("email") email: String,
         @Field("name") name: String,
         @Field("password") password: String,
-    ): Response<String>
+    ): Response<APIResponse<UserObject>>
 
     @GET("book")
     suspend fun bookList(

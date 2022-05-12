@@ -1,6 +1,7 @@
 package com.bibliotecadebolso.app.data.repository
 
 import com.bibliotecadebolso.app.data.api.LoginAPI
+import com.bibliotecadebolso.app.data.interceptors.ConnectivityInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -18,6 +19,7 @@ object BibliotecaDeBolsoRepository {
     private val client = OkHttpClient.Builder()
             .apply {
                 addInterceptor(interceptor = headerBodyInterceptor)
+                addInterceptor(ConnectivityInterceptor())
                 connectTimeout(10, TimeUnit.SECONDS)
                 writeTimeout(10, TimeUnit.SECONDS)
                 readTimeout(30, TimeUnit.SECONDS)

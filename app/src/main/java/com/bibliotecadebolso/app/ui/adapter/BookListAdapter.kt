@@ -57,8 +57,7 @@ class BookListAdapter(private var context: Context) :
 
         Glide.with(context)
             .load(
-                if (CreatedBook.thumbnail.isNotEmpty()) CreatedBook.thumbnail
-                else defaultThumbnailInt
+                CreatedBook.thumbnail.ifEmpty { defaultThumbnailInt }
             )
             .apply(RequestOptions().override(200, 300))
             .into(holder.binding.ivBookDefault)

@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
+import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
@@ -22,18 +23,17 @@ object BookDataSource {
         description: String = "",
         thumbnail: String = ""
     ): Result<CreatedBook> {
-        val bookResponse = BookResponse(title, author, isbn, publisher, description, thumbnail)
-        val response =
-            api.createBook("Bearer $accessToken", bookResponse)
-        var result: Result<CreatedBook>
 
-        try {
-            result = RequestUtils.isResponseSuccessful(response)
-        } catch (e: UnknownHostException) {
-            result = Result.Error(
-                null,
-                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
-            )
+        val result: Result<CreatedBook> = RequestUtils.validateErrors {
+            val bookResponse = BookResponse(title, author, isbn, publisher, description, thumbnail)
+            val response =
+                api.createBook("Bearer $accessToken", bookResponse)
+            val tempResult = RequestUtils.isResponseSuccessful(response)
+
+            if (tempResult is Result.Success)
+                Result.Success(tempResult.response)
+            else
+                tempResult as Result.Error
         }
 
         return result;
@@ -43,21 +43,15 @@ object BookDataSource {
         accessToken: String,
         pageNum: Int,
     ): Result<List<CreatedBook>> {
-        val response = api.bookList("Bearer $accessToken", pageNum)
-        var result: Result<List<CreatedBook>>
 
-        try {
+        val result: Result<List<CreatedBook>> = RequestUtils.validateErrors {
+            val response = api.bookList("Bearer $accessToken", pageNum)
             val tempResult = RequestUtils.isResponseSuccessful(response)
 
             if (tempResult is Result.Success)
-                result = Result.Success(tempResult.response.books)
+                Result.Success(tempResult.response.books)
             else
-                result = tempResult as Result.Error
-        } catch (e: UnknownHostException) {
-            result = Result.Error(
-                null,
-                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
-            )
+                tempResult as Result.Error
         }
 
         return result;
@@ -67,24 +61,17 @@ object BookDataSource {
         accessToken: String,
         searchFilter: String,
         lang: String = "pt"
-    ) : Result<List<Book>> {
-        val response = api.searchBook("Bearer $accessToken", searchFilter, lang)
-        var result: Result<List<Book>>
+    ): Result<List<Book>> {
+        val result: Result<List<Book>> = RequestUtils.validateErrors {
+            val response = api.searchBook("Bearer $accessToken", searchFilter, lang)
 
-
-        try {
             val tempResult = RequestUtils.isResponseSuccessful(response)
 
 
             if (tempResult is Result.Success)
-                result = Result.Success(tempResult.response.books)
+                Result.Success(tempResult.response.books)
             else
-                result = tempResult as Result.Error
-        } catch (e: UnknownHostException) {
-            result = Result.Error(
-                null,
-                ErrorResponse("error", "unknownHost", "sem conexão com a internet")
-            )
+                tempResult as Result.Error
         }
 
         return result
