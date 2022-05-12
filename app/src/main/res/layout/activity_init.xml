@@ -7,4 +7,6 @@
     android:background="@drawable/bg_init_1280x720"
     tools:context=".ui.init.InitActivity">
 
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

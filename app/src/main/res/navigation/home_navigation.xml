@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="com.bibliotecadebolso.app.ui.home.ui.home.HomeFragment"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_book_list" />
 
     <fragment
         android:id="@+id/navigation_dashboard"

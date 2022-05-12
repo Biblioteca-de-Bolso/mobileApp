@@ -8,6 +8,7 @@ import com.bibliotecadebolso.app.data.dataSource.LoginDataSource
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
+import com.bibliotecadebolso.app.data.model.response.UserObject
 
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -16,7 +17,7 @@ class AppAccessViewModel : ViewModel() {
 
     private val loginDataSource = LoginDataSource()
     val loginResponse = MutableLiveData<Result<AuthTokens?>>()
-    val registerResponse = MutableLiveData<Result<String?>>()
+    val registerResponse = MutableLiveData<Result<UserObject?>>()
 
     fun login(email: String, password: String): Boolean {
         viewModelScope.launch {

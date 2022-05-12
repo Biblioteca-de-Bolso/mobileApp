@@ -14,7 +14,7 @@
     <string name="prompt_username">username</string>
     <string name="button_register">Register</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Home</string>
+    <string name="title_home">Livros</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="label_app_name">Biblioteca de bolso</string>
@@ -28,4 +28,26 @@
     <string name="label_logout">Logout</string>
     <string name="drawer_label_open">open</string>
     <string name="drawer_label_close">close</string>
+    <string name="label_add_book">Add a book</string>
+    <string name="title_activity_add_book">AddBookActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="add_book_options_fragment_label">Add book - Options</string>
+    <string name="add_book_offline_fragment_label">Add Book - Add a own book</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="label_search_online">Find your book on google books</string>
+    <string name="label_add_your_own_book">Add your custom book</string>
+    <string name="label_would_like_add">How you would like to add?</string>
+    <string name="label_author">author</string>
+    <string name="label_title">title</string>
+    <string name="label_publisher">publisher</string>
+    <string name="label_description">description</string>
+    <string name="error_must_be_beetween_1_128">Must be between 1 and 128</string>
+    <string name="error_must_be_between_0_128">Must be between 0 and 128</string>
+    <string name="error_must_be_between_0_5000">Must be between 0 and 5000</string>
+    <string name="label_isbn_10_or_13">isbn10 or isbn13</string>
+    <string name="label_book_image">Book Image</string>
+    <string name="label_loading_book_list">Loading book list</string>
+    <string name="label_search">Search</string>
 </resources>

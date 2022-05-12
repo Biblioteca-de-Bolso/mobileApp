@@ -4,9 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -17,6 +15,11 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityHomeBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessActivity
 import com.bibliotecadebolso.app.util.Constants
+import com.google.android.material.appbar.MaterialToolbar
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
+
 
 class HomeActivity : AppCompatActivity() {
 
@@ -24,6 +27,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
     private lateinit var bottomNavView: BottomNavigationView
+    private lateinit var toolBar: MaterialToolbar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,12 +37,33 @@ class HomeActivity : AppCompatActivity() {
         bottomNavView = binding.navView
         drawerLayout = binding.container
 
+        setupTopBarNavigation()
         setupBottomBarNavigation()
         setupNavigationDrawer()
 
-
-
     }
+
+    private fun setupTopBarNavigation() {
+        toolBar = binding.topBarApp
+        setSupportActionBar(toolBar)
+
+
+        /*
+            BORDER TOOLBAR SETUṔ
+            In order to remove the margin between screen and toolbar, you must
+            remove android:layout_margin from AppBarLayout in Activity
+         */
+        val radius: Float = resources.getDimension(R.dimen.default_toolbar_corner_radius)
+        val materialShapeDrawable: MaterialShapeDrawable = toolBar.background as MaterialShapeDrawable
+
+        materialShapeDrawable.shapeAppearanceModel = materialShapeDrawable.shapeAppearanceModel
+            .toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius)
+            .build()
+
+        binding.topBarLayout.outlineProvider = null
+    }
+
 
     private fun setupBottomBarNavigation() {
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
@@ -47,8 +72,6 @@ class HomeActivity : AppCompatActivity() {
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_home,
-                R.id.navigation_dashboard,
-                R.id.navigation_notifications
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

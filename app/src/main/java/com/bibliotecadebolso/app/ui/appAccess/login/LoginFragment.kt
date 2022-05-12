@@ -14,7 +14,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.data.model.SessionManager
 import com.bibliotecadebolso.app.databinding.FragmentLoginBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessViewModel
 import com.bibliotecadebolso.app.ui.home.HomeActivity
@@ -28,7 +27,6 @@ import com.google.android.material.snackbar.Snackbar
 class LoginFragment : Fragment() {
 
     private val appAccessViewModel: AppAccessViewModel by activityViewModels()
-    private lateinit var sessionManager: SessionManager
     private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
