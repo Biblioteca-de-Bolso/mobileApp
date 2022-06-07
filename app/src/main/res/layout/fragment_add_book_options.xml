@@ -10,6 +10,19 @@
     android:layout_height="match_parent"
     tools:background="@color/splash_screen_dark_purple">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_sending"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackColor="@color/splash_screen_dark_purple" />
+
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/et_search_book"
         android:layout_width="match_parent"
@@ -26,7 +39,7 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/progress_sending">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"

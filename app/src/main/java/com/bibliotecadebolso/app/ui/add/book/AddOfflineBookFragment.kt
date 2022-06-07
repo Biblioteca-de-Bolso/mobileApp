@@ -79,6 +79,7 @@ class AddOfflineBookFragment : Fragment() {
         btnAddBook.setOnClickListener {
             val isValid: Boolean = validateInputs()
             if (isValid) {
+                binding.progressSending.visibility = View.VISIBLE
                 createBook()
             }
         }
@@ -100,7 +101,6 @@ class AddOfflineBookFragment : Fragment() {
         val book = arguments?.getParcelable<Book>("book")
         val thumbnail = book?.thumbnail ?: ""
 
-        binding.progressSending.visibility = View.VISIBLE
         viewModel.apiCreateBook(
             accessToken = accessToken,
             title = title,

@@ -14,7 +14,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOptionsBinding
-import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.adapter.BookSearchListAdapter
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -36,12 +35,48 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddBookOptionsBinding.inflate(inflater, container, false)
-        binding.btnAddOwnBook.setOnClickListener {
 
-            findNavController().navigate(R.id.action_optionsFragment_to_AddOfflineBookFragment)
+        setupBtnListeners()
+        setupObserver()
+
+        setupRecyclerView()
+        setupSearchEditText()
+
+        return binding.root
+    }
+
+    private fun setupSearchEditText() {
+        val etSearchBook = binding.etSearchBook.editText!!
+
+        var job: Job? = null
+        etSearchBook.addTextChangedListener { editableText ->
+            job?.cancel()
+            job = MainScope().launch {
+                delay(Constants.SEARCH_NEWS_DELAY)
+                editableText?.let {
+                    val editableTextString = editableText.toString()
+                    if (editableTextString.isNotEmpty()) {
+                        showLoadingProgress()
+                        searchBookWithFilter(editableTextString)
+                    }
+
+                }
+            }
         }
+    }
 
+    private fun searchBookWithFilter(stringFilter: String) {
+        val prefs = requireActivity().getSharedPreferences(
+            Constants.Prefs.USER_TOKENS,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
+        viewModel.apiListBook(accessToken, stringFilter)
+    }
+
+    private fun setupObserver() {
         viewModel.booksSearchContent.observe(viewLifecycleOwner) {
+            hideLoadingProgress()
             if (it is Result.Success) {
                 fragmentAdapter.differ.submitList(it.response)
                 fragmentAdapter.notifyDataSetChanged()
@@ -54,29 +89,12 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
                 ).show()
             }
         }
-        setupRecyclerView()
+    }
 
-        val etSearchBook = binding.etSearchBook.editText!!
-
-        var job: Job? = null
-        etSearchBook.addTextChangedListener { editableText ->
-            job?.cancel()
-            job = MainScope().launch {
-                delay(Constants.SEARCH_NEWS_DELAY)
-                editableText?.let {
-                    if (editableText.toString().isNotEmpty()) {
-                        val prefs = requireActivity().getSharedPreferences(
-                            Constants.Prefs.USER_TOKENS,
-                            AppCompatActivity.MODE_PRIVATE
-                        )
-                        val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
-                        viewModel.apiListBook(accessToken, editableText.toString())
-                    }
-                }
-            }
+    private fun setupBtnListeners() {
+        binding.btnAddOwnBook.setOnClickListener {
+            findNavController().navigate(R.id.action_optionsFragment_to_AddOfflineBookFragment)
         }
-
-        return binding.root
     }
 
 
@@ -107,5 +125,13 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
         findNavController().navigate(
             R.id.action_optionsFragment_to_AddOfflineBookFragment,
             Bundle().also { it.putParcelable("book", book) })
+    }
+
+    private fun showLoadingProgress() {
+        binding.progressSending.visibility = View.VISIBLE
+    }
+
+    private fun hideLoadingProgress() {
+        binding.progressSending.visibility = View.GONE
     }
 }
