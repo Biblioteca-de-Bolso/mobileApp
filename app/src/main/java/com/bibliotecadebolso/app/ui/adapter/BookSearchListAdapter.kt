@@ -67,7 +67,7 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
         holder.binding.tvAuthor.text =
             if (searchBook.author.length <= 15) searchBook.author else searchBook.author.substring(0..15).plus("...")
         val imgView = holder.binding.ivBookDefault
-        val linkThumbnail = searchBook.thumbnail.substring(0,4) + "s" + searchBook.thumbnail.substring(4)
+        val linkThumbnail = searchBook.thumbnail
         if (linkThumbnail.isNotEmpty()) {
 
             Glide.with(context).load(linkThumbnail)
