@@ -91,6 +91,25 @@
         <item name="android:editTextStyle">@style/TextInputEditTextFilledBlack</item>
     </style>
 
+    <style name="Theme.MyApplication.SplashScreenTheme.TextInputLayout.FilledBlack" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_white_stroke_color</item>
+        <item name="android:textColorHint">@color/white</item>
+    </style>
+
+    <style name="Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_white_stroke_color</item>
+        <item name="android:textColorHint">@color/gd_blue_purple_3</item>
+        <item name="android:editTextStyle">@style/Blue.TextInputEditTextFilledBlack</item>
+    </style>
+
+    <style name="Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.NoUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@color/text_input_layout_splashscreen_purple_blue_3_stroke_color</item>
+        <item name="android:textColorHint">@color/gd_blue_purple_3</item>
+        <item name="android:editTextStyle">@style/Blue.TextInputEditTextFilledBlack</item>
+        <item name="boxBackgroundColor">@color/splash_screen_dark_purple</item>
+    </style>
+
+
     <style name="Theme.MyApplication.TextInputLayout.FilledBlack.NoUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="boxStrokeColor">@color/text_input_layout_black_stroke_color_no_underline</item>
         <item name="android:textColorHint">@color/gray_transparent_80</item>
@@ -108,6 +127,10 @@
 
     <style name="TextInputEditTextFilledBlack" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
         <item name="android:textColor" override="true">@color/gray_transparent_80</item>
+    </style>
+
+    <style name="Blue.TextInputEditTextFilledBlack" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
+        <item name="android:textColor" override="true">@color/gd_blue_purple_3</item>
     </style>
     
 
