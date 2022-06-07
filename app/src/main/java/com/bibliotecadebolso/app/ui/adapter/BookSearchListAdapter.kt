@@ -13,6 +13,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.ItemBookBinding
+import com.bibliotecadebolso.app.databinding.ItemSearchBookTemplateBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -23,7 +24,7 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
     /*
         BookViewHolder it's a template of each item.
      */
-    inner class BookViewHolder(val binding: ItemBookBinding, rvOnClickListener: RvOnClickListener) :
+    inner class BookViewHolder(val binding: ItemSearchBookTemplateBinding, rvOnClickListener: RvOnClickListener) :
         RecyclerView.ViewHolder(binding.root) {
     }
 
@@ -48,13 +49,13 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemBookBinding.inflate(inflater)
+        val binding = ItemSearchBookTemplateBinding.inflate(inflater)
+
 
         return BookViewHolder(binding, rvOnClickListener)
     }
 
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
-        holder.binding.root.setBackgroundColor(ContextCompat.getColor(context, R.color.white))
         holder.binding.root.setOnClickListener{
             rvOnClickListener.onItemCLick(position)
         }
@@ -64,14 +65,14 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
         holder.binding.tvTitle.text =
             if (searchBook.title.length <= 30) searchBook.title else searchBook.title.substring(0..30).plus("...")
         holder.binding.tvAuthor.text =
-            if (searchBook.author.length <= 30) searchBook.author else searchBook.author.substring(0..30).plus("...")
+            if (searchBook.author.length <= 15) searchBook.author else searchBook.author.substring(0..15).plus("...")
         val imgView = holder.binding.ivBookDefault
-        val linkThumbnail = searchBook.thumbnail
+        val linkThumbnail = searchBook.thumbnail.substring(0,4) + "s" + searchBook.thumbnail.substring(4)
         if (linkThumbnail.isNotEmpty()) {
 
             Glide.with(context).load(linkThumbnail)
                 .centerCrop()
-                .apply(RequestOptions().override(200, 300))
+                .apply(RequestOptions().override(200, 280))
                 .into(imgView)
         }
 

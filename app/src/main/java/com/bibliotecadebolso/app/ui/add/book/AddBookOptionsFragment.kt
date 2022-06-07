@@ -80,6 +80,10 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
             if (it is Result.Success) {
                 fragmentAdapter.differ.submitList(it.response)
                 fragmentAdapter.notifyDataSetChanged()
+                binding.tvErrorOnSearch.visibility =
+                    if (it.response.isEmpty()) View.VISIBLE
+                    else View.GONE
+
             } else {
                 val errorResult = it as Result.Error
                 Toast.makeText(
@@ -107,7 +111,7 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
             adapter = fragmentAdapter
             addItemDecoration(
                 BookListDividerDecoration(
-                    resources.getDimensionPixelSize(R.dimen.book_list_spacing),
+                    resources.getDimensionPixelSize(R.dimen.book_search_list_spacing),
                     resources.getInteger(R.integer.book_list_preview_columns)
                 )
             )

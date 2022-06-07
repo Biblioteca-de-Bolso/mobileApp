@@ -7,6 +7,7 @@
     <integer name="book_list_preview_columns">2</integer>
 
     <!-- inter spacing between RecyclerView's Item-->
+    <dimen name="book_search_list_spacing">8dp</dimen>
     <dimen name="book_list_spacing">16dp</dimen>
     <dimen name="default_toolbar_corner_radius">16dp</dimen>
     <dimen name="default_bottombar_corner_radius">16dp</dimen>
