@@ -53,4 +53,5 @@
     <string name="label_sorry_we_not_found_a_book_with_filters">Sorry, we not found a single book with theses filters</string>
     <string name="label_add_an_annotation">Add an annotation</string>
     <string name="label_create_annotation">create annotation</string>
+    <string name="label_book_not_valid">This book is not valid</string>
 </resources>

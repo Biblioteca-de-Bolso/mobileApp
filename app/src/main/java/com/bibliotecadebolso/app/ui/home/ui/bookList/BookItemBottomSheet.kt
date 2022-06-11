@@ -21,6 +21,7 @@ class BookItemBottomSheet(private val bookItemId: Int) : BottomSheetDialogFragme
 
         binding.tvCreateAnnotation.setOnClickListener {
             val intent: Intent = Intent(this.requireContext(), AddAnnotationActivity::class.java)
+            intent.putExtra("bookId", bookItemId);
             startActivity(intent);
         }
         return binding.root
