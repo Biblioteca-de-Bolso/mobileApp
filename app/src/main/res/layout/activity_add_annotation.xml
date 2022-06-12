@@ -15,6 +15,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/et_book_title"
+                style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="@string/label_title"
+                app:boxBackgroundColor="@color/white"
+                >
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/gray_transparent_80" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
             <EditText
                 android:id="@+id/et_content"
                 android:layout_width="match_parent"
@@ -31,6 +53,17 @@
         android:layout_margin="6dp"
         app:layout_anchor="@id/fl_transaction_content"
         app:layout_anchorGravity="top|end"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_save_annotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_save"
+        android:elevation="6dp"
+        android:layout_margin="6dp"
+        app:layout_anchor="@id/fl_transaction_content"
+        app:layout_anchorGravity="top|start"
         />
 
     <FrameLayout

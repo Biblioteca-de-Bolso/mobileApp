@@ -40,7 +40,6 @@ class LoginFragment : Fragment() {
 
         setupOnClickLoginListener()
 
-        //create new register
         setupOnClickRegisterListener()
 
         return binding.root

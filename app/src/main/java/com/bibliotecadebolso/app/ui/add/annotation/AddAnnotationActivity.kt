@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.text.getSpans
+import androidx.core.text.toHtml
 import androidx.core.text.toSpannable
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +18,8 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.enum.TransactionOptions as TO
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
 import com.bibliotecadebolso.app.ui.add.annotation.transactions.EditTransactionFragment
+import com.bibliotecadebolso.app.util.Constants
+import com.bibliotecadebolso.app.util.Result
 
 class AddAnnotationActivity : AppCompatActivity() {
 
@@ -29,6 +31,7 @@ class AddAnnotationActivity : AppCompatActivity() {
     private var isActive: Boolean = false
 
     private lateinit var viewModel: AddAnnotationContentViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddAnnotationBinding.inflate(layoutInflater)
@@ -38,8 +41,40 @@ class AddAnnotationActivity : AppCompatActivity() {
         screenContent = binding.llContent
         editTransactionFragment = EditTransactionFragment()
         viewModel = ViewModelProvider(this)[AddAnnotationContentViewModel::class.java]
-        setFabTransactionListener()
 
+        setFabTransactionListener()
+        setFabSaveAnnotationListener()
+        setTransactionObserver()
+        setFabSaveAnnotationObserver()
+
+        binding.etContent.onFocusChangeListener = textFocusListener
+    }
+
+    private fun setFabSaveAnnotationObserver() {
+        viewModel.resultOfSaveAnnotation.observe(this) {
+            if (it is Result.Success)
+                Toast.makeText(this, "saved successfully", Toast.LENGTH_LONG).show()
+            else if (it is Result.Error)
+                Toast.makeText(this, "Error: ${it.errorBody.message}", Toast.LENGTH_LONG).show()
+
+            finish()
+        }
+    }
+
+    private fun setFabSaveAnnotationListener() {
+        binding.fabSaveAnnotation.setOnClickListener {
+            val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+
+            val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
+
+            val content = binding.etContent.text as SpannableStringBuilder
+            val title = binding.etBookTitle.editText?.text.toString()
+
+            viewModel.saveAnnotation(accessToken, bookId, title, content.toHtml())
+        }
+    }
+
+    private fun setTransactionObserver() {
         viewModel.transactionOptionSelected.observe(this){
             val etFocused = (focusedView as EditText)
             val selectionStart = etFocused.selectionStart
@@ -52,7 +87,6 @@ class AddAnnotationActivity : AppCompatActivity() {
                 TO.TRANSFORM_NORMAL -> StyleSpan(Typeface.NORMAL)
             }
 
-            val spans = spannable.getSpans(0, spannable.length, StyleSpan::class.java)
             if (it.equals(TO.TRANSFORM_NORMAL)) {
                 val spansToRemove = spannable.toSpannable().getSpans(selectionStart, selectionEnd, Any::class.java)
                 for (span in spansToRemove) {
@@ -65,7 +99,6 @@ class AddAnnotationActivity : AppCompatActivity() {
             etFocused.setText(spannable.toSpannable(), TextView.BufferType.SPANNABLE)
 
         }
-        binding.etContent.onFocusChangeListener = FABFocusListener
     }
 
     private fun getAndCheckIfBookIdIsValid() {
@@ -74,6 +107,8 @@ class AddAnnotationActivity : AppCompatActivity() {
             if (bookId == -1) {
                 Toast.makeText(this.baseContext, getString(R.string.label_book_not_valid), Toast.LENGTH_LONG).show()
                 finish()
+            } else {
+                this.bookId = bookId
             }
         }
     }
@@ -99,7 +134,7 @@ class AddAnnotationActivity : AppCompatActivity() {
         }
     }
 
-    private val FABFocusListener = View.OnFocusChangeListener { view, hasFocus ->
+    private val textFocusListener = View.OnFocusChangeListener { view, hasFocus ->
         if (hasFocus) focusedView = view
     }
 }
