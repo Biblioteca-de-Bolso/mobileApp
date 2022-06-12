@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.ItemBookBinding
+import com.bibliotecadebolso.app.util.RvOnClickListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 
-class BookListAdapter(private var context: Context) :
+class BookListAdapter(private var context: Context, private var rvOnClickListener: RvOnClickListener) :
     RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
 
     /*
@@ -61,6 +62,10 @@ class BookListAdapter(private var context: Context) :
             )
             .apply(RequestOptions().override(200, 300))
             .into(holder.binding.ivBookDefault)
+
+        holder.binding.root.setOnClickListener {
+            rvOnClickListener.onItemCLick(CreatedBook.id)
+        }
     }
 
     override fun getItemCount() = differ.currentList.size

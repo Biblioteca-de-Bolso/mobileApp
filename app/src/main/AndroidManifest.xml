@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".ui.add.annotation.AddAnnotationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.list.annotation.AnnotationListedByBookActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.add.book.AddBookActivity"
             android:exported="false"
             android:label="@string/title_activity_add_book"
@@ -35,7 +41,7 @@
             android:theme="@style/Theme.MyApplication.NoActionBar" />
         <activity
             android:name=".ui.appAccess.AppAccessActivity"
-            android:exported="true"></activity>
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -10,7 +10,7 @@ data class Book(
     val author: String,
     val description: String,
     val publisher: String,
-    val subtite: String,
+    val subtitle: String,
     val thumbnail: String,
     val title: String
 ) : Parcelable

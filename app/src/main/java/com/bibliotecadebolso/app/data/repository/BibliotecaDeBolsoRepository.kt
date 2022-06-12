@@ -1,6 +1,6 @@
 package com.bibliotecadebolso.app.data.repository
 
-import com.bibliotecadebolso.app.data.api.LoginAPI
+import com.bibliotecadebolso.app.data.api.BibliotecaDeBolsoAPI
 import com.bibliotecadebolso.app.data.interceptors.ConnectivityInterceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -27,10 +27,10 @@ object BibliotecaDeBolsoRepository {
             .build()
 
 
-    fun retrofit(buildApi: String? = null): LoginAPI = Retrofit.Builder()
+    fun retrofit(buildApi: String? = null): BibliotecaDeBolsoAPI = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-            .create(LoginAPI::class.java)
+            .create(BibliotecaDeBolsoAPI::class.java)
 }

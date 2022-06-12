@@ -1,16 +1,15 @@
 package com.bibliotecadebolso.app.data.api
 
-import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.data.model.CreatedBook
-import com.bibliotecadebolso.app.data.model.BookOnObject
-import com.bibliotecadebolso.app.data.model.SearchBookObject
+import com.bibliotecadebolso.app.data.model.*
+import com.bibliotecadebolso.app.data.model.Annotation
 import com.bibliotecadebolso.app.data.model.response.APIResponse
+import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import retrofit2.Response
 import retrofit2.http.*
 
-interface LoginAPI {
+interface BibliotecaDeBolsoAPI {
 
     // BASE URL: http://bibliotecadebolso.herokuapp.com/api/
 
@@ -47,4 +46,10 @@ interface LoginAPI {
         @Query("qstring") filter: String,
         @Query("lang") lang: String
     ) : Response<APIResponse<SearchBookObject>>
+
+    @POST("annotation")
+    suspend fun saveAnnotation(
+        @Header("Authorization") accessToken: String,
+        @Body annotation: Annotation,
+    ) : Response<APIResponse<AnnotationResponse>>
 }

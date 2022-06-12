@@ -17,10 +17,11 @@ import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.RvOnClickListener
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 
-class BookListFragment : Fragment() {
+class BookListFragment : Fragment(), RvOnClickListener {
 
     private var _binding: FragmentBookListBinding? = null
     private val binding get() = _binding!!
@@ -97,7 +98,7 @@ class BookListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        fragmentAdapter = BookListAdapter(requireContext())
+        fragmentAdapter = BookListAdapter(requireContext(), this)
         val layoutManager = GridLayoutManager(this.requireContext(), 2)
 
         binding.rvListBook.apply {
@@ -121,4 +122,10 @@ class BookListFragment : Fragment() {
 
     private fun hideLoadingIcon(){ binding.pgLoading.visibility = View.GONE }
     private fun showLoadingIcon(){ binding.pgLoading.visibility = View.VISIBLE }
+
+
+    override fun onItemCLick(position: Int) {
+        val modalBottomSheet = BookItemBottomSheet(position)
+        modalBottomSheet.show(this.parentFragmentManager, BookItemBottomSheet.TAG)
+    }
 }
