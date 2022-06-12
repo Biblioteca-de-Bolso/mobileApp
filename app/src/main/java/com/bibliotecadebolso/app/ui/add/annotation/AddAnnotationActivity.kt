@@ -50,6 +50,25 @@ class AddAnnotationActivity : AppCompatActivity() {
         binding.etContent.onFocusChangeListener = textFocusListener
     }
 
+    private fun getAndCheckIfBookIdIsValid() {
+        intent.extras?.let {
+            bookId = it.getInt("bookId", -1)
+            if (bookId == -1) {
+                Toast.makeText(this.baseContext, getString(R.string.label_book_not_valid), Toast.LENGTH_LONG).show()
+                finish()
+            }
+        }
+    }
+
+    private fun setFabTransactionListener() {
+        binding.fabMakeTransaction.setOnClickListener {
+            editTransactionFragment(
+                type = if (isActive) "remove" else "add"
+            )
+            isActive = !isActive
+        }
+    }
+
     private fun setFabSaveAnnotationObserver() {
         viewModel.resultOfSaveAnnotation.observe(this) {
             if (it is Result.Success)
@@ -58,19 +77,6 @@ class AddAnnotationActivity : AppCompatActivity() {
                 Toast.makeText(this, "Error: ${it.errorBody.message}", Toast.LENGTH_LONG).show()
 
             finish()
-        }
-    }
-
-    private fun setFabSaveAnnotationListener() {
-        binding.fabSaveAnnotation.setOnClickListener {
-            val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
-
-            val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
-
-            val content = binding.etContent.text as SpannableStringBuilder
-            val title = binding.etBookTitle.editText?.text.toString()
-
-            viewModel.saveAnnotation(accessToken, bookId, title, content.toHtml())
         }
     }
 
@@ -101,24 +107,16 @@ class AddAnnotationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAndCheckIfBookIdIsValid() {
-        val extras = intent.extras?.let {
-            val bookId: Int = it.getInt("bookId", -1)
-            if (bookId == -1) {
-                Toast.makeText(this.baseContext, getString(R.string.label_book_not_valid), Toast.LENGTH_LONG).show()
-                finish()
-            } else {
-                this.bookId = bookId
-            }
-        }
-    }
+    private fun setFabSaveAnnotationListener() {
+        binding.fabSaveAnnotation.setOnClickListener {
+            val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
 
-    private fun setFabTransactionListener() {
-        binding.fabMakeTransaction.setOnClickListener {
-            editTransactionFragment(
-                type = if (isActive) "remove" else "add"
-            )
-            isActive = !isActive
+            val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
+
+            val content = binding.etContent.text as SpannableStringBuilder
+            val title = binding.etBookTitle.editText?.text.toString()
+
+            viewModel.saveAnnotation(accessToken, bookId, title, content.toHtml())
         }
     }
 
