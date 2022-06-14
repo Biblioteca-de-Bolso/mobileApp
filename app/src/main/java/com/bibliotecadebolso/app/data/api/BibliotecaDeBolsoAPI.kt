@@ -2,10 +2,7 @@ package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.Annotation
-import com.bibliotecadebolso.app.data.model.response.APIResponse
-import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
-import com.bibliotecadebolso.app.data.model.response.BookResponse
-import com.bibliotecadebolso.app.data.model.response.UserObject
+import com.bibliotecadebolso.app.data.model.response.*
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -27,6 +24,14 @@ interface BibliotecaDeBolsoAPI {
         @Field("name") name: String,
         @Field("password") password: String,
     ): Response<APIResponse<UserObject>>
+
+
+    @HTTP(method = "DELETE", path = "user", hasBody = true)
+    suspend fun delete(
+        @Header("Authorization") accessToken: String,
+        @Body deleteForm: DeleteForm
+    ): Response<APIResponse<DeleteAccountResponse>>
+
 
     @GET("book")
     suspend fun bookList(

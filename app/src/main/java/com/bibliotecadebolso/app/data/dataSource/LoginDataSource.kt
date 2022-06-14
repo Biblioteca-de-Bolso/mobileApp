@@ -1,13 +1,16 @@
 package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
+import com.bibliotecadebolso.app.data.model.DeleteForm
 import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.APIResponse
+import com.bibliotecadebolso.app.data.model.response.DeleteAccountResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
+import okhttp3.Request
 import okhttp3.ResponseBody
 import retrofit2.Response
 import java.lang.Exception
@@ -45,6 +48,21 @@ class LoginDataSource {
             else
                 validationResponse as Result.Error
 
+        }
+
+        return result
+
+    }
+
+    suspend fun deleteAccount(accessTokens: String, deleteForm: DeleteForm): Result<DeleteAccountResponse> {
+        val result = RequestUtils.validateErrors {
+            val response = api.delete("Bearer $accessTokens", deleteForm)
+            val validationResponse = RequestUtils.isResponseSuccessful(response)
+
+            if (validationResponse is Result.Success)
+                Result.Success(validationResponse.response)
+            else
+                validationResponse as Result.Error
         }
 
         return result

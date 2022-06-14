@@ -14,6 +14,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityHomeBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessActivity
+import com.bibliotecadebolso.app.ui.home.nav.DeleteAccountActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -97,6 +98,10 @@ class HomeActivity : AppCompatActivity() {
                 R.id.mi_logout -> {
                     removeTokensFromSharedPreferences()
                     returnToLoginAccessActivity()
+                }
+                R.id.mi_disable_account -> {
+                    val intent = Intent(this, DeleteAccountActivity::class.java)
+                    startActivity(intent)
                 }
                 else -> {
                 }

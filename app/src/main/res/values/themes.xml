@@ -74,7 +74,7 @@
     <style name="Theme.MyApplication.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.MyApplication.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-    
+
     <style name="purpleTopBarWithNoOverlay" parent="Widget.MaterialComponents.Toolbar.Primary" >
         <item name="elevation">0dp</item>
     </style>
@@ -132,7 +132,7 @@
     <style name="Blue.TextInputEditTextFilledBlack" parent="Widget.MaterialComponents.TextInputEditText.FilledBox">
         <item name="android:textColor" override="true">@color/gd_blue_purple_3</item>
     </style>
-    
+
 
 
 </resources>

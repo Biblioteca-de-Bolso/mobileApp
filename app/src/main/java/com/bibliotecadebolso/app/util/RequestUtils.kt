@@ -46,7 +46,7 @@ object RequestUtils {
         return if (response.body()?.status.equals("ok"))
             Result.Success(response.body()!!.response)
         else
-            errorResponseTransformed(response)
+            Result.Error(response.code(), ErrorResponse(response.body()!!.status!!, response.body()!!.code!!, response.body()!!.message!!))
     }
 
     private fun errorResponseTransformed(response: Response<*>): Result.Error {

@@ -15,7 +15,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Options"
+        android:text="@string/label_options"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:paddingLeft="8dp"
