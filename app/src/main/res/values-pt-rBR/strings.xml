@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Biblioteca de bolso</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_up">Registrar</string>
+    <string name="action_sign_in_short">Logar</string>
+    <string name="welcome">"Bem vindo!"</string>
+    <string name="invalid_username">nome de usuário invalido</string>
+    <string name="invalid_password">Senha precisa conter mais que 5 caracteres</string>
+    <string name="login_failed">Falha ao logar</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prompt_username">Nome de usuário</string>
+    <string name="button_register">Registrar</string>
+    <string name="title_activity_home">Home</string>
+    <string name="title_home">Livros</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notificações</string>
+    <string name="label_app_name">Biblioteca de bolso</string>
+    <string name="label_login">Login</string>
+    <string name="label_register">Registrar</string>
+    <string name="label_user_logged">Você está logado</string>
+    <string name="label_you_dont_have_connection">Você não tem conexão com a internet</string>
+    <string name="label_incorrect_credentials">Suas credenciais não são parâmetros válidos</string>
+    <string name="label_loading">Carregando...</string>
+    <string name="label_server_not_return_correctly">Erro: não foi possível coletar os dados do servidor</string>
+    <string name="label_logout">Sair</string>
+    <string name="drawer_label_open">Abrir</string>
+    <string name="drawer_label_close">Fechar</string>
+    <string name="label_add_book">Adicionar um livro</string>
+    <string name="title_activity_add_book">Adicionar um livro</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="add_book_options_fragment_label">Adicionar livro - Opções</string>
+    <string name="add_book_offline_fragment_label">Adicionar livro - Adicionar um livro customizado</string>
+    <string name="next">próximo</string>
+    <string name="previous">Anterior</string>
+
+    <string name="label_search_online">Procurar no google books</string>
+    <string name="label_add_your_own_book">Adicionar um livro customizado</string>
+    <string name="label_would_like_add">Como você gostaria de adicionar?</string>
+    <string name="label_author">Autor</string>
+    <string name="label_title">Titulo</string>
+    <string name="label_publisher">Editora</string>
+    <string name="label_description">Descrição</string>
+    <string name="error_must_be_beetween_1_128">Precisa ter entre 1 e 128 caracteres</string>
+    <string name="error_must_be_between_0_128">Precisa ter entre 0 e 128 caracteres</string>
+    <string name="error_must_be_between_0_5000">Precisa ter entre 0 e 5000 caracteres</string>
+    <string name="label_isbn_10_or_13">isbn10 ou isbn13</string>
+    <string name="label_book_image">Imagem do livro</string>
+    <string name="label_loading_book_list">Carregando lista de livros</string>
+    <string name="label_search">Pesquisar</string>
+    <string name="label_sorry_we_not_found_a_book_with_filters">Não encontramos um único livro com esses filtros</string>
+    <string name="label_add_an_annotation">Adicionar uma anotação</string>
+    <string name="label_create_annotation">Criar anotação</string>
+    <string name="label_book_not_valid">Esse livro não é valido</string>
+    <string name="prompt_confirm_password">Confirme a senha</string>
+    <string name="label_successfully_registered">Registrado com sucesso! Cheque seu email para poder ativar sua conta</string>
+    <string name="label_empty_email">Email não pode estar vazio</string>
+    <string name="title_activity_delete_account">Deletar conta</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="label_are_you_sure_delete_account">Tem certeza que deseja deletar sua conta?</string>
+    <string name="label_type_password_to_delete_account">Se você realmente deseja deletar sua conta, digite sua senha aqui.</string>
+    <string name="label_disable_account">Deletar conta</string>
+    <string name="label_about">Sobre</string>
+    <string name="label_account_deleted">Conta deletada com sucesso!</string>
+    <string name="label_options">Opções</string>
+</resources>

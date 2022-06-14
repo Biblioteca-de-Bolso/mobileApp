@@ -10,8 +10,12 @@
         <item
             android:id="@+id/mi_about"
             android:icon="@drawable/ic_info"
-            android:title="About" />
+            android:title="@string/label_about" />
 
+        <item
+            android:id="@+id/mi_disable_account"
+            android:icon="@drawable/ic_exit"
+            android:title="@string/label_disable_account"/>
     </group>
 
 

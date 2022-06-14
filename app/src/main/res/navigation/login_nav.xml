@@ -33,6 +33,10 @@
         <action
             android:id="@+id/action_loginFragment_to_accessFragment"
             app:destination="@id/accessFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/accessFragment"
             app:popUpToInclusive="true" />
     </fragment>
@@ -44,6 +48,10 @@
         <action
             android:id="@+id/action_signUpFragment_to_accessFragment"
             app:destination="@id/accessFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right"
             app:popUpTo="@id/accessFragment" />
     </fragment>
 

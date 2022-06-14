@@ -22,6 +22,7 @@ sealed class Result<out T> {
 
     companion object {
         fun transformToErrorResponse(responseBody: ResponseBody?): ErrorResponse {
+            println(responseBody.toString())
             val type = object : TypeToken<ErrorResponse>() {}.type
             return Gson().fromJson(responseBody?.charStream(), type)
         }

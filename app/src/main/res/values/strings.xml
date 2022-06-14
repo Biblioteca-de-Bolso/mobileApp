@@ -21,18 +21,18 @@
     <string name="label_login">Login</string>
     <string name="label_register">Registrar</string>
     <string name="label_user_logged">Você está logado</string>
-    <string name="label_you_dont_have_connection">Você não tem conexão com a internet</string>
-    <string name="label_incorrect_credentials">Suas credenciais não são parâmetros válidos</string>
-    <string name="label_loading">Carregando...</string>
-    <string name="label_server_not_return_correctly">Erro: não foi possível coletar os dados do servidor</string>
+    <string name="label_you_dont_have_connection">You don\'t have internet connection</string>
+    <string name="label_incorrect_credentials">Your credentials are not valid parameters</string>
+    <string name="label_loading">Loading...</string>
+    <string name="label_server_not_return_correctly">Error: Can\'t collect any data of the server</string>
     <string name="label_logout">Logout</string>
     <string name="drawer_label_open">open</string>
     <string name="drawer_label_close">close</string>
-    <string name="label_add_book">Add a book</string>
+    <string name="label_add_book">Add your book</string>
     <string name="title_activity_add_book">AddBookActivity</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="add_book_options_fragment_label">Add book - Options</string>
-    <string name="add_book_offline_fragment_label">Add Book - Add a own book</string>
+    <string name="add_book_options_fragment_label">Add your book - Options</string>
+    <string name="add_book_offline_fragment_label">Add your Book - Add your own book</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -54,4 +54,20 @@
     <string name="label_add_an_annotation">Add an annotation</string>
     <string name="label_create_annotation">create annotation</string>
     <string name="label_book_not_valid">This book is not valid</string>
+    <string name="prompt_confirm_password">Confirm password</string>
+    <string name="label_successfully_registered">Registered successfully! Check your email to activate your account</string>
+    <string name="label_empty_email">Email can not be empty</string>
+    <string name="title_activity_delete_account">Delete account</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <string name="label_are_you_sure_delete_account">Are you sure you want to delete your account?</string>
+    <string name="label_type_password_to_delete_account">If you really want to delete your account, type your password here</string>
+    <string name="label_disable_account">Delete account</string>
+    <string name="label_about">About</string>
+    <string name="label_account_deleted">Account deleted successfully</string>
+    <string name="label_options">Options</string>
 </resources>
