@@ -1,13 +1,16 @@
 package com.bibliotecadebolso.app.ui.add.annotation
 
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
+import jp.wasabeef.richeditor.RichEditor
 
 class AddAnnotationActivity : AppCompatActivity() {
 
@@ -16,6 +19,7 @@ class AddAnnotationActivity : AppCompatActivity() {
     private var focusedView: View? = null
     private var bookId: Int = -1;
     private var isActive: Boolean = false
+    private lateinit var mPreview: TextView
 
     private lateinit var viewModel: AddAnnotationContentViewModel
 
@@ -27,11 +31,11 @@ class AddAnnotationActivity : AppCompatActivity() {
         screenContent = binding.llContent
         viewModel = ViewModelProvider(this)[AddAnnotationContentViewModel::class.java]
 
-        val mEditor = binding.richEditor
+
+        val mEditor: RichEditor = binding.richEditor
         mEditor.setEditorHeight(200)
         mEditor.setEditorFontSize(16)
         mEditor.setBackgroundColor(Color.TRANSPARENT)
-        mEditor.loadCSS("test.css")
         mEditor.setPadding(10, 10, 10, 10)
         mEditor.setPlaceholder(getString(R.string.annotation_placeholder_insert_text_here))
 
@@ -45,10 +49,27 @@ class AddAnnotationActivity : AppCompatActivity() {
             actionAlignLeft.setOnClickListener { mEditor.setAlignLeft() }
             actionAlignCenter.setOnClickListener { mEditor.setAlignCenter() }
             actionAlignRight.setOnClickListener { mEditor.setAlignRight() }
-            actionBlockquote.setOnClickListener { mEditor.setBlockquote() }
             actionInsertBullets.setOnClickListener { mEditor.setBullets() }
             actionInsertNumbers.setOnClickListener { mEditor.setNumbers() }
-            actionInsertCheckbox.setOnClickListener { mEditor.insertTodo() }
+            actionHighlighterGreen.setOnClickListener(object : View.OnClickListener {
+                var isChanged = false
+                override fun onClick(v: View) {
+                    if (isChanged) {
+                        mEditor.evaluateJavascript("javascript:RE.prepareInsert();", null)
+                        mEditor.evaluateJavascript("javascript:RE.removeBackgroundColor();", null)
+                    } else {
+                        mEditor.setTextBackgroundColor(Color.GREEN)
+                    }
+
+                    isChanged = !isChanged
+                }
+            })
+        }
+
+        binding.fabSaveAnnotation.setOnClickListener {
+            val html: String = if (mEditor.html == null) "" else mEditor.html
+            print(html)
+            Log.i("mEditor", html)
         }
 
     }

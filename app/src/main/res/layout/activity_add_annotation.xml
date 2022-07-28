@@ -73,6 +73,14 @@
                 android:orientation="horizontal">
 
                 <ImageButton
+                    android:id="@+id/action_highlighter_green"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@null"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_highlighter_green" />
+
+                <ImageButton
                     android:id="@+id/action_bold"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
@@ -162,21 +170,6 @@
                     android:contentDescription="@null"
                     android:src="@drawable/ic_text_list_numbered" />
 
-                <ImageButton
-                    android:id="@+id/action_blockquote"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_text_quote" />
-
-                <ImageButton
-                    android:id="@+id/action_insert_checkbox"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:background="@null"
-                    android:contentDescription="@null"
-                    android:src="@android:drawable/checkbox_on_background" />
             </LinearLayout>
         </HorizontalScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -192,7 +185,8 @@
         android:src="@drawable/ic_save"
         app:tint="@color/white"
         app:layout_anchor="@id/fl_transaction_content"
-        app:layout_anchorGravity="top|end" />
+        app:layout_anchorGravity="top|end"
+        android:contentDescription="@string/label_save_annotation" />
 
     <FrameLayout
         android:id="@+id/fl_transaction_content"

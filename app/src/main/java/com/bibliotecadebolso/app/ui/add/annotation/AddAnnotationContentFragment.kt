@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.FragmentAddAnnotationContentBinding
+import jp.wasabeef.richeditor.RichEditor
 
 
 class AddAnnotationContentFragment : Fragment() {
@@ -35,7 +36,7 @@ class AddAnnotationContentFragment : Fragment() {
 
 
         super.onCreate(savedInstanceState)
-        val mEditor = binding.richEditor
+        val mEditor: RichEditor = binding.richEditor
         //mEditor.setEditorHeight(200)
         mEditor.setEditorFontSize(8)
         mEditor.setFontSize(8)
@@ -77,7 +78,6 @@ class AddAnnotationContentFragment : Fragment() {
             actionBlockquote.setOnClickListener { mEditor.setBlockquote() }
             actionInsertBullets.setOnClickListener { mEditor.setBullets() }
             actionInsertNumbers.setOnClickListener { mEditor.setNumbers() }
-            actionInsertCheckbox.setOnClickListener { mEditor.insertTodo() }
         }
     }
 

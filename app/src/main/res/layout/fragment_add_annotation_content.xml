@@ -175,7 +175,7 @@
                 android:src="@drawable/ic_text_quote" />
 
             <ImageButton
-                android:id="@+id/action_insert_checkbox"
+                android:id="@+id/action_highlighter_green"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:background="@null"
