@@ -17,7 +17,7 @@ object AnnotationDataSource {
         text: String,
         page: Int = 0
     ): Result<AnnotationResponse> {
-        val result: Result<AnnotationResponse> = RequestUtils.validateErrors {
+        val result: Result<AnnotationResponse> = RequestUtils.returnOrThrowIfHasConnectionError {
             val annotation = Annotation(bookId, title, text, page)
 
             val response = api.saveAnnotation("Bearer $accessToken", annotation)

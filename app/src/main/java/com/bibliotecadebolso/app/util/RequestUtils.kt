@@ -53,7 +53,7 @@ object RequestUtils {
         return Result.Error(response.code(), Result.transformToErrorResponse(response.errorBody()))
     }
 
-    suspend fun <T> validateErrors(function: suspend () -> Result<T>): Result<T> {
+    suspend fun <T> returnOrThrowIfHasConnectionError(function: suspend () -> Result<T>): Result<T> {
         val result: Result<T> = try {
             function()
         } catch (e: NoInternetException) {
