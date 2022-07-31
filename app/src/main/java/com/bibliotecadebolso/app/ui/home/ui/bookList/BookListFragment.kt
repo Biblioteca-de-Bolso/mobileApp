@@ -15,6 +15,7 @@ import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
+import com.bibliotecadebolso.app.ui.bookInfo.BookInfoActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.RvOnClickListener
@@ -125,7 +126,11 @@ class BookListFragment : Fragment(), RvOnClickListener {
 
 
     override fun onItemCLick(position: Int) {
-        val modalBottomSheet = BookItemBottomSheet(position)
-        modalBottomSheet.show(this.parentFragmentManager, BookItemBottomSheet.TAG)
+        val intent = Intent(context, BookInfoActivity::class.java)
+        intent.putExtra("id", position)
+        startActivity(intent)
+
+        //val modalBottomSheet = BookItemBottomSheet(position)
+        //modalBottomSheet.show(this.parentFragmentManager, BookItemBottomSheet.TAG)
     }
 }

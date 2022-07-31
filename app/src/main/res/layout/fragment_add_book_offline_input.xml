@@ -65,7 +65,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/et_book_author"
-            style="@style/Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.NoUnderline"
+            style="@style/Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.PurpleUnderline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="50dp"

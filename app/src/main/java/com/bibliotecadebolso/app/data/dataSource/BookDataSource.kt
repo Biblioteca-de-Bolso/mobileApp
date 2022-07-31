@@ -73,4 +73,16 @@ object BookDataSource {
 
         return result
     }
+
+    suspend fun getBookById(accessToken: String, id: Int): Result<Book> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.getBookById("Bearer $accessToken", id)
+            val responseResult = RequestUtils.isResponseSuccessful(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response.book)
+            else
+                responseResult as Result.Error
+        }
+
+    }
 }

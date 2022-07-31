@@ -102,8 +102,15 @@
         <item name="android:editTextStyle">@style/Blue.TextInputEditTextFilledBlack</item>
     </style>
 
-    <style name="Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.NoUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+    <style name="Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.PurpleUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
         <item name="boxStrokeColor">@color/text_input_layout_splashscreen_purple_blue_3_stroke_color</item>
+        <item name="android:textColorHint">@color/gd_blue_purple_3</item>
+        <item name="android:editTextStyle">@style/Blue.TextInputEditTextFilledBlack</item>
+        <item name="boxBackgroundColor">@color/splash_screen_dark_purple</item>
+    </style>
+
+    <style name="Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.NoUnderline" parent="Widget.MaterialComponents.TextInputLayout.FilledBox.Dense">
+        <item name="boxStrokeColor">@android:color/transparent</item>
         <item name="android:textColorHint">@color/gd_blue_purple_3</item>
         <item name="android:editTextStyle">@style/Blue.TextInputEditTextFilledBlack</item>
         <item name="boxBackgroundColor">@color/splash_screen_dark_purple</item>

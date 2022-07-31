@@ -73,4 +73,6 @@
     <string name="annotation_placeholder_insert_text_here">Insert text here...</string>
     <string name="label_save_annotation">Save annotation</string>
     <string name="alert_token_expired">Token expired, please log in again</string>
+    <string name="label_edit_book">Edit book</string>
+    <string name="label_book_not_found">Book not found</string>
 </resources>

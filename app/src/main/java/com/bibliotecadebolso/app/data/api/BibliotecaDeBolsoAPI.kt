@@ -42,7 +42,13 @@ interface BibliotecaDeBolsoAPI {
     suspend fun bookList(
         @Header("Authorization") accessToken: String,
         @Query("page") pageNum: Int
-    ): Response<APIResponse<BookOnObject>>
+    ): Response<APIResponse<BookListInObject>>
+
+    @GET("book/{id}")
+    suspend fun getBookById(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int
+    ): Response<APIResponse<BookInObject>>
 
     @POST("book")
     suspend fun createBook(
@@ -55,11 +61,11 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Query("qstring") filter: String,
         @Query("lang") lang: String
-    ) : Response<APIResponse<SearchBookObject>>
+    ): Response<APIResponse<SearchBookObject>>
 
     @POST("annotation")
     suspend fun saveAnnotation(
         @Header("Authorization") accessToken: String,
         @Body annotation: Annotation,
-    ) : Response<APIResponse<AnnotationResponse>>
+    ): Response<APIResponse<AnnotationResponse>>
 }
