@@ -75,5 +75,7 @@ dependencies {
     //jwt decode
     implementation 'com.auth0.android:jwtdecode:2.0.1'
 
+    implementation 'jp.wasabeef:richeditor-android:2.0.0'
+
 
 }
