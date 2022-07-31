@@ -17,6 +17,11 @@ interface BibliotecaDeBolsoAPI {
         @Field("password") password: String,
     ): Response<APIResponse<AuthTokens>>
 
+    @POST("auth/refresh")
+    suspend fun getNewAccessToken(
+        @Body refreshToken: String,
+    ): Response<APIResponse<AuthTokens>>
+
     @FormUrlEncoded
     @POST("user")
     suspend fun register(

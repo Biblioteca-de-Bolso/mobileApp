@@ -7,6 +7,18 @@
     android:background="@drawable/bg_init_1280x720"
     tools:context=".ui.init.InitActivity">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/pg_loading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:indicatorColor="@color/white_blue"
+        android:visibility="invisible"
+        />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
