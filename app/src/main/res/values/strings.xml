@@ -75,4 +75,13 @@
     <string name="alert_token_expired">Token expired, please log in again</string>
     <string name="label_edit_book">Edit book</string>
     <string name="label_book_not_found">Book not found</string>
+    <string name="label_book_details">Book details</string>
+    <string name="label_show_more">Show more</string>
+
+    <string-array name="spinner_book_reading_status_value">
+        <item>Planning</item>
+        <item>Reading</item>
+        <item>Concluded</item>
+        <item>Dropped</item>
+    </string-array>
 </resources>
