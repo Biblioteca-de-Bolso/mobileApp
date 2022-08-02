@@ -13,6 +13,10 @@ object SharedPreferencesUtils {
         return AuthTokens(accessToken, refreshToken)
     }
 
+    fun getAccessToken(prefs: SharedPreferences): String {
+        return prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
+    }
+
     fun putAuthTokens(
         prefs: SharedPreferences,
         newAccessToken: String,

@@ -10,14 +10,14 @@ import kotlinx.coroutines.launch
 
 class BookInfoViewModel : ViewModel() {
 
-    val mutableBookInfo = MutableLiveData<Result<Book>>()
+    val liveDataBookInfo = MutableLiveData<Result<Book>>()
 
     val dataSource = BookDataSource
 
     fun getInfoByID(accessToken: String, id: Int) {
         viewModelScope.launch {
             val result = dataSource.getBookById(accessToken, id)
-            mutableBookInfo.postValue(result)
+            liveDataBookInfo.postValue(result)
         }
 
     }

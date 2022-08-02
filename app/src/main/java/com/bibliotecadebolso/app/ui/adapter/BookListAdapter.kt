@@ -60,7 +60,7 @@ class BookListAdapter(private var context: Context, private var rvOnClickListene
             .load(
                 CreatedBook.thumbnail.ifEmpty { defaultThumbnailInt }
             )
-            .apply(RequestOptions().override(200, 300))
+            .centerInside()
             .into(holder.binding.ivBookDefault)
 
         holder.binding.root.setOnClickListener {

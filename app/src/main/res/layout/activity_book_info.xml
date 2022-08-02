@@ -47,14 +47,12 @@
 
             <ImageView
                 android:id="@+id/iv_book_preview"
-                android:layout_width="wrap_content"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
+                android:layout_marginStart="12dp"
                 android:layout_marginTop="30dp"
                 android:contentDescription="@string/label_book_image"
-                android:minWidth="150dp"
-                android:maxWidth="160dp"
-                android:minHeight="150dp"
+                android:minHeight="240dp"
                 android:src="@drawable/ic_item_book"
                 app:layout_constraintEnd_toStartOf="@id/tv_book_title"
                 app:layout_constraintStart_toStartOf="parent"
@@ -64,14 +62,16 @@
                 android:id="@+id/tv_book_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
                 android:textAlignment="textStart"
                 android:textColor="@color/white"
+                android:text="@string/label_loading_three_dots"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/iv_book_preview"
                 app:layout_constraintTop_toTopOf="@id/iv_book_preview"
-                tools:text="Book name" />
+                />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/et_book_author"
@@ -91,8 +91,9 @@
                     android:layout_height="wrap_content"
                     android:gravity="start"
                     android:enabled="false"
+                    android:text="@string/label_loading_three_dots"
                     android:textColor="@color/gd_blue_purple_3"
-                    tools:text="Author name here" />
+                    />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -141,7 +142,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="Description"
+                    android:text="@string/label_Description"
                     android:textStyle="bold"
                     android:textSize="20sp"
                     android:textColor="@color/black"
@@ -154,6 +155,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:textColor="@color/gray_transparent_80"
                     android:lineHeight="20sp"
+                    android:text="@string/label_loading_three_dots"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_label_description"
                     tools:text="Lorem impsum fnausof fsnaofsa fnasofna fnsaionfsa faisnfosa fnaifnaofnsa fpamfpsa"

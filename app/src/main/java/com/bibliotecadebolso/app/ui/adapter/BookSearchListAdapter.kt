@@ -69,10 +69,8 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
         val imgView = holder.binding.ivBookDefault
         val linkThumbnail = searchBook.thumbnail
         if (linkThumbnail.isNotEmpty()) {
-
             Glide.with(context).load(linkThumbnail)
-                .centerCrop()
-                .apply(RequestOptions().override(200, 280))
+                .centerInside()
                 .into(imgView)
         }
 
