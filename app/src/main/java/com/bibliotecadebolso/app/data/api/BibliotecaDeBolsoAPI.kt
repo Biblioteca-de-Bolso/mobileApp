@@ -19,6 +19,7 @@ interface BibliotecaDeBolsoAPI {
 
     @POST("auth/refresh")
     suspend fun getNewAccessToken(
+        @Header("Authorization") accessToken: String,
         @Body refreshToken: String,
     ): Response<APIResponse<AuthTokens>>
 

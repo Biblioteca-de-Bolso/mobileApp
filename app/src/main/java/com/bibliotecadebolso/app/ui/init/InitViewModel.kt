@@ -14,9 +14,9 @@ class InitViewModel : ViewModel() {
     private val loginDataSource = LoginDataSource()
     val liveDataAuthTokens = MutableLiveData<Result<AuthTokens?>>()
 
-    fun getNewAcessToken(refreshToken: String) {
+    fun getNewAccessToken(accessToken: String, refreshToken: String) {
         viewModelScope.launch {
-            val result = loginDataSource.getNewAccessToken(refreshToken)
+            val result = loginDataSource.getNewAccessToken(accessToken, refreshToken)
             liveDataAuthTokens.postValue(result)
         }
     }

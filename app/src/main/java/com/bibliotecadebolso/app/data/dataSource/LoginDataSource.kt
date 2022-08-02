@@ -32,9 +32,9 @@ class LoginDataSource {
         }
     }
 
-    suspend fun getNewAccessToken(refreshToken: String): Result<AuthTokens?> {
+    suspend fun getNewAccessToken(accessToken: String,refreshToken: String): Result<AuthTokens?> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.getNewAccessToken(refreshToken)
+            val response = api.getNewAccessToken("Bearer $accessToken", refreshToken)
             val responseResult = RequestUtils.isResponseSuccessful(response)
 
             if (responseResult is Result.Success) Result.Success(responseResult.response)
