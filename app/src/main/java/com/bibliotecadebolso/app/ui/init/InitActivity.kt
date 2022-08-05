@@ -54,7 +54,7 @@ class InitActivity : AppCompatActivity() {
             return
         }
 
-        if (accessDecoded.isExpired(0) && refreshToken.isNotEmpty()) {
+        if (refreshToken.isNotEmpty()) {
             viewModel.getNewAccessToken(accessToken, refreshToken)
             setIsWaitingRequest(true)
         } else {
@@ -72,17 +72,26 @@ class InitActivity : AppCompatActivity() {
         viewModel.liveDataAuthTokens.observe(this) {
             var newAccessToken = ""
             var newRefreshToken = ""
+            var errorMessage = ""
 
             if (it is Result.Success) {
                 newAccessToken = it.response!!.accessToken
                 newRefreshToken = it.response.refreshToken
+            } else if (it is Result.Error) {
+                when (it.errorBody.code) {
+                    "noInternetConnection" -> errorMessage =
+                        getString(R.string.label_no_internet_connection)
+                    else -> errorMessage = it.errorBody.message
+                }
             }
 
-            SharedPreferencesUtils.putAuthTokens(prefs, newAccessToken, newRefreshToken)
+            if ((it is Result.Success) ||
+                (it is Result.Error && it.errorBody.code != "noInternetConnection")
+            )
+                SharedPreferencesUtils.putAuthTokens(prefs, newAccessToken, newRefreshToken)
 
-            isWaitingRequest = false;
-            binding.pgLoading.visibility = View.INVISIBLE
-            redirectToHomeActivityIfHasNoPendingRequest("")
+            setIsWaitingRequest(false)
+            redirectToHomeActivityIfHasNoPendingRequest(errorMessage)
         }
     }
 

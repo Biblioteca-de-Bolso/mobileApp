@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.DeleteForm
+import com.bibliotecadebolso.app.data.model.RefreshTokenObject
 import com.bibliotecadebolso.app.data.model.response.DeleteAccountResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
@@ -32,9 +33,11 @@ class LoginDataSource {
         }
     }
 
-    suspend fun getNewAccessToken(accessToken: String,refreshToken: String): Result<AuthTokens?> {
+    suspend fun getNewAccessToken(accessToken: String, refreshToken: String): Result<AuthTokens?> {
+        val refreshTokenObject = RefreshTokenObject(refreshToken)
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.getNewAccessToken("Bearer $accessToken", refreshToken)
+            val response =
+                api.getNewAccessToken("Bearer $accessToken", refreshTokenObject)
             val responseResult = RequestUtils.isResponseSuccessful(response)
 
             if (responseResult is Result.Success) Result.Success(responseResult.response)

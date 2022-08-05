@@ -50,6 +50,7 @@ class AddOfflineBookFragment : Fragment() {
                 etBookAuthor.editText?.setText(book.author)
                 etBookIsbn10Or13.editText?.setText(book.ISBN_13)
                 etBookDescription.editText?.setText(book.description)
+                etBookPublisher.editText?.setText(book.publisher)
                 if (book.thumbnail.isNotEmpty())
                     Glide.with(requireActivity()).load(book.thumbnail)
                         .centerCrop()

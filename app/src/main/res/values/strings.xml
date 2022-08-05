@@ -80,6 +80,10 @@
     <string name="error_invalid_token">Invalid Token! Please log in again</string>
     <string name="label_loading_three_dots">loading...</string>
     <string name="label_Description">Description</string>
+    <string name="label_annotations">Annotations</string>
+    <string name="label_abstracts">Abstracts</string>
+    <string name="label_add_annotation_or_abstract">Add an annotation or abstract</string>
+    <string name="label_no_internet_connection">No internet connection</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

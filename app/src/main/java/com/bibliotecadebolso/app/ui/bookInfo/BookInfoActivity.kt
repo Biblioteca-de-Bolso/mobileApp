@@ -1,8 +1,11 @@
 package com.bibliotecadebolso.app.ui.bookInfo
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -11,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
+import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
@@ -20,6 +24,13 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
+
+    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_open) }
+    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_close) }
+    private val fabFromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_from_bottom_anim) }
+    private val fabToBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_to_bottom_anim) }
+
+    private var isFabVisible = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,6 +48,43 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
         setupReadingStatusSpinner()
         listenerFillActivityWithBookInfo()
+
+        setupFabs()
+    }
+
+    private fun setupFabs() {
+        binding.fabShowAddOptions.setOnClickListener {
+            setFabOptionsVisibility(!isFabVisible)
+            setFabAnimation(!isFabVisible)
+            isFabVisible = !isFabVisible
+        }
+
+        binding.fabAddAbstract.setOnClickListener {
+            Toast.makeText(this, "fabAddAbstract clicked", Toast.LENGTH_LONG).show()
+        }
+        binding.fabAddAnnotation.setOnClickListener {
+            val intent: Intent = Intent(this, AddAnnotationActivity::class.java)
+            intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+            startActivity(intent)
+        }
+    }
+
+    private fun setFabAnimation(isToStartAnimation: Boolean) {
+        val miniFabAnimation = if (isToStartAnimation) fabFromBottom else fabToBottom
+        val optionsFabAnimation = if (isToStartAnimation) rotateOpen else rotateClose
+
+        binding.apply {
+            fabShowAddOptions.startAnimation(optionsFabAnimation)
+            fabAddAnnotation.startAnimation(miniFabAnimation)
+            fabAddAbstract.startAnimation(miniFabAnimation)
+        }
+    }
+
+    private fun setFabOptionsVisibility(isToBeVisible: Boolean) {
+        val visibility = if (isToBeVisible) View.VISIBLE else View.GONE
+
+        binding.fabAddAbstract.visibility = visibility
+        binding.fabAddAnnotation.visibility = visibility
     }
 
     private fun getIdFromExtrasOrMinus1(): Int {

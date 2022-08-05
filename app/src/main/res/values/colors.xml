@@ -46,4 +46,6 @@
     <!-- splash screen colors -->
     <color name="splash_screen_dark_purple">#472275</color>
     <color name="splash_screen_strong_orange">#FF662F</color>
+    <color name="dark_gray_1">#928B9B</color>
+    <color name="yellow_gray_1">#E2DDCB</color>
 </resources>
