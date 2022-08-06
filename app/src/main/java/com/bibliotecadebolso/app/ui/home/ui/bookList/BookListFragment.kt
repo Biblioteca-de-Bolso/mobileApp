@@ -1,6 +1,7 @@
 package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import BookListDividerDecoration
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -61,15 +62,16 @@ class BookListFragment : Fragment(), RvOnClickListener {
         )
 
         val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
-
+        showLoadingIcon()
         viewModel.apiListBook(accessToken)
     }
 
     private fun setupBookListObserver() {
         viewModel.bookList.observe(viewLifecycleOwner) {
+            hideLoadingIcon()
             when (it) {
                 is Result.Success<List<CreatedBook>> -> {
-                    hideLoadingIcon()
+
                     binding.srBookList.isRefreshing = false
                     fragmentAdapter.differ.submitList(it.response)
                     if (it.response.isEmpty()) {
@@ -93,7 +95,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     private fun setupFabButtonListener() {
         binding.fabAddBook.setOnClickListener {
             val intent = Intent(requireContext(), AddBookActivity::class.java)
-            startActivity(intent)
+            startActivityForResult(intent, ADD_BOOK)
 
         }
     }
@@ -128,9 +130,25 @@ class BookListFragment : Fragment(), RvOnClickListener {
     override fun onItemCLick(position: Int) {
         val intent = Intent(context, BookInfoActivity::class.java)
         intent.putExtra("id", position)
-        startActivity(intent)
+        startActivityForResult(intent, VIEW_DETAIL_BOOK)
 
         //val modalBottomSheet = BookItemBottomSheet(position)
         //modalBottomSheet.show(this.parentFragmentManager, BookItemBottomSheet.TAG)
+    }
+
+    companion object {
+        const val VIEW_DETAIL_BOOK = 30
+        const val ADD_BOOK = 20
+        const val BOOK_ADDED = 21
+        const val REMOVE_BOOK = 31
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == VIEW_DETAIL_BOOK && resultCode == REMOVE_BOOK)
+            getList()
+        else if (requestCode == ADD_BOOK && resultCode == BOOK_ADDED)
+            getList()
+
     }
 }

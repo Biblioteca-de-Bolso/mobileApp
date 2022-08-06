@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.add.book
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,6 +13,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.validator.BookValidator
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOfflineInputBinding
+import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bumptech.glide.Glide
@@ -66,6 +68,8 @@ class AddOfflineBookFragment : Fragment() {
 
             if (it is Result.Success) {
                 Toast.makeText(requireContext(), "Book Created", Toast.LENGTH_LONG).show()
+                val resultIntent = Intent()
+                activity?.setResult(BookListFragment.BOOK_ADDED, resultIntent)
                 requireActivity().finish()
             } else {
                 val errorMessage = (it as Result.Error).errorBody.message

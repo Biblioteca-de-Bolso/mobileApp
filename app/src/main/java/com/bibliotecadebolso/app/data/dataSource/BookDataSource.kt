@@ -1,6 +1,7 @@
 package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.BookIdObject
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
@@ -80,6 +81,18 @@ object BookDataSource {
             val responseResult = RequestUtils.isResponseSuccessful(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.book)
+            else
+                responseResult as Result.Error
+        }
+
+    }
+
+    suspend fun deleteBookById(accessToken: String, bookId: Int): Result<String> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.deleteBookById("Bearer $accessToken", BookIdObject(bookId))
+            val responseResult = RequestUtils.isResponseSuccessful(response)
+            if (responseResult is Result.Success)
+                Result.Success("O livro e os dados relacionados foram apagados com sucesso.")
             else
                 responseResult as Result.Error
         }

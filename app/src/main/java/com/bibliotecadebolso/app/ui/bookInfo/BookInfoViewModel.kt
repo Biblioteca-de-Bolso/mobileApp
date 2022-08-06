@@ -11,7 +11,8 @@ import kotlinx.coroutines.launch
 class BookInfoViewModel : ViewModel() {
 
     val liveDataBookInfo = MutableLiveData<Result<Book>>()
-
+    var isDescriptionShowMoreActive = false
+    val liveDataDeleteBook = MutableLiveData<Result<String>>()
     val dataSource = BookDataSource
 
     fun getInfoByID(accessToken: String, id: Int) {
@@ -19,7 +20,13 @@ class BookInfoViewModel : ViewModel() {
             val result = dataSource.getBookById(accessToken, id)
             liveDataBookInfo.postValue(result)
         }
+    }
 
+    fun deleteBook(accessToken: String, bookId: Int) {
+        viewModelScope.launch {
+            val result = dataSource.deleteBookById(accessToken, bookId)
+            liveDataDeleteBook.postValue(result)
+        }
     }
 
 }

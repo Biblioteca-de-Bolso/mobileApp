@@ -51,6 +51,12 @@ interface BibliotecaDeBolsoAPI {
         @Path("id") id: Int
     ): Response<APIResponse<BookInObject>>
 
+    @HTTP(method = "DELETE", path = "book", hasBody = true)
+    suspend fun deleteBookById(
+        @Header("Authorization") accessToken: String,
+        @Body bookId: BookIdObject
+    ): Response<APIResponse<Nothing>>
+
     @POST("book")
     suspend fun createBook(
         @Header("Authorization") accessToken: String,

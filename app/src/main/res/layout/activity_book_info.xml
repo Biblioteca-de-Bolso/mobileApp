@@ -71,28 +71,28 @@
                 app:layout_constraintStart_toEndOf="@id/iv_book_preview"
                 app:layout_constraintTop_toTopOf="@id/iv_book_preview" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/et_book_author"
-                style="@style/Theme.MyApplication.SplashScreenTheme.Blue.TextInputLayout.FilledBlack.NoUnderline"
+            <TextView
+                android:id="@+id/tv_label_author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="@color/splash_screen_dark_purple"
-                android:hint="@string/label_author"
-                app:boxBackgroundColor="@color/splash_screen_dark_purple"
-                app:boxStrokeColor="@color/til_purple_stroke_color_no_underline"
+                app:layout_constraintStart_toStartOf="@id/tv_book_title"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_book_preview"
-                app:layout_constraintTop_toBottomOf="@id/tv_book_title">
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+                android:text="@string/label_author"
+                android:textColor="@color/gd_blue_purple_3"
+                />
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:enabled="false"
-                    android:gravity="start"
-                    android:text="@string/label_loading_three_dots"
-                    android:textColor="@color/gd_blue_purple_3" />
-            </com.google.android.material.textfield.TextInputLayout>
-
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="@id/tv_label_author"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_author"
+                android:text="@string/label_loading_three_dots"
+                android:textColor="@color/gd_blue_purple_3"
+                />
 
             <Button
                 android:id="@+id/btn_edit_book"
@@ -105,6 +105,17 @@
                 app:layout_constraintStart_toStartOf="@id/iv_book_preview"
                 app:layout_constraintTop_toBottomOf="@id/iv_book_preview" />
 
+            <Button
+                android:id="@+id/btn_delete_book"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:text="@string/label_delete"
+                app:layout_constraintEnd_toEndOf="@id/iv_book_preview"
+                app:layout_constraintStart_toStartOf="@id/iv_book_preview"
+                app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
+
             <Spinner
                 android:id="@+id/spinner_reading_status"
                 android:layout_width="150dp"
@@ -113,7 +124,9 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_edit_book"
                 app:layout_constraintTop_toTopOf="@id/btn_edit_book"
-                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+                tools:listitem="@android:layout/simple_spinner_dropdown_item"
+                android:entries="@array/spinner_book_reading_status_value"
+                />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/divider_purple_to_white"
@@ -150,11 +163,13 @@
                     android:id="@+id/tv_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:lineHeight="20sp"
+                    android:paddingHorizontal="16dp"
+                    android:justificationMode="inter_word"
+                    android:lineHeight="25sp"
                     android:text="@string/label_loading_three_dots"
                     android:textColor="@color/gray_transparent_80"
                     app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_label_description"
                     tools:text="Lorem impsum fnausof fsnaofsa fnasofna fnsaionfsa faisnfosa fnaifnaofnsa fpamfpsa" />
 

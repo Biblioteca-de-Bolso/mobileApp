@@ -84,6 +84,12 @@
     <string name="label_abstracts">Abstracts</string>
     <string name="label_add_annotation_or_abstract">Add an annotation or abstract</string>
     <string name="label_no_internet_connection">No internet connection</string>
+    <string name="label_show_less">show less</string>
+    <string name="label_are_you_sure">Are you sure?</string>
+    <string name="label_are_you_sure_delete_book">Are you sure you want to delete this book?</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_delete">delete</string>
+    <string name="label_book_removed">Book removed successfully</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

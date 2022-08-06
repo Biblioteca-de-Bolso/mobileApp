@@ -15,20 +15,42 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationActivity
+import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
 
-    private val rotateOpen: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_open) }
-    private val rotateClose: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_close) }
-    private val fabFromBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_from_bottom_anim) }
-    private val fabToBottom: Animation by lazy { AnimationUtils.loadAnimation(this, R.anim.fab_to_bottom_anim) }
+    private val rotateOpen: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.fab_open
+        )
+    }
+    private val rotateClose: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.fab_close
+        )
+    }
+    private val fabFromBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.fab_from_bottom_anim
+        )
+    }
+    private val fabToBottom: Animation by lazy {
+        AnimationUtils.loadAnimation(
+            this,
+            R.anim.fab_to_bottom_anim
+        )
+    }
 
     private var isFabVisible = false;
 
@@ -50,6 +72,44 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         listenerFillActivityWithBookInfo()
 
         setupFabs()
+        setupOnClickRemoveBook()
+        setRemoveBookListener()
+    }
+
+    private fun setupOnClickRemoveBook() {
+        binding.btnDeleteBook.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.label_are_you_sure))
+                .setMessage(getString(R.string.label_are_you_sure_delete_book))
+                .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
+                .setPositiveButton(resources.getString(R.string.label_delete)) { dialog, which ->
+                    deleteBook(getIdFromExtrasOrMinus1())
+                }
+                .show()
+        }
+    }
+
+    private fun deleteBook(bookId: Int) {
+        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+        binding.progressSending.visibility = View.VISIBLE
+        viewModel.deleteBook(accessToken, getIdFromExtrasOrMinus1())
+    }
+
+    private fun setRemoveBookListener() {
+        viewModel.liveDataDeleteBook.observe(this) {
+            if (it is Result.Success) {
+                binding.progressSending.visibility = View.GONE
+                Toast.makeText(this, getString(R.string.label_book_removed), Toast.LENGTH_SHORT)
+                    .show()
+                val returnResult = Intent()
+                setResult(BookListFragment.REMOVE_BOOK, returnResult)
+                finish()
+            } else if (it is Result.Error) {
+                Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
     }
 
     private fun setupFabs() {
@@ -95,7 +155,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private fun finishActivityIfBookIdIsInvalid(bookId: Any) {
         if (bookId == -1) {
             Toast.makeText(this, getString(R.string.label_book_not_found), Toast.LENGTH_LONG).show()
-            finishAffinity()
+            finish()
         }
     }
 
@@ -116,7 +176,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             R.array.spinner_book_reading_status_value,
             R.layout.spinner_item
         ).also { arrayAdapter ->
-            arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             binding.spinnerReadingStatus.adapter = arrayAdapter
         }
     }
@@ -133,23 +193,44 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun loadActivityWithBookInfo(book: Book) {
         binding.tvBookTitle.text = book.title
-        binding.etBookAuthor.editText?.setText(book.author)
-        if (book.thumbnail.isNotEmpty()) {
+        binding.tvAuthor.text = book.author
+        if (book.thumbnail.isNotEmpty())
             Glide.with(this).load(book.thumbnail)
                 .centerInside()
                 .into(binding.ivBookPreview)
-        }
-        if (book.description.length > 270) {
-            binding.tvDescription.text = book.description.substring(0, 270) + "..."
-        } else {
-            binding.tvDescription.text = book.description
-        }
+
+        var description = StringBuilder(book.description)
+        if (description.length > 270)
+            setShortDescription(description)
+        else
+            setFullDescription(description)
+
 
         binding.tvDescriptionShowMore.setOnClickListener {
-            binding.tvDescription.text = book.description
+            if (viewModel.isDescriptionShowMoreActive)
+                setShortDescription(description)
+            else
+                setFullDescription(description)
+
+            viewModel.isDescriptionShowMoreActive = !viewModel.isDescriptionShowMoreActive
         }
     }
 
+    private fun setShortDescription(description: StringBuilder) {
+        if (description.length > 270) {
+            val shortDescription = description.substring(0, 270) + "..."
+            binding.tvDescription.text = shortDescription
+            binding.tvDescriptionShowMore.text = getString(R.string.label_show_more)
+        }
+    }
+
+    private fun setFullDescription(description: StringBuilder) {
+        binding.tvDescription.text = description.toString()
+        if (description.length > 270)
+            binding.tvDescriptionShowMore.text = getString(R.string.label_show_less)
+        else
+            binding.tvDescriptionShowMore.visibility = View.INVISIBLE
+    }
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
