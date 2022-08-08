@@ -1,7 +1,7 @@
 package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.*
-import com.bibliotecadebolso.app.data.model.Annotation
+import com.bibliotecadebolso.app.data.model.SaveAnnotation
 import com.bibliotecadebolso.app.data.model.response.*
 import retrofit2.Response
 import retrofit2.http.*
@@ -73,6 +73,13 @@ interface BibliotecaDeBolsoAPI {
     @POST("annotation")
     suspend fun saveAnnotation(
         @Header("Authorization") accessToken: String,
-        @Body annotation: Annotation,
+        @Body annotation: SaveAnnotation,
     ): Response<APIResponse<AnnotationResponse>>
+
+    @GET("annotation")
+    suspend fun getAnnotationList(
+        @Header("Authorization") accessToken: String,
+        @Query("page") page: Int = 1,
+        @Query("bookId") bookId: Int,
+    ): Response<APIResponse<AnnotationObject>>
 }
