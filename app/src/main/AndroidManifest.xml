@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".AnnotationListActivity"
+            android:name=".ui.bookInfo.annotationList.AnnotationListActivity"
             android:exported="false" />
         <activity
             android:name=".ui.bookInfo.BookInfoActivity"

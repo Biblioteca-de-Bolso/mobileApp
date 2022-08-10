@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 
 class AnnotationListViewModel : ViewModel() {
 
-    private val liveDataAnnotationList = MutableLiveData<Result<AnnotationObject>>()
+    val liveDataAnnotationList = MutableLiveData<Result<AnnotationObject>>()
 
     fun getList(accessToken: String, bookId: Int, page: Int) {
         viewModelScope.launch {

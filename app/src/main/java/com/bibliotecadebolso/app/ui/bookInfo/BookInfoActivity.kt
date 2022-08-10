@@ -15,6 +15,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationActivity
+import com.bibliotecadebolso.app.ui.bookInfo.annotationList.AnnotationListActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -26,6 +27,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
+    private val readingStatusMap = HashMap<String, String>()
 
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(
@@ -74,6 +76,12 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setupFabs()
         setupOnClickRemoveBook()
         setRemoveBookListener()
+
+        binding.tvAnnotationShowMore.setOnClickListener {
+            val intent = Intent(this, AnnotationListActivity::class.java)
+            intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+            startActivity(intent)
+        }
     }
 
     private fun setupOnClickRemoveBook() {
@@ -165,7 +173,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val spinnerReadingStatusValue =
             resources.getStringArray(R.array.spinner_book_reading_status_value)
 
-        val readingStatusMap = HashMap<String, String>()
+
         for (i in spinnerReadingStatusKey.indices) {
             readingStatusMap[spinnerReadingStatusValue[i]] = spinnerReadingStatusKey[i]
         }
@@ -235,7 +243,11 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        Log.i("BookActivityOnItemSelected", p0?.getItemAtPosition(p2).toString())
+        val itemSelected: String = p0?.getItemAtPosition(p2).toString()
+        val readingStatusSelected: String = readingStatusMap[itemSelected] ?: ""
+
+        Log.i("BookActivityOnItemSelected", itemSelected)
+        Log.e("BookActivityOnItemSelected", readingStatusSelected)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

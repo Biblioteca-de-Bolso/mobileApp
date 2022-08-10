@@ -23,7 +23,7 @@
                 app:trackColor="@color/splash_screen_dark_purple" />
 
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-                android:id="@+id/sr_book_list"
+                android:id="@+id/sr_annotation_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="60dp">
