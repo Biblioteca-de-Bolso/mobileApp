@@ -90,6 +90,8 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_delete">delete</string>
     <string name="label_book_removed">Book removed successfully</string>
+    <string name="label_reference_with_example">Loc: Cap.X</string>
+    <string name="label_annotation_saved_successfully">Annotation saved successfully!</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

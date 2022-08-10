@@ -179,6 +179,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
             binding.spinnerReadingStatus.adapter = arrayAdapter
         }
+
     }
 
 
