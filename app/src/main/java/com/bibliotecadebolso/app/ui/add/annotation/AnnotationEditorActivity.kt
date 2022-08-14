@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -16,11 +17,21 @@ import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.richeditor.RichEditor
 
-class AddAnnotationActivity : AppCompatActivity() {
+/**
+ * Annotation edition activity.
+ *     Send parameters through intent.putExtra()
+ *
+ * @param actionType it should be a AnnotationActionEnum type in a string format
+ * @param bookId required only if actionType ie equals to 'add'
+ * @param annotationId if actionType is equals to 'edit'
+ */
+class AnnotationEditorActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddAnnotationBinding
-    private var bookId: Int = -1;
+    private var bookId: Int = -1
     private lateinit var mEditor: RichEditor
+    private var actionType: AnnotationActionEnum? = null
+    private var annotationId: Int = -1
 
     private lateinit var viewModel: AddAnnotationContentViewModel
 
@@ -30,28 +41,51 @@ class AddAnnotationActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         assignGlobalVariables()
-        finishIfBookIdNotValid()
+        finishIfExtrasIsNotValid()
         loadWebAnnotationView()
+        loadContentToWebAnnotationView()
         setFabSaveAnnotationClick()
         setSaveAnnotationListener()
+        setUpdateAnnotationListener()
+        setGetAnnotationByIdListener()
     }
+
 
     private fun assignGlobalVariables() {
         viewModel = ViewModelProvider(this)[AddAnnotationContentViewModel::class.java]
         mEditor = binding.richEditor
-        bookId = getBookIdFromExtrasOrMinus1()
-    }
 
-    private fun getBookIdFromExtrasOrMinus1(): Int {
         val extras = intent.extras
-        return extras?.getInt("bookId", -1) ?: -1
+        bookId = extras?.getInt("bookId", -1) ?: -1
+        getActionTypeOrFinishActivity(extras)
+        annotationId = extras?.getInt("annotationId", -1) ?: -1
+
     }
 
-    private fun finishIfBookIdNotValid() {
-        if (bookId == -1) {
-            Toast.makeText(this, "Book ID invalid", Toast.LENGTH_LONG).show()
+    private fun getActionTypeOrFinishActivity(extras: Bundle?) {
+        try {
+            val actionTypeString = extras?.getString("actionType", "") ?: ""
+            actionType = AnnotationActionEnum.valueOf(actionTypeString)
+        } catch (e: IllegalArgumentException) {
+            Toast.makeText(this, getString(R.string.label_action_not_valid), Toast.LENGTH_LONG)
+                .show()
             finish()
+        }
+    }
 
+    private fun finishIfExtrasIsNotValid() {
+        when (actionType) {
+            AnnotationActionEnum.ADD ->
+                if (bookId == -1) {
+                    showLongToast(getString(R.string.label_book_id_not_valid))
+                    finish()
+                }
+            AnnotationActionEnum.EDIT ->
+                if (annotationId == -1) {
+                    showLongToast(getString(R.string.label_annotation_id_not_valid))
+                    finish()
+                }
+            else -> {}
         }
     }
 
@@ -91,12 +125,42 @@ class AddAnnotationActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun loadContentToWebAnnotationView() {
+        if (actionType == AnnotationActionEnum.EDIT) {
+            binding.progressSending.visibility = View.VISIBLE
+            viewModel.getAnnotationById(
+                SharedPreferencesUtils.getAccessToken(
+                    getSharedPreferences(
+                        Constants.Prefs.USER_TOKENS,
+                        MODE_PRIVATE
+                    )
+                ),
+                annotationId
+            )
+        }
+    }
+
+    private fun setGetAnnotationByIdListener() {
+        viewModel.getByIdResult.observe(this) {
+            if (it is Result.Success) {
+                val annotation = it.response.annotation
+                mEditor.html = annotation.text
+                binding.etBookTitle.editText?.setText(annotation.title)
+                binding.etBookReference.editText?.setText(annotation.reference)
+            } else if (it is Result.Error) {
+                showSnackBar(it.errorBody.message)
+            }
+
+            binding.progressSending.visibility = View.GONE
+        }
+    }
+
     private fun setFabSaveAnnotationClick() {
         binding.fabSaveAnnotation.setOnClickListener {
             val html: String = if (mEditor.html == null) "" else mEditor.html
             val title: String = binding.etBookTitle.editText!!.text.toString()
             val reference: String = binding.etBookReference.editText!!.text.toString()
-
 
             val accessToken = SharedPreferencesUtils.getAccessToken(
                 getSharedPreferences(
@@ -104,7 +168,26 @@ class AddAnnotationActivity : AppCompatActivity() {
                     MODE_PRIVATE
                 )
             )
-            viewModel.saveAnnotation(accessToken, bookId, title, html, reference)
+
+            binding.progressSending.visibility = View.VISIBLE
+            when (actionType) {
+                AnnotationActionEnum.ADD -> viewModel.saveAnnotation(
+                    accessToken,
+                    bookId,
+                    title,
+                    html,
+                    reference
+                )
+                AnnotationActionEnum.EDIT -> viewModel.updateAnnotation(
+                    accessToken,
+                    annotationId,
+                    title,
+                    html,
+                    reference
+                )
+                else -> {}
+            }
+
         }
     }
 
@@ -115,6 +198,20 @@ class AddAnnotationActivity : AppCompatActivity() {
             } else if (it is Result.Error) {
                 showSnackBar(it.errorBody.message)
             }
+
+            binding.progressSending.visibility = View.GONE
+        }
+    }
+
+    private fun setUpdateAnnotationListener() {
+        viewModel.updateAnnotationResult.observe(this) {
+            if (it is Result.Success) {
+                showSuccessfullyToastAndFinishActivity()
+            } else if (it is Result.Error) {
+                showSnackBar(it.errorBody.message)
+            }
+
+            binding.progressSending.visibility = View.GONE
         }
     }
 
@@ -131,4 +228,7 @@ class AddAnnotationActivity : AppCompatActivity() {
         finish()
     }
 
+    private fun showLongToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
 }

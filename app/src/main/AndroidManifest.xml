@@ -25,7 +25,7 @@
             android:exported="false"
             android:label="@string/title_activity_delete_account" />
         <activity
-            android:name=".ui.add.annotation.AddAnnotationActivity"
+            android:name=".ui.add.annotation.AnnotationEditorActivity"
             android:exported="false" />
         <activity
             android:name=".ui.list.annotation.AnnotationListedByBookActivity"

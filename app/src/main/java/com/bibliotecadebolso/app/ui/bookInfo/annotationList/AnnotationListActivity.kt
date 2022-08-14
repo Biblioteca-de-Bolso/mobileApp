@@ -1,15 +1,16 @@
 package com.bibliotecadebolso.app.ui.bookInfo.annotationList
 
 import BookListDividerDecoration
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAnnotationListBinding
 import com.bibliotecadebolso.app.ui.adapter.AnnotationListAdapter
-import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
+import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.RvOnClickListener
@@ -22,10 +23,8 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
     private var bookId: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityAnnotationListBinding.inflate(layoutInflater)
-        viewModel = ViewModelProvider(this)[AnnotationListViewModel::class.java]
 
-        bookId = getIdFromExtrasOrMinus1()
+        assignVariables()
         val accessToken = SharedPreferencesUtils.getAccessToken(
             getSharedPreferences(
                 Constants.Prefs.USER_TOKENS,
@@ -33,13 +32,27 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
             )
         )
 
-
+        setupSwipeRefreshListener(accessToken)
+        setupAnnotationListObserver()
         viewModel.getList(accessToken, bookId, 1)
+        setupRecyclerView()
+        setContentView(binding.root)
+    }
+    private fun assignVariables() {
+        binding = ActivityAnnotationListBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[AnnotationListViewModel::class.java]
 
+        bookId = getIdFromExtrasOrMinus1()
+    }
+
+
+    private fun setupSwipeRefreshListener(accessToken: String) {
         binding.srAnnotationList.setOnRefreshListener {
             viewModel.getList(accessToken, bookId, 1)
         }
+    }
 
+    private fun setupAnnotationListObserver() {
         viewModel.liveDataAnnotationList.observe(this) {
             if (it is Result.Success) {
                 fragmentAdapter.differ.submitList(it.response.annotations)
@@ -48,9 +61,6 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
             binding.srAnnotationList.isRefreshing = false
         }
 
-
-        setupRecyclerView()
-        setContentView(binding.root)
     }
 
     private fun getIdFromExtrasOrMinus1(): Int {
@@ -74,32 +84,12 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
         }
     }
 
-    private fun setupBookListObserver() {
-        /*
-        viewModel.bookList.observe(viewLifecycleOwner) {
-            hideLoadingIcon()
-            when (it) {
-                is Result.Success<List<CreatedBook>> -> {
-
-                    binding.srBookList.isRefreshing = false
-                    fragmentAdapter.differ.submitList(it.response)
-                    if (it.response.isEmpty()) {
-                        //TODO make appear a text telling that doesn't have a book
-                    }
-                    fragmentAdapter.notifyDataSetChanged()
-                }
-                is Result.Error -> {
-                    showLongSnackBar(it.errorBody.message)
-                    binding.srBookList.isRefreshing = false
-                }
-            }
-
-         */
-    }
-
 
     override fun onItemCLick(position: Int) {
-        Toast.makeText(this, getString(android.R.string.unknownName), Toast.LENGTH_LONG).show()
+        val intent = Intent(this, AnnotationEditorActivity::class.java)
+        intent.putExtra("annotationId", position)
+        intent.putExtra("actionType", AnnotationActionEnum.EDIT.toString())
+        startActivity(intent)
         // TODO("Not yet implemented")
     }
 }

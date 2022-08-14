@@ -40,7 +40,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-                    tools:listitem="@layout/item_book"
+                    tools:listitem="@layout/item_annotation"
                     tools:orientation="vertical"
                     tools:spanCount="2" />
 
@@ -53,8 +53,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
-        android:backgroundTint="@color/gd_blue_purple_0"
+        app:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/label_add_annotation_or_abstract"
         app:srcCompat="@drawable/ic_add"
-        app:tint="@color/white" />
+        app:tint="@color/natural_pallet_blue3" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

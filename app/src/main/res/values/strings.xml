@@ -92,6 +92,9 @@
     <string name="label_book_removed">Book removed successfully</string>
     <string name="label_reference_with_example">Loc: Cap.X</string>
     <string name="label_annotation_saved_successfully">Annotation saved successfully!</string>
+    <string name="label_action_not_valid">Action type not valid</string>
+    <string name="label_annotation_id_not_valid">Annotation ID invalid</string>
+    <string name="label_book_id_not_valid">Book ID invalid</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

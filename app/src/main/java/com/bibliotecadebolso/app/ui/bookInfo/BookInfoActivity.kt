@@ -13,8 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
-import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationActivity
+import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.bookInfo.annotationList.AnnotationListActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
@@ -131,8 +132,9 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             Toast.makeText(this, "fabAddAbstract clicked", Toast.LENGTH_LONG).show()
         }
         binding.fabAddAnnotation.setOnClickListener {
-            val intent: Intent = Intent(this, AddAnnotationActivity::class.java)
+            val intent: Intent = Intent(this, AnnotationEditorActivity::class.java)
             intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+            intent.putExtra("actionType", AnnotationActionEnum.ADD.toString())
             startActivity(intent)
         }
     }

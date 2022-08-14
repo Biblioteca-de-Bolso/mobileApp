@@ -76,10 +76,22 @@ interface BibliotecaDeBolsoAPI {
         @Body annotation: SaveAnnotation,
     ): Response<APIResponse<AnnotationResponse>>
 
+    @PUT("annotation")
+    suspend fun updateAnnotation(
+        @Header("Authorization") accessToken: String,
+        @Body annotation: UpdateAnnotation
+    ): Response<APIResponse<AnnotationObject>>
+
     @GET("annotation")
     suspend fun getAnnotationList(
         @Header("Authorization") accessToken: String,
         @Query("page") page: Int = 1,
         @Query("bookId") bookId: Int,
+    ): Response<APIResponse<ListAnnotationObject>>
+
+    @GET("annotation/{id}")
+    suspend fun getAnnotationById(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int
     ): Response<APIResponse<AnnotationObject>>
 }

@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bibliotecadebolso.app.databinding.BookOptionsBottomSheetBinding
-import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationActivity
+import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BookItemBottomSheet(private val bookItemId: Int) : BottomSheetDialogFragment() {
@@ -20,7 +20,7 @@ class BookItemBottomSheet(private val bookItemId: Int) : BottomSheetDialogFragme
         binding = BookOptionsBottomSheetBinding.inflate(inflater, container, false)
 
         binding.tvCreateAnnotation.setOnClickListener {
-            val intent: Intent = Intent(this.requireContext(), AddAnnotationActivity::class.java)
+            val intent: Intent = Intent(this.requireContext(), AnnotationEditorActivity::class.java)
             intent.putExtra("bookId", bookItemId);
             startActivity(intent);
         }

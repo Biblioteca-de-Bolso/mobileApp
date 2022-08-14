@@ -4,13 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.AnnotationDataSource
-import com.bibliotecadebolso.app.data.model.AnnotationObject
+import com.bibliotecadebolso.app.data.model.ListAnnotationObject
 import com.bibliotecadebolso.app.util.Result
 import kotlinx.coroutines.launch
 
 class AnnotationListViewModel : ViewModel() {
 
-    val liveDataAnnotationList = MutableLiveData<Result<AnnotationObject>>()
+    val liveDataAnnotationList = MutableLiveData<Result<ListAnnotationObject>>()
 
     fun getList(accessToken: String, bookId: Int, page: Int) {
         viewModelScope.launch {
