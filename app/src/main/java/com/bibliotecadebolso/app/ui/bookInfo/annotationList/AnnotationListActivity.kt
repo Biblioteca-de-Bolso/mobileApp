@@ -11,10 +11,7 @@ import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAnnotationListBinding
 import com.bibliotecadebolso.app.ui.adapter.AnnotationListAdapter
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
-import com.bibliotecadebolso.app.util.Constants
-import com.bibliotecadebolso.app.util.Result
-import com.bibliotecadebolso.app.util.RvOnClickListener
-import com.bibliotecadebolso.app.util.SharedPreferencesUtils
+import com.bibliotecadebolso.app.util.*
 
 class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
     private lateinit var binding: ActivityAnnotationListBinding
@@ -23,7 +20,8 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
     private var bookId: Int = -1
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        ContextUtils.setActionBarColor(supportActionBar, this)
+        supportActionBar?.title = getString(R.string.label_annotations)
         assignVariables()
         val accessToken = SharedPreferencesUtils.getAccessToken(
             getSharedPreferences(
@@ -31,13 +29,15 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
                 MODE_PRIVATE
             )
         )
-
         setupSwipeRefreshListener(accessToken)
         setupAnnotationListObserver()
         viewModel.getList(accessToken, bookId, 1)
         setupRecyclerView()
+        setFabAddAnnotation()
         setContentView(binding.root)
     }
+
+
     private fun assignVariables() {
         binding = ActivityAnnotationListBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[AnnotationListViewModel::class.java]
@@ -81,6 +81,15 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
                     resources.getInteger(R.integer.book_list_preview_columns)
                 )
             )
+        }
+    }
+
+    private fun setFabAddAnnotation() {
+        binding.fabShowAddOptions.setOnClickListener {
+            val intent = Intent(this, AnnotationEditorActivity::class.java)
+            intent.putExtra("actionType", AnnotationActionEnum.ADD.toString())
+            intent.putExtra("bookId", bookId)
+            startActivity(intent)
         }
     }
 

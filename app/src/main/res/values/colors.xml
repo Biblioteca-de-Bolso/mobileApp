@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="purple_primary">#492376</color>
+
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -48,4 +50,7 @@
     <color name="splash_screen_strong_orange">#FF662F</color>
     <color name="dark_gray_1">#928B9B</color>
     <color name="yellow_gray_1">#E2DDCB</color>
+
+    <color name="m_editor_wheat">#FAE8CD</color>
+    <color name="m_editor_black">@color/yellow_gray_1</color>
 </resources>

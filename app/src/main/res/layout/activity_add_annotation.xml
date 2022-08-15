@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FAE8CD">
+    android:background="?attr/wheatColor">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/progress_sending"
@@ -53,7 +53,7 @@
                         android:layout_margin="16dp"
                         android:layout_marginTop="8dp"
                         android:hint="@string/label_title"
-                        app:boxBackgroundColor="#FAE8CD">
+                        app:boxBackgroundColor="?attr/wheatColor">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -71,7 +71,7 @@
                         android:layout_marginVertical="16dp"
                         android:layout_marginTop="8dp"
                         android:hint="@string/label_reference_with_example"
-                        app:boxBackgroundColor="#FAE8CD">
+                        app:boxBackgroundColor="?attr/wheatColor">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:layout_width="match_parent"
@@ -89,7 +89,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="1200dp"
-                    android:background="#FAE8CD"
+                    android:background="?attr/wheatColor"
                     android:minHeight="400dp"
                     tools:visibility="invisible" />
 
@@ -100,7 +100,7 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f2faff"
+            android:background="?attr/colorOnPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -218,13 +218,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="60dp"
-        android:backgroundTint="@color/white_blue"
+        android:backgroundTint="?attr/colorPrimary"
         android:contentDescription="@string/label_save_annotation"
         android:elevation="8dp"
         android:src="@drawable/ic_save"
         app:layout_anchor="@id/fl_transaction_content"
         app:layout_anchorGravity="top|end"
-        app:tint="@color/white" />
+        app:tint="@color/natural_pallet_blue3" />
 
     <FrameLayout
         android:id="@+id/fl_transaction_content"

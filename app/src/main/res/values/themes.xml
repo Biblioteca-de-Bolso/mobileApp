@@ -11,6 +11,8 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+
+        <item name="wheatColor">@color/m_editor_wheat</item>
         <!-- Customize your theme here. -->
     </style>
 
@@ -19,6 +21,7 @@
         <item name="colorPrimary">@color/white_blue</item>
         <item name="colorPrimaryVariant">#007AB3</item>
         <item name="colorOnPrimary">@color/white</item>
+        <item name="readablePrimaryColor">@color/white_blue</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>

@@ -1,15 +1,16 @@
 package com.bibliotecadebolso.app.ui.appAccess
 
-import androidx.lifecycle.ViewModelProvider
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupActionBarWithNavController
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityLoginBinding
-import com.bumptech.glide.Glide
+import com.bibliotecadebolso.app.util.ContextUtils
 
 class AppAccessActivity : AppCompatActivity() {
 
@@ -19,7 +20,7 @@ class AppAccessActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        ContextUtils.setActionBarColor(supportActionBar, this)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         appAccessViewModel = ViewModelProvider(this)[AppAccessViewModel::class.java]

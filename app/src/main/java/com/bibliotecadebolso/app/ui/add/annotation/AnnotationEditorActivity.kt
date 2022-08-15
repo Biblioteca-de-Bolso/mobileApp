@@ -11,6 +11,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
 import com.bibliotecadebolso.app.util.Constants
+import com.bibliotecadebolso.app.util.ContextUtils
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.google.android.material.snackbar.BaseTransientBottomBar
@@ -39,6 +40,8 @@ class AnnotationEditorActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddAnnotationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ContextUtils.setActionBarColor(supportActionBar, this)
 
         assignGlobalVariables()
         finishIfExtrasIsNotValid()
@@ -145,6 +148,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         viewModel.getByIdResult.observe(this) {
             if (it is Result.Success) {
                 val annotation = it.response.annotation
+                supportActionBar?.title = annotation.title
                 mEditor.html = annotation.text
                 binding.etBookTitle.editText?.setText(annotation.title)
                 binding.etBookReference.editText?.setText(annotation.reference)

@@ -1,11 +1,14 @@
 package com.bibliotecadebolso.app.ui.home.nav
 
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.lifecycle.ViewModelProvider
 import com.auth0.android.jwt.JWT
@@ -13,6 +16,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityDeleteAccoutBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessActivity
 import com.bibliotecadebolso.app.util.Constants
+import com.bibliotecadebolso.app.util.ContextUtils
 import com.bibliotecadebolso.app.util.Result
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -24,6 +28,9 @@ class DeleteAccountActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ContextUtils.setActionBarColor(supportActionBar, this)
+
+
 
         binding = ActivityDeleteAccoutBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[DeleteAccountViewModel::class.java]
@@ -53,7 +60,7 @@ class DeleteAccountActivity : AppCompatActivity() {
             if (it is Result.Success) {
                 showLongToast(getString(R.string.label_account_deleted))
 
-                with (prefs.edit()) {
+                with(prefs.edit()) {
                     putString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")
                     putString(Constants.Prefs.Tokens.REFRESH_TOKEN, "")
                     apply()
