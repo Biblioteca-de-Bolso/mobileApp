@@ -210,11 +210,23 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .centerInside()
                 .into(binding.ivBookPreview)
 
-        var description = StringBuilder(book.description)
-        if (description.length > 270)
-            setShortDescription(description)
-        else
+        loadDescriptionContent(book)
+    }
+
+    private fun loadDescriptionContent(book: Book) {
+        val description = StringBuilder(book.description)
+        val isAShortDescription = description.length <= 270
+
+        if (viewModel.isDescriptionShowMoreActive)
             setFullDescription(description)
+        else {
+            if (isAShortDescription) {
+                setFullDescription(description)
+                disableTvDescriptionShowMore()
+            } else
+                setShortDescription(description)
+        }
+
 
 
         binding.tvDescriptionShowMore.setOnClickListener {
@@ -227,6 +239,16 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
+    private fun setFullDescription(description: StringBuilder) {
+        binding.tvDescription.text = description.toString()
+        if (description.length > 270)
+            binding.tvDescriptionShowMore.text = getString(R.string.label_show_less)
+    }
+
+    private fun disableTvDescriptionShowMore() {
+        binding.tvDescriptionShowMore.visibility = View.INVISIBLE
+    }
+
     private fun setShortDescription(description: StringBuilder) {
         if (description.length > 270) {
             val shortDescription = description.substring(0, 270) + "..."
@@ -235,13 +257,6 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
-    private fun setFullDescription(description: StringBuilder) {
-        binding.tvDescription.text = description.toString()
-        if (description.length > 270)
-            binding.tvDescriptionShowMore.text = getString(R.string.label_show_less)
-        else
-            binding.tvDescriptionShowMore.visibility = View.INVISIBLE
-    }
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
