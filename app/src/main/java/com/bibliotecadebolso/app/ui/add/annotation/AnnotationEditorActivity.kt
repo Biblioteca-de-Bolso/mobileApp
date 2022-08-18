@@ -98,6 +98,9 @@ class AnnotationEditorActivity : AppCompatActivity() {
         mEditor.setBackgroundColor(Color.TRANSPARENT)
         mEditor.setPadding(10, 10, 10, 10)
         mEditor.setPlaceholder(getString(R.string.annotation_placeholder_insert_text_here))
+        mEditor.setOnTextChangeListener {
+            viewModel.richEditorHtmlData = it
+        }
 
         binding.apply {
             actionBold.setOnClickListener { mEditor.setBold() }
@@ -130,18 +133,24 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
 
     private fun loadContentToWebAnnotationView() {
-        if (actionType == AnnotationActionEnum.EDIT) {
+        if (viewModel.richEditorHtmlData.isNotEmpty()) {
+          mEditor.html = viewModel.richEditorHtmlData
+        } else if (actionType == AnnotationActionEnum.EDIT) {
             binding.progressSending.visibility = View.VISIBLE
-            viewModel.getAnnotationById(
-                SharedPreferencesUtils.getAccessToken(
-                    getSharedPreferences(
-                        Constants.Prefs.USER_TOKENS,
-                        MODE_PRIVATE
-                    )
-                ),
-                annotationId
-            )
+            getAnnotationById()
         }
+    }
+
+    private fun getAnnotationById() {
+        viewModel.getAnnotationById(
+            SharedPreferencesUtils.getAccessToken(
+                getSharedPreferences(
+                    Constants.Prefs.USER_TOKENS,
+                    MODE_PRIVATE
+                )
+            ),
+            annotationId
+        )
     }
 
     private fun setGetAnnotationByIdListener() {
