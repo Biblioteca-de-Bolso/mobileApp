@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
@@ -99,6 +101,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         mEditor.setPadding(10, 10, 10, 10)
         mEditor.setPlaceholder(getString(R.string.annotation_placeholder_insert_text_here))
         mEditor.setOnTextChangeListener {
+            viewModel.richEditorHtmlDataChanged = true
             viewModel.richEditorHtmlData = it
         }
 
@@ -128,13 +131,30 @@ class AnnotationEditorActivity : AppCompatActivity() {
                     isChanged = !isChanged
                 }
             })
+
+            etBookTitle.editText?.doAfterTextChanged {
+                it?.let {
+                    viewModel.titleChanged = true
+                    viewModel.titleText = it.toString()
+                }
+            }
+            etBookReference.editText?.doAfterTextChanged {
+                it?.let {
+                    viewModel.referenceChanged = true
+                    viewModel.referenceText = it.toString()
+                }
+            }
         }
     }
 
 
     private fun loadContentToWebAnnotationView() {
-        if (viewModel.richEditorHtmlData.isNotEmpty()) {
-          mEditor.html = viewModel.richEditorHtmlData
+        if (viewModel.titleChanged || viewModel.titleText.isNotEmpty())
+            binding.etBookTitle.editText?.setText(viewModel.titleText)
+        if (viewModel.referenceChanged || viewModel.referenceText.isNotEmpty())
+            binding.etBookReference.editText?.setText(viewModel.referenceText)
+        if (viewModel.richEditorHtmlDataChanged || viewModel.richEditorHtmlData.isNotEmpty()) {
+            mEditor.html = viewModel.richEditorHtmlData
         } else if (actionType == AnnotationActionEnum.EDIT) {
             binding.progressSending.visibility = View.VISIBLE
             getAnnotationById()
