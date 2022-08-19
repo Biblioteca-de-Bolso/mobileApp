@@ -18,6 +18,15 @@ class AddAnnotationContentViewModel : ViewModel() {
     val updateAnnotationResult = MutableLiveData<Result<AnnotationObject>>()
     val getByIdResult = MutableLiveData<Result<AnnotationObject>>()
 
+    var richEditorHtmlData = ""
+    var referenceText = ""
+    var titleText = ""
+    var titleChanged = false
+    var referenceChanged = false
+    var richEditorHtmlDataChanged = false
+
+
+
     fun saveAnnotation(accessToken: String, bookId: Int, title: String, text: String, reference: String = "") {
         viewModelScope.launch {
             val result = AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
