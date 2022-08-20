@@ -55,7 +55,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         )
     }
 
-    private var isFabVisible = false;
+    var isFabInvisible = false;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -92,13 +92,13 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .setMessage(getString(R.string.label_are_you_sure_delete_book))
                 .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
                 .setPositiveButton(resources.getString(R.string.label_delete)) { dialog, which ->
-                    deleteBook(getIdFromExtrasOrMinus1())
+                    deleteBook()
                 }
                 .show()
         }
     }
 
-    private fun deleteBook(bookId: Int) {
+    private fun deleteBook() {
         val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
         val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
         binding.progressSending.visibility = View.VISIBLE
@@ -123,16 +123,16 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun setupFabs() {
         binding.fabShowAddOptions.setOnClickListener {
-            setFabOptionsVisibility(!isFabVisible)
-            setFabAnimation(!isFabVisible)
-            isFabVisible = !isFabVisible
+            setFabOptionsVisibility(!isFabInvisible)
+            setFabAnimation(!isFabInvisible)
+            isFabInvisible = !isFabInvisible
         }
 
         binding.fabAddAbstract.setOnClickListener {
             Toast.makeText(this, "fabAddAbstract clicked", Toast.LENGTH_LONG).show()
         }
         binding.fabAddAnnotation.setOnClickListener {
-            val intent: Intent = Intent(this, AnnotationEditorActivity::class.java)
+            val intent = Intent(this, AnnotationEditorActivity::class.java)
             intent.putExtra("bookId", getIdFromExtrasOrMinus1())
             intent.putExtra("actionType", AnnotationActionEnum.ADD.toString())
             startActivity(intent)
