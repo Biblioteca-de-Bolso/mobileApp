@@ -187,9 +187,9 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
     private fun setFabSaveAnnotationClick() {
         binding.fabSaveAnnotation.setOnClickListener {
-            val html: String = if (mEditor.html == null) "" else mEditor.html
-            val title: String = binding.etBookTitle.editText!!.text.toString()
-            val reference: String = binding.etBookReference.editText!!.text.toString()
+            val html: String = viewModel.richEditorHtmlData
+            val title: String = viewModel.titleText
+            val reference: String = viewModel.referenceText
 
             val accessToken = SharedPreferencesUtils.getAccessToken(
                 getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
