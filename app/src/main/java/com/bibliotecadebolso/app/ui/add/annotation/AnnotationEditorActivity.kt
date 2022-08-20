@@ -136,7 +136,9 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
 
     private fun loadContentToWebAnnotationView() {
-        if (actionType == AnnotationActionEnum.EDIT) {
+        if (actionType == AnnotationActionEnum.ADD) {
+            displayAnnotationContent()
+        } else if (actionType == AnnotationActionEnum.EDIT) {
             if (viewModel.getByIdAlreadyLoaded) {
                 displayAnnotationContent()
             } else {
@@ -145,6 +147,15 @@ class AnnotationEditorActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun displayAnnotationContent() {
+        viewModel.apply {
+            mEditor.html = richEditorHtmlData
+            binding.etBookTitle.editText?.setText(titleText)
+            binding.etBookReference.editText?.setText(referenceText)
+        }
+    }
+
 
     private fun getAnnotationById() {
         viewModel.getAnnotationById(
@@ -167,14 +178,6 @@ class AnnotationEditorActivity : AppCompatActivity() {
             }
 
             binding.progressSending.visibility = View.GONE
-        }
-    }
-
-    private fun displayAnnotationContent() {
-        viewModel.apply {
-            mEditor.html = richEditorHtmlData
-            binding.etBookTitle.editText?.setText(titleText)
-            binding.etBookReference.editText?.setText(referenceText)
         }
     }
 
