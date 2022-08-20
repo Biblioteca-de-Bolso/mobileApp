@@ -17,7 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="?attr/colorPrimary" />
+        app:trackColor="?attr/colorSecondaryVariant" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

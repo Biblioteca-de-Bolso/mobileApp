@@ -6,10 +6,10 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.infix.changeHighlight
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
 import com.bibliotecadebolso.app.util.Constants
@@ -101,8 +101,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         mEditor.setPadding(10, 10, 10, 10)
         mEditor.setPlaceholder(getString(R.string.annotation_placeholder_insert_text_here))
         mEditor.setOnTextChangeListener {
-            viewModel.richEditorHtmlDataChanged = true
-            viewModel.richEditorHtmlData = it
+            viewModel.changeHtmlBody(it)
         }
 
         binding.apply {
@@ -118,56 +117,39 @@ class AnnotationEditorActivity : AppCompatActivity() {
             actionInsertBullets.setOnClickListener { mEditor.setBullets() }
             actionInsertNumbers.setOnClickListener { mEditor.setNumbers() }
             actionHighlighterGreen.setOnClickListener(object : View.OnClickListener {
-                var isChanged = false
+                var isToDisable = false
                 override fun onClick(v: View) {
-                    Log.e("actionHighlighter", isChanged.toString())
-                    if (isChanged) {
-                        mEditor.evaluateJavascript("javascript:RE.prepareInsert();", null)
-                        mEditor.evaluateJavascript("javascript:RE.removeBackgroundColor();", null)
-                    } else {
-                        mEditor.setTextBackgroundColor(Color.GREEN)
-                    }
-
-                    isChanged = !isChanged
+                    Log.e("actionHighlighter", isToDisable.toString())
+                    mEditor.changeHighlight(isToDisable)
+                    isToDisable = !isToDisable
                 }
             })
 
             etBookTitle.editText?.doAfterTextChanged {
-                it?.let {
-                    viewModel.titleChanged = true
-                    viewModel.titleText = it.toString()
-                }
+                it?.let { viewModel.changeTitle(it.toString()) }
             }
             etBookReference.editText?.doAfterTextChanged {
-                it?.let {
-                    viewModel.referenceChanged = true
-                    viewModel.referenceText = it.toString()
-                }
+                it?.let { viewModel.changeReference(it.toString()) }
             }
         }
     }
 
 
     private fun loadContentToWebAnnotationView() {
-        if (viewModel.titleChanged || viewModel.titleText.isNotEmpty())
-            binding.etBookTitle.editText?.setText(viewModel.titleText)
-        if (viewModel.referenceChanged || viewModel.referenceText.isNotEmpty())
-            binding.etBookReference.editText?.setText(viewModel.referenceText)
-        if (viewModel.richEditorHtmlDataChanged || viewModel.richEditorHtmlData.isNotEmpty()) {
-            mEditor.html = viewModel.richEditorHtmlData
-        } else if (actionType == AnnotationActionEnum.EDIT) {
-            binding.progressSending.visibility = View.VISIBLE
-            getAnnotationById()
+        if (actionType == AnnotationActionEnum.EDIT) {
+            if (viewModel.getByIdAlreadyLoaded) {
+                displayAnnotationContent()
+            } else {
+                binding.progressSending.visibility = View.VISIBLE
+                getAnnotationById()
+            }
         }
     }
 
     private fun getAnnotationById() {
         viewModel.getAnnotationById(
             SharedPreferencesUtils.getAccessToken(
-                getSharedPreferences(
-                    Constants.Prefs.USER_TOKENS,
-                    MODE_PRIVATE
-                )
+                getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
             ),
             annotationId
         )
@@ -175,18 +157,29 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
     private fun setGetAnnotationByIdListener() {
         viewModel.getByIdResult.observe(this) {
-            if (it is Result.Success) {
+            if (it is Result.Success && !viewModel.richEditorHtmlDataChanged) {
                 val annotation = it.response.annotation
-                supportActionBar?.title = annotation.title
-                mEditor.html = annotation.text
-                binding.etBookTitle.editText?.setText(annotation.title)
-                binding.etBookReference.editText?.setText(annotation.reference)
+                viewModel.loadAnnotationContent(annotation)
+                displayAnnotationContent()
+                setSupportActionBarTitle(annotation.title)
             } else if (it is Result.Error) {
                 showSnackBar(it.errorBody.message)
             }
 
             binding.progressSending.visibility = View.GONE
         }
+    }
+
+    private fun displayAnnotationContent() {
+        viewModel.apply {
+            mEditor.html = richEditorHtmlData
+            binding.etBookTitle.editText?.setText(titleText)
+            binding.etBookReference.editText?.setText(referenceText)
+        }
+    }
+
+    private fun setSupportActionBarTitle(title: String) {
+        supportActionBar?.title = title
     }
 
     private fun setFabSaveAnnotationClick() {
@@ -196,10 +189,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
             val reference: String = binding.etBookReference.editText!!.text.toString()
 
             val accessToken = SharedPreferencesUtils.getAccessToken(
-                getSharedPreferences(
-                    Constants.Prefs.USER_TOKENS,
-                    MODE_PRIVATE
-                )
+                getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
             )
 
             binding.progressSending.visibility = View.VISIBLE
