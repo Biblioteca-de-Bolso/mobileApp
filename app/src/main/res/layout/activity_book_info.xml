@@ -165,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:paddingHorizontal="16dp"
                     android:justificationMode="inter_word"
-                    android:lineHeight="25sp"
+                    android:lineSpacingExtra="9sp"
                     android:text="@string/label_loading_three_dots"
                     android:textColor="@color/gray_transparent_80"
                     app:layout_constraintStart_toStartOf="parent"

@@ -1,7 +1,10 @@
 package com.bibliotecadebolso.app.ui.add.book
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +34,7 @@ class AddOfflineBookFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    @SuppressLint("WrongConstant")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +44,11 @@ class AddOfflineBookFragment : Fragment() {
         addIfRequestedToAddABook()
         setupIsBookCreatedObserver()
         setupOnClickAddBook()
+
+
+        binding.etBookDescription
+        binding.etBookDescription.editText?.justificationMode = 1
+
 
         return binding.root
     }
@@ -56,7 +65,7 @@ class AddOfflineBookFragment : Fragment() {
                 if (book.thumbnail.isNotEmpty())
                     Glide.with(requireActivity()).load(book.thumbnail)
                         .centerCrop()
-                        .apply(RequestOptions().override(400,600))
+                        .apply(RequestOptions().override(400, 600))
                         .into(ivBookPreview)
             }
         }
