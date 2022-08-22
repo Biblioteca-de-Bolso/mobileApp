@@ -1,8 +1,6 @@
 package com.bibliotecadebolso.app.data.dataSource
 
-import com.bibliotecadebolso.app.data.model.Book
-import com.bibliotecadebolso.app.data.model.BookIdObject
-import com.bibliotecadebolso.app.data.model.CreatedBook
+import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
@@ -26,7 +24,7 @@ object BookDataSource {
             val bookResponse = BookResponse(title, author, isbn, publisher, description, thumbnail)
             val response =
                 api.createBook("Bearer $accessToken", bookResponse)
-            val tempResult = RequestUtils.isResponseSuccessful(response)
+            val tempResult = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (tempResult is Result.Success)
                 Result.Success(tempResult.response)
@@ -44,7 +42,7 @@ object BookDataSource {
 
         val result: Result<List<CreatedBook>> = RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.bookList("Bearer $accessToken", pageNum)
-            val tempResult = RequestUtils.isResponseSuccessful(response)
+            val tempResult = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (tempResult is Result.Success)
                 Result.Success(tempResult.response.books)
@@ -63,7 +61,7 @@ object BookDataSource {
         val result: Result<List<Book>> = RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.searchBook("Bearer $accessToken", searchFilter, lang)
 
-            val tempResult = RequestUtils.isResponseSuccessful(response)
+            val tempResult = RequestUtils.convertAPIResponseToResultClass(response)
 
 
             if (tempResult is Result.Success)
@@ -78,7 +76,7 @@ object BookDataSource {
     suspend fun getBookById(accessToken: String, id: Int): Result<Book> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.getBookById("Bearer $accessToken", id)
-            val responseResult = RequestUtils.isResponseSuccessful(response)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.book)
             else
@@ -87,10 +85,21 @@ object BookDataSource {
 
     }
 
+    suspend fun updateBookById(accessToken: String, book: UpdateBook): Result<UpdatedBook> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.updateBookById("Bearer $accessToken", book)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response.book)
+            else
+                responseResult as Result.Error
+        }
+    }
+
     suspend fun deleteBookById(accessToken: String, bookId: Int): Result<String> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.deleteBookById("Bearer $accessToken", BookIdObject(bookId))
-            val responseResult = RequestUtils.isResponseSuccessful(response)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success("O livro e os dados relacionados foram apagados com sucesso.")
             else

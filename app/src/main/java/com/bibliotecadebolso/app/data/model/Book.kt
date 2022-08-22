@@ -12,5 +12,6 @@ data class Book(
     val publisher: String,
     val subtitle: String,
     val thumbnail: String,
-    val title: String
+    val title: String,
+    val readStatusEnum: ReadStatusEnum? = null,
 ) : Parcelable

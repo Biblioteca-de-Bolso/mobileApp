@@ -63,6 +63,12 @@ interface BibliotecaDeBolsoAPI {
         @Body bookResponse: BookResponse
     ): Response<APIResponse<CreatedBook>>
 
+    @PUT("book")
+    suspend fun updateBookById(
+        @Header("Authorization") accessToken: String,
+        @Body book: UpdateBook
+    ): Response<APIResponse<UpdatedBookObject>>
+
     @GET("googlebooks")
     suspend fun searchBook(
         @Header("Authorization") accessToken: String,

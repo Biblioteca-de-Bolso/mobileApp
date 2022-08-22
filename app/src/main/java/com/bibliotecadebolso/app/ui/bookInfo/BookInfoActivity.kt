@@ -17,6 +17,7 @@ import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.bookInfo.annotationList.AnnotationListActivity
+import com.bibliotecadebolso.app.ui.edit.book.EditBookActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -77,6 +78,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setupFabs()
         setupOnClickRemoveBook()
         setRemoveBookListener()
+        setupOnClickEditBook()
 
         binding.tvAnnotationShowMore.setOnClickListener {
             val intent = Intent(this, AnnotationListActivity::class.java)
@@ -254,6 +256,15 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             val shortDescription = description.substring(0, 270) + "..."
             binding.tvDescription.text = shortDescription
             binding.tvDescriptionShowMore.text = getString(R.string.label_show_more)
+        }
+    }
+
+    private fun setupOnClickEditBook() {
+        binding.btnEditBook.setOnClickListener {
+            val intent = Intent(this, EditBookActivity::class.java)
+            intent.putExtra("bookId", getIdFromExtrasOrMinus1().toLong())
+
+            startActivity(intent)
         }
     }
 

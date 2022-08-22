@@ -33,7 +33,7 @@ object RequestUtils {
         return false
     }
 
-    fun <T: Any> isResponseSuccessful(response: Response<APIResponse<T>>): Result<T> {
+    fun <T: Any> convertAPIResponseToResultClass(response: Response<APIResponse<T>>): Result<T> {
         return if (response.isSuccessful) {
             resultBasedOnStatusBody(response)
         } else {

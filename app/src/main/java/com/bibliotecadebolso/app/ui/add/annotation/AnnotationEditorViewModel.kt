@@ -11,7 +11,7 @@ import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.util.Result
 import kotlinx.coroutines.launch
 
-class AddAnnotationContentViewModel : ViewModel() {
+class AnnotationEditorViewModel : ViewModel() {
 
     val transactionOptionSelected = MutableLiveData<TransactionOptions>()
     val resultOfSaveAnnotation = MutableLiveData<Result<AnnotationResponse?>>()

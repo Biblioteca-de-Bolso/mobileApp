@@ -18,7 +18,7 @@ class AddAnnotationContentFragment : Fragment() {
         fun newInstance() = AddAnnotationContentFragment()
     }
 
-    private lateinit var viewModel: AddAnnotationContentViewModel
+    private lateinit var viewModel: AnnotationEditorViewModel
     private lateinit var binding: FragmentAddAnnotationContentBinding
 
     override fun onCreateView(
@@ -26,7 +26,7 @@ class AddAnnotationContentFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAddAnnotationContentBinding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(this).get(AddAnnotationContentViewModel::class.java)
+        viewModel = ViewModelProvider(this).get(AnnotationEditorViewModel::class.java)
         return binding.root
     }
 

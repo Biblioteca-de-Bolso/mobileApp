@@ -16,7 +16,7 @@ class LoginDataSource {
     suspend fun login(email: String, password: String): Result<AuthTokens?> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.login(email, password)
-            val validationResponse = RequestUtils.isResponseSuccessful(response)
+            val validationResponse = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (validationResponse is Result.Success) Result.Success(validationResponse.response)
             else validationResponse as Result.Error
@@ -26,7 +26,7 @@ class LoginDataSource {
     suspend fun register(username: String, email: String, password: String): Result<UserObject?> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.register(email, username, password)
-            val responseResult = RequestUtils.isResponseSuccessful(response)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (responseResult is Result.Success) Result.Success(responseResult.response)
             else responseResult as Result.Error
@@ -38,7 +38,7 @@ class LoginDataSource {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response =
                 api.getNewAccessToken("Bearer $accessToken", refreshTokenObject)
-            val responseResult = RequestUtils.isResponseSuccessful(response)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (responseResult is Result.Success) Result.Success(responseResult.response)
             else responseResult as Result.Error
@@ -51,7 +51,7 @@ class LoginDataSource {
     ): Result<DeleteAccountResponse> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.delete("Bearer $accessTokens", deleteForm)
-            val validationResponse = RequestUtils.isResponseSuccessful(response)
+            val validationResponse = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (validationResponse is Result.Success) Result.Success(validationResponse.response)
             else validationResponse as Result.Error

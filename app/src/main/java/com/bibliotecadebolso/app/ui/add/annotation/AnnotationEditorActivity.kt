@@ -36,7 +36,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private var actionType: AnnotationActionEnum? = null
     private var annotationId: Int = -1
 
-    private lateinit var viewModel: AddAnnotationContentViewModel
+    private lateinit var viewModel: AnnotationEditorViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +57,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
 
     private fun assignGlobalVariables() {
-        viewModel = ViewModelProvider(this)[AddAnnotationContentViewModel::class.java]
+        viewModel = ViewModelProvider(this)[AnnotationEditorViewModel::class.java]
         mEditor = binding.richEditor
 
         val extras = intent.extras
