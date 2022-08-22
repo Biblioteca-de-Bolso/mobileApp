@@ -5,8 +5,8 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Book(
-    val ISBN_10: String,
-    val ISBN_13: String,
+    val isbn10: String,
+    val isbn13: String,
     val author: String,
     val description: String,
     val publisher: String,

@@ -13,6 +13,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.ReadStatusEnum
+import com.bibliotecadebolso.app.data.model.UpdateBook
+import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
@@ -24,6 +27,7 @@ import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -269,13 +273,53 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
 
-
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         val itemSelected: String = p0?.getItemAtPosition(p2).toString()
-        val readingStatusSelected: String = readingStatusMap[itemSelected] ?: ""
+        val readingStatusSelected: ReadStatusEnum = readingStatusMap[itemSelected]?.let {
+            try {
+                ReadStatusEnum.valueOf(it)
+            } catch (e: IllegalArgumentException) {
+                ReadStatusEnum.NO_STATUS
+            }
+        } ?: ReadStatusEnum.NO_STATUS
+
+        if (readingStatusSelected != ReadStatusEnum.NO_STATUS)
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.label_are_you_sure))
+                .setMessage("Are you sure you want to change the book status? New status: $itemSelected")
+                .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
+                .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
+                    updateStatus(getIdFromExtrasOrMinus1(), readingStatusSelected)
+                }
+                .show()
 
         Log.i("BookActivityOnItemSelected", itemSelected)
-        Log.e("BookActivityOnItemSelected", readingStatusSelected)
+        Log.e("BookActivityOnItemSelected", readingStatusSelected.toString())
+    }
+
+    private fun updateStatus(idFromExtrasOrMinus1: Int, readingStatusSelected: ReadStatusEnum) {
+        val book = (viewModel.liveDataBookInfo.value!! as Result.Success).response
+        // val updateBook = with(book) { UpdateBook(idFromExtrasOrMinus1.toLong(), title, author,)}
+        val bookChanged = book.copy(readStatusEnum = readingStatusSelected)
+        binding.progressSending.visibility = View.VISIBLE
+        viewModel.liveDataUpdateBook.observe(this) {
+            binding.progressSending.visibility = View.GONE
+            if (it is Result.Success) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.label_book_status_updated),
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
+        }
+
+        val accessToken = SharedPreferencesUtils.getAccessToken(
+            getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+        )
+        // viewModel.updateBook(accessToken, bookChanged)
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

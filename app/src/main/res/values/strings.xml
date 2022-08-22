@@ -96,6 +96,8 @@
     <string name="label_annotation_id_not_valid">Annotation ID invalid</string>
     <string name="label_book_id_not_valid">Book ID invalid</string>
     <string name="label_book_updated_sucessfully">Book updated successfully</string>
+    <string name="label_update">Update</string>
+    <string name="label_book_status_updated">Book status updated</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
