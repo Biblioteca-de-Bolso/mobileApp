@@ -36,6 +36,7 @@
                 android:id="@+id/progress_sending"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:indeterminate="true"
                 android:visibility="gone"
                 app:indicatorColor="?attr/colorPrimary"
@@ -44,18 +45,48 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:trackColor="@color/splash_screen_dark_purple" />
 
-            <ImageView
-                android:id="@+id/iv_book_preview"
-                android:layout_width="160dp"
+            <FrameLayout
+                android:id="@+id/fl_book_image"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="30dp"
-                android:contentDescription="@string/label_book_image"
-                android:minHeight="240dp"
-                android:src="@drawable/ic_item_book"
                 app:layout_constraintEnd_toStartOf="@id/tv_book_title"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progress_sending" />
+                app:layout_constraintTop_toBottomOf="@id/progress_sending">
+
+                <ImageView
+                    android:id="@+id/iv_book_preview"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/label_book_image"
+                    android:minHeight="240dp"
+                    android:src="@drawable/ic_item_book" />
+
+                <ImageView
+                    android:id="@+id/iv_btn_edit_image"
+                    android:layout_width="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:contentDescription="@string/label_book_image"
+
+                    android:background="@color/gd_blue_purple_1"
+                    android:src="@drawable/ic_pen_edit" />
+
+                <ImageView
+                    android:id="@+id/iv_btn_save_image"
+                    android:layout_width="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    android:layout_marginEnd="50dp"
+                    android:contentDescription="@string/label_book_image"
+
+                    android:background="@color/gd_blue_yellow_3"
+                    android:src="@drawable/ic_save" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/tv_book_title"
@@ -68,31 +99,29 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/iv_book_preview"
-                app:layout_constraintTop_toTopOf="@id/iv_book_preview" />
+                app:layout_constraintStart_toEndOf="@id/fl_book_image"
+                app:layout_constraintTop_toTopOf="@id/fl_book_image" />
 
             <TextView
                 android:id="@+id/tv_label_author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tv_book_title"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_book_title"
                 android:text="@string/label_author"
                 android:textColor="@color/gd_blue_purple_3"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_book_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
 
             <TextView
                 android:id="@+id/tv_author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="@id/tv_label_author"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_label_author"
                 android:text="@string/label_loading_three_dots"
                 android:textColor="@color/gd_blue_purple_3"
-                />
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_label_author"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_author" />
 
             <Button
                 android:id="@+id/btn_edit_book"
@@ -101,9 +130,9 @@
                 android:layout_margin="16dp"
                 android:backgroundTint="@color/gd_blue_purple_1"
                 android:text="@string/label_edit_book"
-                app:layout_constraintEnd_toEndOf="@id/iv_book_preview"
-                app:layout_constraintStart_toStartOf="@id/iv_book_preview"
-                app:layout_constraintTop_toBottomOf="@id/iv_book_preview" />
+                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
+                app:layout_constraintStart_toStartOf="@id/fl_book_image"
+                app:layout_constraintTop_toBottomOf="@id/fl_book_image" />
 
             <Button
                 android:id="@+id/btn_delete_book"
@@ -112,21 +141,20 @@
                 android:layout_marginHorizontal="32dp"
                 android:backgroundTint="@android:color/holo_red_light"
                 android:text="@string/label_delete"
-                app:layout_constraintEnd_toEndOf="@id/iv_book_preview"
-                app:layout_constraintStart_toStartOf="@id/iv_book_preview"
+                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
+                app:layout_constraintStart_toStartOf="@id/fl_book_image"
                 app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
 
             <Spinner
                 android:id="@+id/spinner_reading_status"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:entries="@array/spinner_book_reading_status_value"
                 app:layout_constraintBottom_toBottomOf="@id/btn_edit_book"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/btn_edit_book"
                 app:layout_constraintTop_toTopOf="@id/btn_edit_book"
-                tools:listitem="@android:layout/simple_spinner_dropdown_item"
-                android:entries="@array/spinner_book_reading_status_value"
-                />
+                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/divider_purple_to_white"
@@ -163,13 +191,13 @@
                     android:id="@+id/tv_description"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="16dp"
                     android:justificationMode="inter_word"
                     android:lineSpacingExtra="9sp"
+                    android:paddingHorizontal="16dp"
                     android:text="@string/label_loading_three_dots"
                     android:textColor="@color/gray_transparent_80"
-                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_label_description"
                     tools:text="Lorem impsum fnausof fsnaofsa fnasofna fnsaionfsa faisnfosa fnaifnaofnsa fpamfpsa" />
 

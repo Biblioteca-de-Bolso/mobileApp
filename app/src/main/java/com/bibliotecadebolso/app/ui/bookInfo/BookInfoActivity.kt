@@ -1,6 +1,8 @@
 package com.bibliotecadebolso.app.ui.bookInfo
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,13 +11,14 @@ import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
-import com.bibliotecadebolso.app.data.model.UpdateBook
-import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
@@ -28,6 +31,7 @@ import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -83,6 +87,8 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setupOnClickRemoveBook()
         setRemoveBookListener()
         setupOnClickEditBook()
+        setOnClickEditImage()
+        setOnClickSaveNewImage()
 
         binding.tvAnnotationShowMore.setOnClickListener {
             val intent = Intent(this, AnnotationListActivity::class.java)
@@ -321,6 +327,48 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         )
         // viewModel.updateBook(accessToken, bookChanged)
     }
+
+    private fun setOnClickEditImage() {
+        binding.ivBtnEditImage.setOnClickListener {
+            val photoPickerIntent = Intent(Intent.ACTION_PICK)
+            photoPickerIntent.type = "image/*"
+            imagePickerActivityResult.launch(photoPickerIntent)
+        }
+    }
+
+    private var imagePickerActivityResult = registerForActivityResult(
+        StartActivityForResult()
+    ) { result ->
+        if (result != null) {
+            val imageUri: Uri? = result.data?.data
+            if (imageUri != null) {
+                Glide.with(this@BookInfoActivity)
+                    .load(imageUri)
+                    .into(binding.ivBookPreview)
+
+                binding.ivBtnSaveImage.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun setOnClickSaveNewImage() {
+        binding.ivBtnSaveImage.setOnClickListener {
+            binding.progressSending.visibility = View.VISIBLE
+            binding.ivBtnSaveImage.visibility = View.GONE
+        }
+    }
+
+    companion object {
+        const val REQUEST_IMAGE = 100
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
+            val imageBitmap = data?.extras?.get("data") as Bitmap?
+        }
+    }
+
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
         TODO("Not yet implemented")

@@ -3,6 +3,8 @@ package com.bibliotecadebolso.app.data.api
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.SaveAnnotation
 import com.bibliotecadebolso.app.data.model.response.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -68,6 +70,14 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Body book: UpdateBook
     ): Response<APIResponse<UpdatedBookObject>>
+
+    @Multipart
+    @PUT("book/thumbnail")
+    suspend fun updateBookImageById(
+        @Header("Authorization") accessToken: String,
+        @Part("bookId") bookId: RequestBody,
+        @Part("thumbnailFile") thumbnailFile: MultipartBody.Part
+    )
 
     @GET("googlebooks")
     suspend fun searchBook(
