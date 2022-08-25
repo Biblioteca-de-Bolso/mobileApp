@@ -48,6 +48,8 @@ class EditBookActivity : AppCompatActivity() {
         viewModel.bookLiveData.observe(this) {
             if (it is Result.Success) {
                 fillInputWithData(it.response)
+            } else if (it is Result.Error) {
+                Toast.makeText(this, it.errorBody.message, Toast.LENGTH_LONG).show()
             }
         }
 
@@ -93,17 +95,17 @@ class EditBookActivity : AppCompatActivity() {
         if (!bookValidator.isTitleValid(tilTitle.editText!!.text.toString())) {
             tilTitle.error = getString(R.string.error_must_be_beetween_1_128)
             return false
-        }
+        } else tilTitle.error = ""
 
         if (!bookValidator.isAuthorNameValid(tilAuthor.editText!!.text.toString())) {
             tilAuthor.error = getString(R.string.error_must_be_between_0_128)
             return false
-        }
+        } else tilAuthor.error = ""
 
         if (!bookValidator.isPublisherNameValid(tilPublisher.editText!!.text.toString())) {
             tilPublisher.error = getString(R.string.error_must_be_between_0_128)
             return false
-        }
+        } else tilPublisher.error = ""
 
 
         return true

@@ -18,7 +18,8 @@ class EditBookViewModel : ViewModel() {
     var lastReadingStatus = ReadStatusEnum.NO_STATUS
         private set
 
-    fun getBookById(accessToken: String , bookId: Long) {
+
+    fun getBookById(accessToken: String, bookId: Long) {
         viewModelScope.launch {
             val result = BookDataSource.getBookById(accessToken, bookId.toInt())
             if (result is Result.Success) {
@@ -28,6 +29,7 @@ class EditBookViewModel : ViewModel() {
             bookLiveData.postValue(result)
         }
     }
+
 
     fun updateBook(accessToken: String, updateBook: UpdateBook) {
         viewModelScope.launch {

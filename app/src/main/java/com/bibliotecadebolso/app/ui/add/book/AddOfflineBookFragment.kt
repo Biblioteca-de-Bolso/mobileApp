@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.data.validator.BookValidator
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOfflineInputBinding
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
@@ -52,12 +53,12 @@ class AddOfflineBookFragment : Fragment() {
     }
 
     private fun addIfRequestedToAddABook() {
-        val book = arguments?.getParcelable<Book>("book")
+        val book = arguments?.getParcelable<BookSearch>("book")
         if (book != null) {
             binding.apply {
                 etBookTitle.editText?.setText(book.title)
                 etBookAuthor.editText?.setText(book.author)
-                etBookIsbn10Or13.editText?.setText(book.isbn13)
+                etBookIsbn10Or13.editText?.setText(getISBNNotEmpty(book))
                 etBookDescription.editText?.setText(book.description)
                 etBookPublisher.editText?.setText(book.publisher)
                 if (book.thumbnail.isNotEmpty())
@@ -68,6 +69,9 @@ class AddOfflineBookFragment : Fragment() {
             }
         }
     }
+
+    private fun getISBNNotEmpty(book: BookSearch) =
+        if (book.ISBN_13.isNullOrEmpty()) book.ISBN_10 else book.ISBN_13
 
     private fun setupIsBookCreatedObserver() {
         viewModel.isBookCreatedResponse.observe(viewLifecycleOwner) {
@@ -110,7 +114,7 @@ class AddOfflineBookFragment : Fragment() {
         )
         val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
 
-        val book = arguments?.getParcelable<Book>("book")
+        val book = arguments?.getParcelable<BookSearch>("book")
         val thumbnail = book?.thumbnail ?: ""
 
         viewModel.apiCreateBook(

@@ -124,7 +124,9 @@ class AddBookOptionsFragment : Fragment(), RvOnClickListener {
     }
 
     override fun onItemCLick(position: Int) {
+        println("Position $position")
         val book = (viewModel.booksSearchContent.value as Result.Success).response[position]
+        println("book ${book.toString()}")
 
         findNavController().navigate(
             R.id.action_optionsFragment_to_AddOfflineBookFragment,

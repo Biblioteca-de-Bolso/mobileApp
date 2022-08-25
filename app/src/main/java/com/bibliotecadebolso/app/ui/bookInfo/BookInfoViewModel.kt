@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.bookInfo
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,14 @@ class BookInfoViewModel : ViewModel() {
     val liveDataDeleteBook = MutableLiveData<Result<String>>()
     val liveDataUpdateBook = MutableLiveData<Result<UpdatedBook>>()
     val dataSource = BookDataSource
+
+    var isToShowConfirmationDisplay = false
+        private set
+
+    fun setDisplayStatusConfirmation(boolean: Boolean) {
+        Log.e("onViewModel", boolean.toString())
+        isToShowConfirmationDisplay = boolean
+    }
 
 
     fun getInfoByID(accessToken: String, id: Int) {

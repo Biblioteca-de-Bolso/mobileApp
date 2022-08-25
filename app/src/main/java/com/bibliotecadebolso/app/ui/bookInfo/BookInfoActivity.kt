@@ -11,8 +11,6 @@ import android.view.animation.AnimationUtils
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -37,7 +35,9 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
-    private val readingStatusMap = HashMap<String, String>()
+    private val readingStatusValuesKey = HashMap<String, String>()
+    private lateinit var readingStatusAdapter: ArrayAdapter<CharSequence>
+    private var userIsInteracting = false
 
     private val rotateOpen: Animation by lazy {
         AnimationUtils.loadAnimation(
@@ -189,11 +189,11 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
         for (i in spinnerReadingStatusKey.indices) {
-            readingStatusMap[spinnerReadingStatusValue[i]] = spinnerReadingStatusKey[i]
+            readingStatusValuesKey[spinnerReadingStatusValue[i]] = spinnerReadingStatusKey[i]
         }
         binding.spinnerReadingStatus.onItemSelectedListener = this
 
-        ArrayAdapter.createFromResource(
+        readingStatusAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.spinner_book_reading_status_value,
             R.layout.spinner_item
@@ -223,6 +223,19 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .into(binding.ivBookPreview)
 
         loadDescriptionContent(book)
+        if (book.readStatusEnum != null && book.readStatusEnum != ReadStatusEnum.NO_STATUS) {
+
+            val indexOfReadingStatusLabel = readingStatusValuesKey.values.toList()
+                .indexOf(
+                    book.readStatusEnum.toString()
+                )
+            // valor PT => valor PT para
+            binding.spinnerReadingStatus.setSelection(
+                readingStatusAdapter.getPosition(
+                    readingStatusValuesKey.keys.toList()[indexOfReadingStatusLabel]
+                )
+            )
+        }
     }
 
     private fun loadDescriptionContent(book: Book) {
@@ -280,28 +293,33 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        val itemSelected: String = p0?.getItemAtPosition(p2).toString()
-        val readingStatusSelected: ReadStatusEnum = readingStatusMap[itemSelected]?.let {
-            try {
-                ReadStatusEnum.valueOf(it)
-            } catch (e: IllegalArgumentException) {
-                ReadStatusEnum.NO_STATUS
-            }
-        } ?: ReadStatusEnum.NO_STATUS
+        if (!userIsInteracting) return
+        val itemLabelSelected: String = p0?.getItemAtPosition(p2).toString()
+        val readingStatusSelected: ReadStatusEnum =
+            getReadingStatusOrSetAsNoStatus(itemLabelSelected)
 
         if (readingStatusSelected != ReadStatusEnum.NO_STATUS)
             MaterialAlertDialogBuilder(this)
                 .setTitle(resources.getString(R.string.label_are_you_sure))
-                .setMessage("Are you sure you want to change the book status? New status: $itemSelected")
-                .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
+                .setMessage("Are you sure you want to change the book status? New status: $itemLabelSelected")
+                .setNegativeButton(getString(R.string.label_cancel)) { _, _ ->
+                }
                 .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
                     updateStatus(getIdFromExtrasOrMinus1(), readingStatusSelected)
                 }
                 .show()
-
-        Log.i("BookActivityOnItemSelected", itemSelected)
-        Log.e("BookActivityOnItemSelected", readingStatusSelected.toString())
     }
+
+    private fun getReadingStatusOrSetAsNoStatus(itemLabelSelected: String): ReadStatusEnum {
+        return readingStatusValuesKey[itemLabelSelected]?.let { readStatusString: String ->
+            try {
+                ReadStatusEnum.valueOf(readStatusString)
+            } catch (e: IllegalArgumentException) {
+                ReadStatusEnum.NO_STATUS
+            }
+        } ?: ReadStatusEnum.NO_STATUS
+    }
+
 
     private fun updateStatus(idFromExtrasOrMinus1: Int, readingStatusSelected: ReadStatusEnum) {
         val book = (viewModel.liveDataBookInfo.value!! as Result.Success).response
@@ -377,5 +395,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     override fun onBackPressed() {
         super.onBackPressed()
         Glide.with(this).clear(binding.ivBookPreview)
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        userIsInteracting = true
     }
 }

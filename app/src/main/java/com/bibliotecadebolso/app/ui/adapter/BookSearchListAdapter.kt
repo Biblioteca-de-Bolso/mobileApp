@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
+import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.databinding.ItemBookBinding
 import com.bibliotecadebolso.app.databinding.ItemSearchBookTemplateBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
@@ -32,17 +33,17 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
         DifferCallBack is a list that search the elements more faster than a default kotlin List.
         You should use only on Adapters to accelerate screen refresh.
      */
-    private val differCallBack = object : DiffUtil.ItemCallback<Book>() {
-        override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean {
+    private val differCallBack = object : DiffUtil.ItemCallback<BookSearch>() {
+        override fun areItemsTheSame(oldItem: BookSearch, newItem: BookSearch): Boolean {
             return oldItem == newItem
         }
 
-        override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
+        override fun areContentsTheSame(oldItem: BookSearch, newItem: BookSearch): Boolean {
             return oldItem == newItem
         }
     }
 
-    val differ: AsyncListDiffer<Book> = AsyncListDiffer(this, differCallBack)
+    val differ: AsyncListDiffer<BookSearch> = AsyncListDiffer(this, differCallBack)
 
     /*
         This method belows determines the creation and content of a ViewHolder
@@ -60,7 +61,7 @@ class BookSearchListAdapter(private var context: Context, private val rvOnClickL
             rvOnClickListener.onItemCLick(position)
         }
 
-        val searchBook: Book = differ.currentList[position]
+        val searchBook: BookSearch = differ.currentList[position]
 
         holder.binding.tvTitle.text =
             if (searchBook.title.length <= 30) searchBook.title else searchBook.title.substring(0..30).plus("...")

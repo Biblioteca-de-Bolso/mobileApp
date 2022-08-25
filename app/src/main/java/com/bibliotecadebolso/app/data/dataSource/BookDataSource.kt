@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.response.BookResponse
+import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
@@ -57,8 +58,8 @@ object BookDataSource {
         accessToken: String,
         searchFilter: String,
         lang: String = "pt"
-    ): Result<List<Book>> {
-        val result: Result<List<Book>> = RequestUtils.returnOrThrowIfHasConnectionError {
+    ): Result<List<BookSearch>> {
+        val result: Result<List<BookSearch>> = RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.searchBook("Bearer $accessToken", searchFilter, lang)
 
             val tempResult = RequestUtils.convertAPIResponseToResultClass(response)
