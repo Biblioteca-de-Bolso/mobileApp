@@ -77,7 +77,7 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Part("bookId") bookId: RequestBody,
         @Part("thumbnailFile") thumbnailFile: MultipartBody.Part
-    )
+    ): Response<APIResponse<Any>>
 
     @GET("googlebooks")
     suspend fun searchBook(

@@ -1,9 +1,12 @@
 package com.bibliotecadebolso.app.ui.bookInfo
 
 import android.content.Intent
+import android.database.Cursor
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.view.animation.Animation
@@ -75,12 +78,8 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
         val bookId = getIdFromExtrasOrMinus1()
         finishActivityIfBookIdIsInvalid(bookId)
-
-        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
-        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
-        viewModel.getInfoByID(accessToken, bookId)
-
         setupReadingStatusSpinner()
+        getBookById(bookId)
         listenerFillActivityWithBookInfo()
 
         setupFabs()
@@ -88,6 +87,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setRemoveBookListener()
         setupOnClickEditBook()
         setOnClickEditImage()
+        setupOnImageCompressedListener()
         setOnClickSaveNewImage()
 
         binding.tvAnnotationShowMore.setOnClickListener {
@@ -95,6 +95,12 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             intent.putExtra("bookId", getIdFromExtrasOrMinus1())
             startActivity(intent)
         }
+    }
+
+    private fun getBookById(bookId: Int) {
+        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+        viewModel.getInfoByID(accessToken, bookId)
     }
 
     private fun setupOnClickRemoveBook() {
@@ -360,12 +366,45 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         if (result != null) {
             val imageUri: Uri? = result.data?.data
             if (imageUri != null) {
-                Glide.with(this@BookInfoActivity)
-                    .load(imageUri)
-                    .into(binding.ivBookPreview)
-
-                binding.ivBtnSaveImage.visibility = View.VISIBLE
+                val realURI = getRealPathFromURIForGallery(imageUri)
+                Log.e("realURI", realURI.toString())
+                realURI?.let { viewModel.compressImage(this, it) }
+                Toast.makeText(this, getString(R.string.label_compressing_image), Toast.LENGTH_SHORT).show()
+                binding.progressSending.visibility = View.VISIBLE
             }
+        }
+    }
+
+    fun getRealPathFromURIForGallery(uri: Uri?): String? {
+        if (uri == null) {
+            return null
+        }
+        val projection = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor: Cursor? = this.contentResolver.query(
+            uri, projection, null,
+            null, null
+        )
+        if (cursor != null) {
+            val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            return cursor.getString(columnIndex)
+        }
+        assert(false)
+        cursor?.close()
+        return uri.path
+    }
+
+    private fun setupOnImageCompressedListener() {
+        viewModel.liveDataImageCompressed.observe(this) {
+            val newBitmap = BitmapFactory.decodeFile(it.path)
+            Glide.with(this@BookInfoActivity)
+                .load(newBitmap)
+                .into(binding.ivBookPreview)
+
+            binding.ivBtnSaveImage.visibility = View.VISIBLE
+            binding.progressSending.visibility = View.GONE
+
+            Toast.makeText(this, getString(R.string.label_image_compressed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -373,6 +412,8 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         binding.ivBtnSaveImage.setOnClickListener {
             binding.progressSending.visibility = View.VISIBLE
             binding.ivBtnSaveImage.visibility = View.GONE
+
+
         }
     }
 

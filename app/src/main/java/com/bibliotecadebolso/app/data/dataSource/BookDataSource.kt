@@ -1,11 +1,19 @@
 package com.bibliotecadebolso.app.data.dataSource
 
+import android.content.Context
+import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import java.io.File
+
 
 object BookDataSource {
 
@@ -103,6 +111,31 @@ object BookDataSource {
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success("O livro e os dados relacionados foram apagados com sucesso.")
+            else
+                responseResult as Result.Error
+        }
+
+    }
+
+    suspend fun updateImageBookById(
+        context: Context,
+        accessToken: String,
+        bookId: Int,
+        file: File
+    ): Result<String> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val requestBody =
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), bookId.toString())
+
+            val requestFile: RequestBody =
+                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
+            val body: MultipartBody.Part =
+                MultipartBody.Part.createFormData("image", file.name, requestFile)
+
+            val response = api.updateBookImageById("Bearer $accessToken", requestBody, body)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(context.getString(R.string.label_updated_successfully))
             else
                 responseResult as Result.Error
         }
