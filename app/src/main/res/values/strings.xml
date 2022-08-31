@@ -101,6 +101,7 @@
     <string name="label_image_compressed">Image compressed</string>
     <string name="label_compressing_image">Compressing image</string>
     <string name="label_updated_successfully">Updated successfully</string>
+    <string name="label_theres_not_an_image_to_update">There\'s not an image to update</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

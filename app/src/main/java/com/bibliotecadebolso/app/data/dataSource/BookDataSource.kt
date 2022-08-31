@@ -8,10 +8,11 @@ import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
-import okhttp3.MediaType
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.File
 
 
@@ -124,15 +125,18 @@ object BookDataSource {
         file: File
     ): Result<String> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val requestBody =
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), bookId.toString())
 
-            val requestFile: RequestBody =
-                RequestBody.create("multipart/form-data".toMediaTypeOrNull(), file)
-            val body: MultipartBody.Part =
-                MultipartBody.Part.createFormData("image", file.name, requestFile)
+            val requestBodyBookId = bookId.toString().toRequestBody("text/plain".toMediaType())
 
-            val response = api.updateBookImageById("Bearer $accessToken", requestBody, body)
+            val requestBodyFile: RequestBody = file.asRequestBody("multipart/form-data".toMediaType())
+            val partRequestFile = MultipartBody.Part.createFormData("thumbnailFile", file.name, requestBodyFile)
+
+            /*val bodyPart: MultipartBody.Part =
+                MultipartBody.Part.createFormData("image", file.name, requestBodyThumbnailFile)
+             */
+
+            val response = api.updateBookImageById("Bearer $accessToken", requestBodyBookId, partRequestFile)
+
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(context.getString(R.string.label_updated_successfully))

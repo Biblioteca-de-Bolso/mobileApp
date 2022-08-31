@@ -18,8 +18,11 @@ import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.util.Result
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.format
+import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
+import java.text.DecimalFormat
+import kotlin.math.pow
 
 
 class BookInfoViewModel : ViewModel() {
@@ -65,8 +68,11 @@ class BookInfoViewModel : ViewModel() {
 
     fun compressImage(context: Context, imagePath: String) {
         viewModelScope.launch {
-            val compressedFile = Compressor.compress(context, File(imagePath)) {
+            val file = File(imagePath)
+            Log.e("compressedImageSize", getReadableFileSize(file.length()))
+            val compressedFile = Compressor.compress(context, file) {
                 format(Bitmap.CompressFormat.WEBP)
+                size(400_000)
             }
 
             Log.e("BookInfoViewModel", "Image compressed")
@@ -82,14 +88,18 @@ class BookInfoViewModel : ViewModel() {
         file: File
     ) {
         viewModelScope.launch {
-            liveDataImageCompressed.value?.let {
-                val response = BookDataSource.updateImageBookById(context, accessToken, bookId,
-                    it
-                )
-
-                liveDataUpdateImage.postValue(response)
-            }
+            val response = BookDataSource.updateImageBookById(context, accessToken, bookId, file)
+            liveDataUpdateImage.postValue(response)
         }
+    }
+
+    fun getReadableFileSize(size: Long): String {
+        if (size <= 0) {
+            return "0"
+        }
+        val units = arrayOf("B", "KB", "MB", "GB", "TB")
+        val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+        return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
 }

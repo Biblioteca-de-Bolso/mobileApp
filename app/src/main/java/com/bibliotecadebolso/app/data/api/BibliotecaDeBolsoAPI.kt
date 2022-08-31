@@ -76,7 +76,7 @@ interface BibliotecaDeBolsoAPI {
     suspend fun updateBookImageById(
         @Header("Authorization") accessToken: String,
         @Part("bookId") bookId: RequestBody,
-        @Part("thumbnailFile") thumbnailFile: MultipartBody.Part
+        @Part thumbnailFile: MultipartBody.Part
     ): Response<APIResponse<Any>>
 
     @GET("googlebooks")

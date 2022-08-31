@@ -2,7 +2,6 @@ package com.bibliotecadebolso.app.ui.bookInfo
 
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
@@ -32,6 +31,9 @@ import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import java.lang.Math.log10
+import java.text.DecimalFormat
+import kotlin.math.pow
 
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -89,6 +91,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setOnClickEditImage()
         setupOnImageCompressedListener()
         setOnClickSaveNewImage()
+        setOnImageUpdatedListener()
 
         binding.tvAnnotationShowMore.setOnClickListener {
             val intent = Intent(this, AnnotationListActivity::class.java)
@@ -369,13 +372,17 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 val realURI = getRealPathFromURIForGallery(imageUri)
                 Log.e("realURI", realURI.toString())
                 realURI?.let { viewModel.compressImage(this, it) }
-                Toast.makeText(this, getString(R.string.label_compressing_image), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.label_compressing_image),
+                    Toast.LENGTH_SHORT
+                ).show()
                 binding.progressSending.visibility = View.VISIBLE
             }
         }
     }
 
-    fun getRealPathFromURIForGallery(uri: Uri?): String? {
+    private fun getRealPathFromURIForGallery(uri: Uri?): String? {
         if (uri == null) {
             return null
         }
@@ -401,15 +408,36 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .load(newBitmap)
                 .into(binding.ivBookPreview)
 
+            Log.e("compressedImageSize", viewModel.getReadableFileSize(it.length()))
+
             binding.ivBtnSaveImage.visibility = View.VISIBLE
             binding.progressSending.visibility = View.GONE
 
-            Toast.makeText(this, getString(R.string.label_image_compressed), Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.label_image_compressed), Toast.LENGTH_SHORT)
+                .show()
         }
     }
 
+
+
     private fun setOnClickSaveNewImage() {
         binding.ivBtnSaveImage.setOnClickListener {
+            val imageFile = viewModel.liveDataImageCompressed.value
+            if (imageFile == null) {
+                Toast.makeText(
+                    this,
+                    getString(R.string.label_theres_not_an_image_to_update),
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            val accessToken = SharedPreferencesUtils.getAccessToken(
+                getSharedPreferences(
+                    Constants.Prefs.USER_TOKENS,
+                    MODE_PRIVATE
+                )
+            )
+            viewModel.updateImageBookById(this, accessToken, getIdFromExtrasOrMinus1(), imageFile)
             binding.progressSending.visibility = View.VISIBLE
             binding.ivBtnSaveImage.visibility = View.GONE
 
@@ -417,14 +445,16 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
-    companion object {
-        const val REQUEST_IMAGE = 100
-    }
+    private fun setOnImageUpdatedListener() {
+        viewModel.liveDataUpdateImage.observe(this) {
+            Log.e("imageUpdatedListener", it.toString())
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
-            val imageBitmap = data?.extras?.get("data") as Bitmap?
+            binding.progressSending.visibility = View.GONE
+            if (it is Result.Error) {
+                Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, (it as Result.Success).response, Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -437,7 +467,6 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         super.onBackPressed()
         Glide.with(this).clear(binding.ivBookPreview)
     }
-
     override fun onUserInteraction() {
         super.onUserInteraction()
         userIsInteracting = true
