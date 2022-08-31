@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.add.annotation
 
+import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -35,6 +36,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private lateinit var mEditor: RichEditor
     private var actionType: AnnotationActionEnum? = null
     private var annotationId: Int = -1
+    private var isDarkMode = false
 
     private lateinit var viewModel: AnnotationEditorViewModel
 
@@ -43,6 +45,11 @@ class AnnotationEditorActivity : AppCompatActivity() {
         binding = ActivityAddAnnotationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        when (this.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)) {
+            Configuration.UI_MODE_NIGHT_YES -> {
+                isDarkMode = true
+            }
+        }
         ContextUtils.setActionBarColor(supportActionBar, this)
 
         assignGlobalVariables()
@@ -97,7 +104,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private fun loadWebAnnotationView() {
         mEditor.setEditorHeight(200)
         mEditor.setEditorFontSize(16)
-        mEditor.setBackgroundColor(Color.TRANSPARENT)
+        mEditor.setEditorFontColor(if (isDarkMode) Color.LTGRAY else Color.BLACK)
         mEditor.setPadding(10, 10, 10, 10)
         mEditor.setPlaceholder(getString(R.string.annotation_placeholder_insert_text_here))
         mEditor.setOnTextChangeListener {

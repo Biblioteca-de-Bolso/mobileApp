@@ -52,5 +52,5 @@
     <color name="yellow_gray_1">#E2DDCB</color>
 
     <color name="m_editor_wheat">#FAE8CD</color>
-    <color name="m_editor_black">@color/yellow_gray_1</color>
+    <color name="m_editor_black">@color/black</color>
 </resources>
