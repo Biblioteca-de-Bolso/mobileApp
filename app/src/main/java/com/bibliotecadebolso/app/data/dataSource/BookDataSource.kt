@@ -106,6 +106,17 @@ object BookDataSource {
         }
     }
 
+    suspend fun updateBookByIdWithPatch(accessToken: String, book: UpdateBook): Result<UpdatedBook> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.updateBookById("Bearer $accessToken", book)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response.book)
+            else
+                responseResult as Result.Error
+        }
+    }
+
     suspend fun deleteBookById(accessToken: String, bookId: Int): Result<String> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.deleteBookById("Bearer $accessToken", BookIdObject(bookId))

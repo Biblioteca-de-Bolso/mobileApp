@@ -53,4 +53,9 @@
 
     <color name="m_editor_wheat">#FAE8CD</color>
     <color name="m_editor_black">@color/black</color>
+
+    <color name="highlight_purple">#ae33ff</color>
+    <color name="highlight_blue">#0037fe</color>
+
+
 </resources>

@@ -71,6 +71,12 @@ interface BibliotecaDeBolsoAPI {
         @Body book: UpdateBook
     ): Response<APIResponse<UpdatedBookObject>>
 
+    @PATCH("book")
+    suspend fun updateBookByIdWithPatch(
+        @Header("Authorization") accessToken: String,
+        @Body book: UpdateBook
+    ): Response<APIResponse<UpdatedBookObject>>
+
     @Multipart
     @PUT("book/thumbnail")
     suspend fun updateBookImageById(

@@ -1,18 +1,16 @@
 package com.bibliotecadebolso.app.ui.bookInfo
 
 import android.content.Context
-import android.database.Cursor
 import android.graphics.Bitmap
-import android.net.Uri
-import android.provider.MediaStore
 import android.util.Log
-import androidx.core.net.toFile
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.loader.content.CursorLoader
+import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.util.Result
@@ -34,7 +32,7 @@ class BookInfoViewModel : ViewModel() {
     val dataSource = BookDataSource
     val liveDataImageCompressed = MutableLiveData<File>()
     val liveDataUpdateImage = MutableLiveData<Result<String>>()
-
+    val readingStatusValuesKey = HashMap<String, String>()
     var isToShowConfirmationDisplay = false
         private set
 
@@ -42,6 +40,23 @@ class BookInfoViewModel : ViewModel() {
         Log.e("onViewModel", boolean.toString())
         isToShowConfirmationDisplay = boolean
     }
+
+    fun setReadStatusValuesKeyMap(
+        spinnerReadingStatusKey: Array<String>,
+        spinnerReadingStatusValue: Array<String>
+    ) {
+        readingStatusValuesKey.clear()
+        for (i in spinnerReadingStatusKey.indices) {
+            readingStatusValuesKey[spinnerReadingStatusValue[i]] = spinnerReadingStatusKey[i]
+        }
+    }
+
+    fun getReadingStatusKeyByIndex(indexOfReadingStatusLabel: Int) =
+        readingStatusValuesKey.keys.toList()[indexOfReadingStatusLabel]
+
+    fun getReadStatusEnumIndexOnSpinner(readStatusEnum: ReadStatusEnum) =
+        readingStatusValuesKey.values.toList()
+            .indexOf(readStatusEnum.toString())
 
 
     fun getInfoByID(accessToken: String, id: Int) {
@@ -101,5 +116,21 @@ class BookInfoViewModel : ViewModel() {
         val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
         return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
+
+    fun getDescription(description: StringBuilder): String {
+        return if (isDescriptionShowMoreActive)
+            description.toString()
+        else {
+            if (isAShortDescription(description)) {
+                description.toString()
+            } else
+                setShortDescription(description)
+        }
+    }
+
+    fun isAShortDescription(description: StringBuilder) = description.length <= 270
+
+    private fun setShortDescription(description: StringBuilder) =
+        description.substring(0, 270) + "..."
 
 }

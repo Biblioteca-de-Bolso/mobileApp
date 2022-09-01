@@ -31,16 +31,12 @@ import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import java.lang.Math.log10
-import java.text.DecimalFormat
-import kotlin.math.pow
 
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
-    private val readingStatusValuesKey = HashMap<String, String>()
     private lateinit var readingStatusAdapter: ArrayAdapter<CharSequence>
     private var userIsInteracting = false
 
@@ -92,11 +88,15 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setupOnImageCompressedListener()
         setOnClickSaveNewImage()
         setOnImageUpdatedListener()
+        setTvAnnotationShowMoreOnClickListener()
+    }
 
-        binding.tvAnnotationShowMore.setOnClickListener {
-            val intent = Intent(this, AnnotationListActivity::class.java)
-            intent.putExtra("bookId", getIdFromExtrasOrMinus1())
-            startActivity(intent)
+    private fun getIdFromExtrasOrMinus1(): Int = intent.extras?.getInt("id", -1) ?: -1
+
+    private fun finishActivityIfBookIdIsInvalid(bookId: Any) {
+        if (bookId == -1) {
+            Toast.makeText(this, getString(R.string.label_book_not_found), Toast.LENGTH_LONG).show()
+            finish()
         }
     }
 
@@ -104,42 +104,6 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
         val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
         viewModel.getInfoByID(accessToken, bookId)
-    }
-
-    private fun setupOnClickRemoveBook() {
-        binding.btnDeleteBook.setOnClickListener {
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.label_are_you_sure))
-                .setMessage(getString(R.string.label_are_you_sure_delete_book))
-                .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
-                .setPositiveButton(resources.getString(R.string.label_delete)) { dialog, which ->
-                    deleteBook()
-                }
-                .show()
-        }
-    }
-
-    private fun deleteBook() {
-        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
-        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
-        binding.progressSending.visibility = View.VISIBLE
-        viewModel.deleteBook(accessToken, getIdFromExtrasOrMinus1())
-    }
-
-    private fun setRemoveBookListener() {
-        viewModel.liveDataDeleteBook.observe(this) {
-            if (it is Result.Success) {
-                binding.progressSending.visibility = View.GONE
-                Toast.makeText(this, getString(R.string.label_book_removed), Toast.LENGTH_SHORT)
-                    .show()
-                val returnResult = Intent()
-                setResult(BookListFragment.REMOVE_BOOK, returnResult)
-                finish()
-            } else if (it is Result.Error) {
-                Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT)
-                    .show()
-            }
-        }
     }
 
     private fun setupFabs() {
@@ -160,6 +124,13 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
+    private fun setFabOptionsVisibility(isToBeVisible: Boolean) {
+        val visibility = if (isToBeVisible) View.VISIBLE else View.GONE
+
+        binding.fabAddAbstract.visibility = visibility
+        binding.fabAddAnnotation.visibility = visibility
+    }
+
     private fun setFabAnimation(isToStartAnimation: Boolean) {
         val miniFabAnimation = if (isToStartAnimation) fabFromBottom else fabToBottom
         val optionsFabAnimation = if (isToStartAnimation) rotateOpen else rotateClose
@@ -171,55 +142,69 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
-    private fun setFabOptionsVisibility(isToBeVisible: Boolean) {
-        val visibility = if (isToBeVisible) View.VISIBLE else View.GONE
-
-        binding.fabAddAbstract.visibility = visibility
-        binding.fabAddAnnotation.visibility = visibility
+    private fun setupOnClickRemoveBook() {
+        binding.btnDeleteBook.setOnClickListener {
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.label_are_you_sure))
+                .setMessage(getString(R.string.label_are_you_sure_delete_book))
+                .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
+                .setPositiveButton(resources.getString(R.string.label_delete)) { dialog, which ->
+                    showLoadingBar()
+                    deleteBook()
+                }
+                .show()
+        }
     }
 
-    private fun getIdFromExtrasOrMinus1(): Int {
-        val extras = intent.extras
-        return extras?.getInt("id", -1) ?: -1
+    private fun deleteBook() {
+        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+        binding.progressSending.visibility = View.VISIBLE
+        viewModel.deleteBook(accessToken, getIdFromExtrasOrMinus1())
     }
 
-    private fun finishActivityIfBookIdIsInvalid(bookId: Any) {
-        if (bookId == -1) {
-            Toast.makeText(this, getString(R.string.label_book_not_found), Toast.LENGTH_LONG).show()
-            finish()
+    private fun setRemoveBookListener() {
+        viewModel.liveDataDeleteBook.observe(this) {
+            if (it is Result.Success) {
+                hideLoadingBar()
+                showLongToast(getString(R.string.label_book_removed))
+
+                val returnResult = Intent()
+                setResult(BookListFragment.REMOVE_BOOK, returnResult)
+                finish()
+            } else if (it is Result.Error) {
+                showLongToast(it.errorBody.message)
+            }
         }
     }
 
     private fun setupReadingStatusSpinner() {
-        val spinnerReadingStatusKey =
-            resources.getStringArray(R.array.spinner_book_reading_status_key)
-        val spinnerReadingStatusValue =
+
+        viewModel.setReadStatusValuesKeyMap(
+            resources.getStringArray(R.array.spinner_book_reading_status_key),
             resources.getStringArray(R.array.spinner_book_reading_status_value)
-
-
-        for (i in spinnerReadingStatusKey.indices) {
-            readingStatusValuesKey[spinnerReadingStatusValue[i]] = spinnerReadingStatusKey[i]
-        }
+        )
         binding.spinnerReadingStatus.onItemSelectedListener = this
 
         readingStatusAdapter = ArrayAdapter.createFromResource(
             this,
             R.array.spinner_book_reading_status_value,
             R.layout.spinner_item
-        ).also { arrayAdapter ->
-            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-            binding.spinnerReadingStatus.adapter = arrayAdapter
+        )
+
+        with(readingStatusAdapter) {
+            this.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            binding.spinnerReadingStatus.adapter = this
         }
 
     }
 
-
     private fun listenerFillActivityWithBookInfo() {
         viewModel.liveDataBookInfo.observe(this) {
-            if (it is Result.Success) {
+            if (it is Result.Success)
                 loadActivityWithBookInfo(it.response)
-
-            }
+            else
+                showLongToast((it as Result.Error).errorBody.message)
         }
     }
 
@@ -232,64 +217,48 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .into(binding.ivBookPreview)
 
         loadDescriptionContent(book)
-        if (book.readStatusEnum != null && book.readStatusEnum != ReadStatusEnum.NO_STATUS) {
-
-            val indexOfReadingStatusLabel = readingStatusValuesKey.values.toList()
-                .indexOf(
-                    book.readStatusEnum.toString()
-                )
-            // valor PT => valor PT para
-            binding.spinnerReadingStatus.setSelection(
-                readingStatusAdapter.getPosition(
-                    readingStatusValuesKey.keys.toList()[indexOfReadingStatusLabel]
-                )
-            )
-        }
+        selectReadStatusOnSpinner(book.readStatusEnum)
     }
 
     private fun loadDescriptionContent(book: Book) {
         val description = StringBuilder(book.description)
-        val isAShortDescription = description.length <= 270
 
-        if (viewModel.isDescriptionShowMoreActive)
-            setFullDescription(description)
-        else {
-            if (isAShortDescription) {
-                setFullDescription(description)
-                disableTvDescriptionShowMore()
-            } else
-                setShortDescription(description)
-        }
-
-
+        binding.tvDescription.text = viewModel.getDescription(description)
+        setTvDescriptionShowMore(description)
 
         binding.tvDescriptionShowMore.setOnClickListener {
-            if (viewModel.isDescriptionShowMoreActive)
-                setShortDescription(description)
-            else
-                setFullDescription(description)
-
             viewModel.isDescriptionShowMoreActive = !viewModel.isDescriptionShowMoreActive
+            binding.tvDescription.text = viewModel.getDescription(description)
+            changeTvDescriptionShowMore(viewModel.isDescriptionShowMoreActive)
+
         }
     }
 
-    private fun setFullDescription(description: StringBuilder) {
-        binding.tvDescription.text = description.toString()
-        if (description.length > 270)
-            binding.tvDescriptionShowMore.text = getString(R.string.label_show_less)
-    }
-
-    private fun disableTvDescriptionShowMore() {
-        binding.tvDescriptionShowMore.visibility = View.INVISIBLE
-    }
-
-    private fun setShortDescription(description: StringBuilder) {
-        if (description.length > 270) {
-            val shortDescription = description.substring(0, 270) + "..."
-            binding.tvDescription.text = shortDescription
-            binding.tvDescriptionShowMore.text = getString(R.string.label_show_more)
+    private fun setTvDescriptionShowMore(description: StringBuilder) {
+        if (viewModel.isAShortDescription(description)) {
+            binding.tvDescriptionShowMore.text = ""
+        } else {
+            changeTvDescriptionShowMore(viewModel.isDescriptionShowMoreActive)
         }
     }
+
+    private fun changeTvDescriptionShowMore(descriptionShowMoreActive: Boolean) {
+        binding.tvDescriptionShowMore.text =
+            if (descriptionShowMoreActive) getString(R.string.label_show_less)
+            else getString(R.string.label_show_more)
+    }
+
+    private fun selectReadStatusOnSpinner(readStatusEnum: ReadStatusEnum?) {
+        if (readStatusEnum != null && readStatusEnum != ReadStatusEnum.NO_STATUS) {
+            val indexOfReadingStatusLabel =
+                viewModel.getReadStatusEnumIndexOnSpinner(readStatusEnum)
+            val readingStatusKey = viewModel.getReadingStatusKeyByIndex(indexOfReadingStatusLabel)
+            binding.spinnerReadingStatus.setSelection(
+                readingStatusAdapter.getPosition(readingStatusKey)
+            )
+        }
+    }
+
 
     private fun setupOnClickEditBook() {
         binding.btnEditBook.setOnClickListener {
@@ -300,60 +269,6 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
     }
 
-
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        if (!userIsInteracting) return
-        val itemLabelSelected: String = p0?.getItemAtPosition(p2).toString()
-        val readingStatusSelected: ReadStatusEnum =
-            getReadingStatusOrSetAsNoStatus(itemLabelSelected)
-
-        if (readingStatusSelected != ReadStatusEnum.NO_STATUS)
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.label_are_you_sure))
-                .setMessage("Are you sure you want to change the book status? New status: $itemLabelSelected")
-                .setNegativeButton(getString(R.string.label_cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
-                    updateStatus(getIdFromExtrasOrMinus1(), readingStatusSelected)
-                }
-                .show()
-    }
-
-    private fun getReadingStatusOrSetAsNoStatus(itemLabelSelected: String): ReadStatusEnum {
-        return readingStatusValuesKey[itemLabelSelected]?.let { readStatusString: String ->
-            try {
-                ReadStatusEnum.valueOf(readStatusString)
-            } catch (e: IllegalArgumentException) {
-                ReadStatusEnum.NO_STATUS
-            }
-        } ?: ReadStatusEnum.NO_STATUS
-    }
-
-
-    private fun updateStatus(idFromExtrasOrMinus1: Int, readingStatusSelected: ReadStatusEnum) {
-        val book = (viewModel.liveDataBookInfo.value!! as Result.Success).response
-        // val updateBook = with(book) { UpdateBook(idFromExtrasOrMinus1.toLong(), title, author,)}
-        val bookChanged = book.copy(readStatusEnum = readingStatusSelected)
-        binding.progressSending.visibility = View.VISIBLE
-        viewModel.liveDataUpdateBook.observe(this) {
-            binding.progressSending.visibility = View.GONE
-            if (it is Result.Success) {
-                Snackbar.make(
-                    binding.root,
-                    getString(R.string.label_book_status_updated),
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
-
-        val accessToken = SharedPreferencesUtils.getAccessToken(
-            getSharedPreferences(
-                Constants.Prefs.USER_TOKENS,
-                MODE_PRIVATE
-            )
-        )
-        // viewModel.updateBook(accessToken, bookChanged)
-    }
 
     private fun setOnClickEditImage() {
         binding.ivBtnEditImage.setOnClickListener {
@@ -370,14 +285,9 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             val imageUri: Uri? = result.data?.data
             if (imageUri != null) {
                 val realURI = getRealPathFromURIForGallery(imageUri)
-                Log.e("realURI", realURI.toString())
                 realURI?.let { viewModel.compressImage(this, it) }
-                Toast.makeText(
-                    this,
-                    getString(R.string.label_compressing_image),
-                    Toast.LENGTH_SHORT
-                ).show()
-                binding.progressSending.visibility = View.VISIBLE
+                showLongToast(getString(R.string.label_compressing_image))
+                showLoadingBar()
             }
         }
     }
@@ -408,27 +318,18 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .load(newBitmap)
                 .into(binding.ivBookPreview)
 
-            Log.e("compressedImageSize", viewModel.getReadableFileSize(it.length()))
-
             binding.ivBtnSaveImage.visibility = View.VISIBLE
-            binding.progressSending.visibility = View.GONE
-
-            Toast.makeText(this, getString(R.string.label_image_compressed), Toast.LENGTH_SHORT)
-                .show()
+            hideLoadingBar()
+            showLongToast(getString(R.string.label_image_compressed))
         }
     }
-
 
 
     private fun setOnClickSaveNewImage() {
         binding.ivBtnSaveImage.setOnClickListener {
             val imageFile = viewModel.liveDataImageCompressed.value
             if (imageFile == null) {
-                Toast.makeText(
-                    this,
-                    getString(R.string.label_theres_not_an_image_to_update),
-                    Toast.LENGTH_SHORT
-                ).show()
+                showLongToast(getString(R.string.label_theres_not_an_image_to_update))
                 return@setOnClickListener
             }
             val accessToken = SharedPreferencesUtils.getAccessToken(
@@ -438,7 +339,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 )
             )
             viewModel.updateImageBookById(this, accessToken, getIdFromExtrasOrMinus1(), imageFile)
-            binding.progressSending.visibility = View.VISIBLE
+            showLoadingBar()
             binding.ivBtnSaveImage.visibility = View.GONE
 
 
@@ -447,15 +348,87 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun setOnImageUpdatedListener() {
         viewModel.liveDataUpdateImage.observe(this) {
-            Log.e("imageUpdatedListener", it.toString())
+            hideLoadingBar()
+            if (it is Result.Error)
+                showLongToast(it.errorBody.message)
+            else
+                showLongToast((it as Result.Success).response)
+        }
+    }
 
+    private fun setTvAnnotationShowMoreOnClickListener() {
+        binding.tvAnnotationShowMore.setOnClickListener {
+            val intent = Intent(this, AnnotationListActivity::class.java)
+            intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+            startActivity(intent)
+        }
+    }
+
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+        if (!userIsInteracting) return
+        val itemLabelSelected: String = p0?.getItemAtPosition(p2).toString()
+        val readingStatusSelected: ReadStatusEnum =
+            getReadingStatusOrSetAsNoStatus(itemLabelSelected)
+
+        if (readingStatusSelected != ReadStatusEnum.NO_STATUS)
+            MaterialAlertDialogBuilder(this)
+                .setTitle(resources.getString(R.string.label_are_you_sure))
+                .setMessage("Are you sure you want to change the book status? New status: $itemLabelSelected")
+                .setNegativeButton(getString(R.string.label_cancel)) { _, _ ->
+                }
+                .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
+                    updateStatus(readingStatusSelected)
+                }
+                .show()
+    }
+
+    private fun getReadingStatusOrSetAsNoStatus(itemLabelSelected: String): ReadStatusEnum {
+        return viewModel.readingStatusValuesKey[itemLabelSelected]?.let { readStatusString: String ->
+            try {
+                ReadStatusEnum.valueOf(readStatusString)
+            } catch (e: IllegalArgumentException) {
+                ReadStatusEnum.NO_STATUS
+            }
+        } ?: ReadStatusEnum.NO_STATUS
+    }
+
+
+    private fun updateStatus(readingStatusSelected: ReadStatusEnum) {
+        val book = (viewModel.liveDataBookInfo.value!! as Result.Success).response
+        // val updateBook = with(book) { UpdateBook(idFromExtrasOrMinus1.toLong(), title, author,)}
+        val bookChanged = book.copy(readStatusEnum = readingStatusSelected)
+        binding.progressSending.visibility = View.VISIBLE
+        viewModel.liveDataUpdateBook.observe(this) {
             binding.progressSending.visibility = View.GONE
-            if (it is Result.Error) {
-                Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, (it as Result.Success).response, Toast.LENGTH_SHORT).show()
+            if (it is Result.Success) {
+                Snackbar.make(
+                    binding.root,
+                    getString(R.string.label_book_status_updated),
+                    Snackbar.LENGTH_LONG
+                ).show()
             }
         }
+
+        val accessToken = SharedPreferencesUtils.getAccessToken(
+            getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+        )
+        // viewModel.updateBook(accessToken, bookChanged)
+    }
+
+    private fun showLongToast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    }
+
+
+    private fun hideLoadingBar() {
+        binding.progressSending.visibility = View.GONE
+    }
+
+    private fun showLoadingBar() {
+        binding.progressSending.visibility = View.VISIBLE
     }
 
 
@@ -467,6 +440,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         super.onBackPressed()
         Glide.with(this).clear(binding.ivBookPreview)
     }
+
     override fun onUserInteraction() {
         super.onUserInteraction()
         userIsInteracting = true

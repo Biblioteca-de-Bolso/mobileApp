@@ -9,6 +9,6 @@ infix fun RichEditor.changeHighlight(isToDisable: Boolean) {
         this.evaluateJavascript("javascript:RE.prepareInsert();", null)
         this.evaluateJavascript("javascript:RE.removeBackgroundColor();", null)
     } else {
-        this.setTextBackgroundColor(resources.getColor(R.color.gd_blue_purple_2))
+        this.setTextBackgroundColor(resources.getColor(R.color.highlight_purple))
     }
 }
