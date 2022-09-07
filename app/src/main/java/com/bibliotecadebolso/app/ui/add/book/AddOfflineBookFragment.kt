@@ -12,14 +12,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.data.validator.BookValidator
+import com.bibliotecadebolso.app.data.validator.Validation
+import com.bibliotecadebolso.app.data.validator.ValidationError
+import com.bibliotecadebolso.app.data.validator.validations.BookValidation
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOfflineInputBinding
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 
 /**
  * A simple [Fragment] subclass as the second destination in the navigation.
@@ -54,19 +59,22 @@ class AddOfflineBookFragment : Fragment() {
 
     private fun addIfRequestedToAddABook() {
         val book = arguments?.getParcelable<BookSearch>("book")
-        if (book != null) {
-            binding.apply {
-                etBookTitle.editText?.setText(book.title)
-                etBookAuthor.editText?.setText(book.author)
-                etBookIsbn10Or13.editText?.setText(getISBNNotEmpty(book))
-                etBookDescription.editText?.setText(book.description)
-                etBookPublisher.editText?.setText(book.publisher)
-                if (book.thumbnail.isNotEmpty())
-                    Glide.with(requireActivity()).load(book.thumbnail)
-                        .centerCrop()
-                        .apply(RequestOptions().override(400, 600))
-                        .into(ivBookPreview)
-            }
+        if (book != null) fillActivityWithBookInfo(book)
+
+    }
+
+    private fun fillActivityWithBookInfo(book: BookSearch) {
+        binding.apply {
+            etBookTitle.editText?.setText(book.title)
+            etBookAuthor.editText?.setText(book.author)
+            etBookIsbn10Or13.editText?.setText(getISBNNotEmpty(book))
+            etBookDescription.editText?.setText(book.description)
+            etBookPublisher.editText?.setText(book.publisher)
+            if (book.thumbnail.isNotEmpty())
+                Glide.with(requireActivity()).load(book.thumbnail)
+                    .centerCrop()
+                    .apply(RequestOptions().override(400, 600))
+                    .into(ivBookPreview)
         }
     }
 
@@ -78,7 +86,7 @@ class AddOfflineBookFragment : Fragment() {
             binding.progressSending.visibility = View.GONE
 
             if (it is Result.Success) {
-                Toast.makeText(requireContext(), "Book Created", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.label_book_created), Toast.LENGTH_LONG).show()
                 val resultIntent = Intent()
                 activity?.setResult(BookListFragment.BOOK_ADDED, resultIntent)
                 requireActivity().finish()
@@ -129,29 +137,48 @@ class AddOfflineBookFragment : Fragment() {
     }
 
     private fun validateInputs(): Boolean {
-        val tilTitle = binding.etBookTitle
-        val tilAuthor = binding.etBookAuthor
-        val tilPublisher = binding.etBookPublisher
-        val tilDescription = binding.etBookDescription
-        val bookValidator = BookValidator
+        val title = binding.etBookTitle.editText!!.text.toString()
+        val author = binding.etBookAuthor.editText!!.text.toString()
+        val publisher = binding.etBookPublisher.editText!!.text.toString()
+        val description = binding.etBookDescription.editText!!.text.toString()
+        val isbn = binding.etBookIsbn10Or13.editText!!.text.toString()
 
-        if (!bookValidator.isTitleValid(tilTitle.editText!!.text.toString())) {
-            tilTitle.error = getString(R.string.error_must_be_beetween_1_128)
-            return false
+        val updateBook = BookResponse(title, author, isbn, publisher, description)
+        val validation = Validation(listOf(BookValidation(updateBook)))
+
+        val errors = validation.checkAllValidations()
+        if (errors.isEmpty()) {
+            cleanInputErrors()
+            return true
         }
 
-        if (!bookValidator.isAuthorNameValid(tilAuthor.editText!!.text.toString())) {
-            tilAuthor.error = getString(R.string.error_must_be_between_0_128)
-            return false
+        showInputErrors(errors)
+        return false
+    }
+
+    private fun cleanInputErrors() {
+        binding.apply {
+            etBookTitle.error = ""
+            etBookAuthor.error = ""
+            etBookPublisher.error = ""
         }
+    }
 
-        if (!bookValidator.isPublisherNameValid(tilPublisher.editText!!.text.toString())) {
-            tilPublisher.error = getString(R.string.error_must_be_between_0_128)
-            return false
+    private fun showInputErrors(errors: List<ValidationError>) {
+        binding.apply {
+            errors.forEach {
+                when (it.field) {
+                    "title" ->
+                        etBookTitle.error = getString(R.string.error_must_be_beetween_1_128)
+                    "author" ->
+                        etBookAuthor.error = getString(R.string.error_must_be_between_0_128)
+                    "publisher" ->
+                        etBookPublisher.error = getString(R.string.error_must_be_between_0_128)
+                    else ->
+                        Snackbar.make(binding.root, it.errorMessage, Snackbar.LENGTH_LONG).show()
+                }
+            }
         }
-
-
-        return true
     }
 
     override fun onDestroyView() {

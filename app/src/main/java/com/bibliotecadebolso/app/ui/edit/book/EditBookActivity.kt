@@ -8,13 +8,18 @@ import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.UpdateBook
+import com.bibliotecadebolso.app.data.model.response.BookResponse
 import com.bibliotecadebolso.app.data.validator.BookValidator
+import com.bibliotecadebolso.app.data.validator.Validation
+import com.bibliotecadebolso.app.data.validator.ValidationError
+import com.bibliotecadebolso.app.data.validator.validations.BookValidation
 import com.bibliotecadebolso.app.databinding.ActivityEditBookBinding
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.snackbar.Snackbar
 
 /**
  *
@@ -24,6 +29,7 @@ class EditBookActivity : AppCompatActivity() {
     private lateinit var binding: ActivityEditBookBinding
     private lateinit var viewModel: EditBookViewModel
     private var bookId: Long = -1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEditBookBinding.inflate(layoutInflater)
@@ -42,10 +48,12 @@ class EditBookActivity : AppCompatActivity() {
         val accessToken = SharedPreferencesUtils.getAccessToken(
             getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
         )
+        showLoadingBar()
         viewModel.getBookById(accessToken, bookId)
 
 
         viewModel.bookLiveData.observe(this) {
+            hideLoadingBar()
             if (it is Result.Success) {
                 fillInputWithData(it.response)
             } else if (it is Result.Error) {
@@ -79,36 +87,55 @@ class EditBookActivity : AppCompatActivity() {
         btnEditBook.setOnClickListener {
             val isValid: Boolean = validateInputs()
             if (isValid) {
-                binding.progressSending.visibility = View.VISIBLE
+                showLoadingBar()
                 updateBook()
             }
         }
     }
 
     private fun validateInputs(): Boolean {
-        val tilTitle = binding.etBookTitle
-        val tilAuthor = binding.etBookAuthor
-        val tilPublisher = binding.etBookPublisher
-        val tilDescription = binding.etBookDescription
-        val bookValidator = BookValidator
+        val title = binding.etBookTitle.editText!!.text.toString()
+        val author = binding.etBookAuthor.editText!!.text.toString()
+        val publisher = binding.etBookPublisher.editText!!.text.toString()
+        val description = binding.etBookDescription.editText!!.text.toString()
+        val isbn = binding.etBookIsbn10Or13.editText!!.text.toString()
 
-        if (!bookValidator.isTitleValid(tilTitle.editText!!.text.toString())) {
-            tilTitle.error = getString(R.string.error_must_be_beetween_1_128)
-            return false
-        } else tilTitle.error = ""
+        val updateBook = BookResponse(title, author, isbn, publisher, description)
+        val validation = Validation(listOf(BookValidation(updateBook)))
 
-        if (!bookValidator.isAuthorNameValid(tilAuthor.editText!!.text.toString())) {
-            tilAuthor.error = getString(R.string.error_must_be_between_0_128)
-            return false
-        } else tilAuthor.error = ""
+        val errors = validation.checkAllValidations()
+        if (errors.isEmpty()) {
+            cleanInputErrors()
+            return true
+        }
 
-        if (!bookValidator.isPublisherNameValid(tilPublisher.editText!!.text.toString())) {
-            tilPublisher.error = getString(R.string.error_must_be_between_0_128)
-            return false
-        } else tilPublisher.error = ""
+        showInputErrors(errors)
+        return false
+    }
 
+    private fun cleanInputErrors() {
+        binding.apply {
+            etBookTitle.error = ""
+            etBookAuthor.error = ""
+            etBookPublisher.error = ""
+        }
+    }
 
-        return true
+    private fun showInputErrors(errors: List<ValidationError>) {
+        binding.apply {
+            errors.forEach {
+                when (it.field) {
+                    "title" ->
+                        etBookTitle.error = getString(R.string.error_must_be_beetween_1_128)
+                    "author" ->
+                        etBookAuthor.error = getString(R.string.error_must_be_between_0_128)
+                    "publisher" ->
+                        etBookPublisher.error = getString(R.string.error_must_be_between_0_128)
+                    else ->
+                        Snackbar.make(binding.root, it.errorMessage, Snackbar.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
 
@@ -124,22 +151,39 @@ class EditBookActivity : AppCompatActivity() {
         )
         viewModel.updateBook(
             accessToken = accessToken,
-            updateBook = UpdateBook(bookId, title, author, isbn, publisher, description, viewModel.lastReadingStatus)
+            updateBook = UpdateBook(
+                bookId,
+                title,
+                author,
+                isbn,
+                publisher,
+                description,
+                viewModel.lastReadingStatus
+            )
         )
     }
 
     private fun updateBookListener() {
         viewModel.updatedBookLiveData.observe(this) {
-            binding.progressSending.visibility = View.INVISIBLE
+            hideLoadingBar()
             if (it is Result.Success) {
                 Toast.makeText(
                     this,
                     getString(R.string.label_book_updated_sucessfully),
                     Toast.LENGTH_LONG
                 ).show()
-
                 finish()
+            } else if (it is Result.Error) {
+                Snackbar.make(binding.root, it.errorBody.message, Snackbar.LENGTH_LONG).show()
             }
         }
+    }
+
+    private fun hideLoadingBar() {
+        binding.progressSending.visibility = View.GONE
+    }
+
+    private fun showLoadingBar() {
+        binding.progressSending.visibility = View.VISIBLE
     }
 }

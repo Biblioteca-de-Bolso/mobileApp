@@ -23,7 +23,7 @@ class EditBookViewModel : ViewModel() {
         viewModelScope.launch {
             val result = BookDataSource.getBookById(accessToken, bookId.toInt())
             if (result is Result.Success) {
-                lastReadingStatus = result.response.readStatusEnum ?: ReadStatusEnum.NO_STATUS
+                lastReadingStatus = result.response.readStatus ?: ReadStatusEnum.NO_STATUS
             }
 
             bookLiveData.postValue(result)

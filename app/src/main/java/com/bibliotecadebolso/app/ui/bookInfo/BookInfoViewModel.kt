@@ -73,6 +73,13 @@ class BookInfoViewModel : ViewModel() {
         }
     }
 
+    fun updateBookByPatch(accessToken: String, book: UpdateBook) {
+        viewModelScope.launch {
+            val result = dataSource.updateBookByIdWithPatch(accessToken, book)
+            liveDataUpdateBook.postValue(result)
+        }
+    }
+
     fun updateBook(accessToken: String, book: UpdateBook) {
         viewModelScope.launch {
             val result = dataSource.updateBookById(accessToken, book)

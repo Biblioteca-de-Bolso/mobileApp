@@ -108,7 +108,7 @@ object BookDataSource {
 
     suspend fun updateBookByIdWithPatch(accessToken: String, book: UpdateBook): Result<UpdatedBook> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.updateBookById("Bearer $accessToken", book)
+            val response = api.updateBookByIdWithPatch("Bearer $accessToken", book)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.book)

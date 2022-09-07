@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -19,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
+import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
@@ -89,6 +89,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setOnClickSaveNewImage()
         setOnImageUpdatedListener()
         setTvAnnotationShowMoreOnClickListener()
+        updateStatusListener()
     }
 
     private fun getIdFromExtrasOrMinus1(): Int = intent.extras?.getInt("id", -1) ?: -1
@@ -217,7 +218,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 .into(binding.ivBookPreview)
 
         loadDescriptionContent(book)
-        selectReadStatusOnSpinner(book.readStatusEnum)
+        selectReadStatusOnSpinner(book.readStatus)
     }
 
     private fun loadDescriptionContent(book: Book) {
@@ -394,12 +395,26 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
 
     private fun updateStatus(readingStatusSelected: ReadStatusEnum) {
-        val book = (viewModel.liveDataBookInfo.value!! as Result.Success).response
-        // val updateBook = with(book) { UpdateBook(idFromExtrasOrMinus1.toLong(), title, author,)}
-        val bookChanged = book.copy(readStatusEnum = readingStatusSelected)
+
+        val bookNullWithStatusOnly = UpdateBook(
+            bookId = getIdFromExtrasOrMinus1().toLong(),
+            readStatus = readingStatusSelected
+        )
+        binding.spinnerReadingStatus.isClickable = false
         binding.progressSending.visibility = View.VISIBLE
+        val accessToken = SharedPreferencesUtils.getAccessToken(
+            getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+        )
+        viewModel.updateBookByPatch(accessToken, bookNullWithStatusOnly)
+    }
+
+    private fun updateStatusListener() {
         viewModel.liveDataUpdateBook.observe(this) {
-            binding.progressSending.visibility = View.GONE
+            binding.spinnerReadingStatus.isClickable = true
+            hideLoadingBar()
             if (it is Result.Success) {
                 Snackbar.make(
                     binding.root,
@@ -408,14 +423,6 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 ).show()
             }
         }
-
-        val accessToken = SharedPreferencesUtils.getAccessToken(
-            getSharedPreferences(
-                Constants.Prefs.USER_TOKENS,
-                MODE_PRIVATE
-            )
-        )
-        // viewModel.updateBook(accessToken, bookChanged)
     }
 
     private fun showLongToast(message: String) {
