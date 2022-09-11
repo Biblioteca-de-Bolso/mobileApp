@@ -103,6 +103,11 @@
     <string name="label_updated_successfully">Updated successfully</string>
     <string name="label_theres_not_an_image_to_update">There\'s not an image to update</string>
     <string name="label_book_created">Book Created</string>
+    <string name="label_book_list_empty">There\'re no books in this category</string>
+    <string name="label_reading">Reading</string>
+    <string name="label_planning_to_read">Planning to read</string>
+    <string name="label_concluded">Concluded</string>
+    <string name="label_dropped">Dropped</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

@@ -1,7 +1,6 @@
 package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import BookListDividerDecoration
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,9 +9,11 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.CreatedBook
+import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
@@ -27,7 +28,10 @@ class BookListFragment : Fragment(), RvOnClickListener {
 
     private var _binding: FragmentBookListBinding? = null
     private val binding get() = _binding!!
-    private lateinit var fragmentAdapter: BookListAdapter
+    private lateinit var fragmentAdapterPlanning: BookListAdapter
+    private lateinit var fragmentAdapterReading: BookListAdapter
+    private lateinit var fragmentAdapterConcluded: BookListAdapter
+    private lateinit var fragmentAdapterDropped: BookListAdapter
     private lateinit var viewModel: HomeViewModel
 
     override fun onCreateView(
@@ -40,7 +44,10 @@ class BookListFragment : Fragment(), RvOnClickListener {
         _binding = FragmentBookListBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        setupRecyclerView()
+        setupRecyclerViewPlanning()
+        setupRecyclerViewReading()
+        setupRecyclerViewConcluded()
+        setupRecyclerViewDropped()
         setupBookListObserver()
         setupFabButtonListener()
         setupSwipeRefreshLayout()
@@ -50,9 +57,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     }
 
     private fun setupSwipeRefreshLayout() {
-        binding.srBookList.setOnRefreshListener {
-            getList()
-        }
+        // binding.srBookList.setOnRefreshListener { getList() }
     }
 
     private fun getList() {
@@ -63,26 +68,80 @@ class BookListFragment : Fragment(), RvOnClickListener {
 
         val accessToken = prefs.getString(Constants.Prefs.Tokens.ACCESS_TOKEN, "")!!
         showLoadingIcon()
-        viewModel.apiListBook(accessToken)
+        viewModel.apiListBook(accessToken, readStatusEnum = ReadStatusEnum.PLANNING)
+        viewModel.apiListBook(accessToken, readStatusEnum = ReadStatusEnum.READING)
+        viewModel.apiListBook(accessToken, readStatusEnum = ReadStatusEnum.CONCLUDED)
+        viewModel.apiListBook(accessToken, readStatusEnum = ReadStatusEnum.DROPPED)
+
     }
 
     private fun setupBookListObserver() {
-        viewModel.bookList.observe(viewLifecycleOwner) {
+        viewModel.bookListPlanning.observe(viewLifecycleOwner) {
             hideLoadingIcon()
-            when (it) {
-                is Result.Success<List<CreatedBook>> -> {
+            loadBookList(it, ReadStatusEnum.PLANNING)
+        }
+        viewModel.bookListReading.observe(viewLifecycleOwner) {
+            hideLoadingIcon()
+            loadBookList(it, ReadStatusEnum.READING)
+        }
+        viewModel.bookListDropped.observe(viewLifecycleOwner) {
+            hideLoadingIcon()
+            loadBookList(it, ReadStatusEnum.DROPPED)
+        }
+        viewModel.bookListConcluded.observe(viewLifecycleOwner) {
+            hideLoadingIcon()
+            loadBookList(it, ReadStatusEnum.CONCLUDED)
+        }
+    }
 
-                    binding.srBookList.isRefreshing = false
-                    fragmentAdapter.differ.submitList(it.response)
-                    if (it.response.isEmpty()) {
-                        //TODO make appear a text telling that doesn't have a book
-                    }
-                    fragmentAdapter.notifyDataSetChanged()
+    private fun loadBookList(result: Result<List<CreatedBook>>, readStatusEnum: ReadStatusEnum) {
+        when (result) {
+            is Result.Success<List<CreatedBook>> -> {
+                // binding.srBookList.isRefreshing = false
+                showBookListOnCorrectCategory(readStatusEnum, result.response)
+
+            }
+            is Result.Error -> {
+                showLongSnackBar(result.errorBody.message)
+                // binding.srBookList.isRefreshing = false
+            }
+        }
+    }
+
+    private fun showBookListOnCorrectCategory(readStatusEnum: ReadStatusEnum, list: List<CreatedBook>) {
+
+        when (readStatusEnum) {
+            ReadStatusEnum.PLANNING -> {
+                if (list.isEmpty()) {
+                    binding.rvListBookPlanning.visibility = View.GONE
+                    binding.labelErrorPlanningToRead.visibility = View.VISIBLE
                 }
-                is Result.Error -> {
-                    showLongSnackBar(it.errorBody.message)
-                    binding.srBookList.isRefreshing = false
+                fragmentAdapterPlanning.differ.submitList(list)
+                fragmentAdapterPlanning.notifyDataSetChanged()
+            }
+            ReadStatusEnum.READING -> {
+                if (list.isEmpty()) {
+                    binding.rvListBookReading.visibility = View.GONE
+                    binding.labelErrorReading.visibility = View.VISIBLE
                 }
+                fragmentAdapterReading.differ.submitList(list)
+                fragmentAdapterReading.notifyDataSetChanged()
+            }
+            ReadStatusEnum.DROPPED -> {
+                if (list.isEmpty()) {
+                    binding.rvListBookDropped.visibility = View.GONE
+                    binding.labelErrorDropped.visibility = View.VISIBLE
+                }
+                fragmentAdapterDropped.differ.submitList(list)
+                fragmentAdapterDropped.notifyDataSetChanged()
+            }
+            ReadStatusEnum.CONCLUDED -> {
+                if (list.isEmpty()) {
+                    binding.rvListBookConcluded.visibility = View.GONE
+                    binding.labelErrorConcluded.visibility = View.VISIBLE
+                }
+                fragmentAdapterConcluded.differ.submitList(list)
+                fragmentAdapterConcluded.notifyDataSetChanged()
             }
         }
     }
@@ -100,22 +159,43 @@ class BookListFragment : Fragment(), RvOnClickListener {
         }
     }
 
-    private fun setupRecyclerView() {
-        fragmentAdapter = BookListAdapter(requireContext(), this)
-        val layoutManager = GridLayoutManager(this.requireContext(), 2)
+    private fun setupRecyclerViewPlanning() {
+        fragmentAdapterPlanning = BookListAdapter(requireContext(), this)
+        val layoutManager = LinearLayoutManager(this.requireContext(), RecyclerView.HORIZONTAL, false)
 
-        binding.rvListBook.apply {
+        binding.rvListBookPlanning.apply {
             setLayoutManager(layoutManager)
-            adapter = fragmentAdapter
-            addItemDecoration(
-                BookListDividerDecoration(
-                    resources.getDimensionPixelSize(R.dimen.book_list_spacing),
-                    resources.getInteger(R.integer.book_list_preview_columns)
-                )
-            )
+            adapter = fragmentAdapterPlanning
         }
+    }
 
+    private fun setupRecyclerViewReading() {
+        fragmentAdapterReading = BookListAdapter(requireContext(), this)
+        val layoutManager = LinearLayoutManager(this.requireContext(), RecyclerView.HORIZONTAL, false)
 
+        binding.rvListBookReading.apply {
+            setLayoutManager(layoutManager)
+            adapter = fragmentAdapterReading
+        }
+    }
+    private fun setupRecyclerViewConcluded() {
+        fragmentAdapterConcluded = BookListAdapter(requireContext(), this)
+        val layoutManager = LinearLayoutManager(this.requireContext(), RecyclerView.HORIZONTAL, false)
+
+        binding.rvListBookConcluded.apply {
+            setLayoutManager(layoutManager)
+            adapter = fragmentAdapterConcluded
+        }
+    }
+
+    private fun setupRecyclerViewDropped() {
+        fragmentAdapterDropped = BookListAdapter(requireContext(), this)
+        val layoutManager = LinearLayoutManager(this.requireContext(), RecyclerView.HORIZONTAL, false)
+
+        binding.rvListBookDropped.apply {
+            setLayoutManager(layoutManager)
+            adapter = fragmentAdapterDropped
+        }
     }
 
     override fun onDestroyView() {

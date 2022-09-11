@@ -4,20 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="10dp"
-    android:background="@drawable/bg_item_book"
-    android:maxWidth="180dp"
+    android:maxWidth="160dp"
     android:maxHeight="220dp"
     android:minWidth="180dp"
-    android:minHeight="220dp"
-    android:padding="2dp">
+    android:minHeight="200dp"
+    >
 
     <ImageView
         android:id="@+id/iv_book_default"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:minHeight="160dp"
-        android:padding="4dp"
+        android:minHeight="180dp"
         android:src="@drawable/ic_item_book"
 
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,22 +30,10 @@
         android:textSize="16sp"
         android:textStyle="bold"
 
-        app:layout_constraintBottom_toTopOf="@id/tv_author"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_book_default"
 
         tools:text="The great mage returned after 4000 years" />
-
-    <TextView
-        android:id="@+id/tv_author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        tools:text="By author" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
