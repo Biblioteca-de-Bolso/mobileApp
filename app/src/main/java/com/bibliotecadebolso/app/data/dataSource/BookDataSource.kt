@@ -48,10 +48,11 @@ object BookDataSource {
     suspend fun list(
         accessToken: String,
         pageNum: Int,
+        readStatusEnum: ReadStatusEnum? = null
     ): Result<List<CreatedBook>> {
 
         val result: Result<List<CreatedBook>> = RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.bookList("Bearer $accessToken", pageNum)
+            val response = api.bookList("Bearer $accessToken", pageNum, readStatusEnum)
             val tempResult = RequestUtils.convertAPIResponseToResultClass(response)
 
             if (tempResult is Result.Success)

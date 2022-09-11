@@ -44,7 +44,8 @@ interface BibliotecaDeBolsoAPI {
     @GET("book")
     suspend fun bookList(
         @Header("Authorization") accessToken: String,
-        @Query("page") pageNum: Int
+        @Query("page") pageNum: Int,
+        @Query("readStatus") readStatusEnum: ReadStatusEnum?
     ): Response<APIResponse<BookListInObject>>
 
     @GET("book/{id}")
