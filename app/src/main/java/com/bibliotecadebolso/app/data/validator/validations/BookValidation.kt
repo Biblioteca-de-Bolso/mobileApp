@@ -28,5 +28,5 @@ class BookValidation(val book: BookResponse) : FieldValidation {
 
     private fun isPublisherNameValid(publisherName: String) = publisherName.length in 0..128
 
-    private fun isDescriptionValid(description: String) = description.length in 0..128
+    private fun isDescriptionValid(description: String) = description.length in 0..5000
 }
