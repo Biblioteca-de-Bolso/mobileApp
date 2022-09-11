@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="readablePrimaryColor" format="reference" />
+    <attr name="actionBarColor" format="reference" />
+    <attr name="wheatColor" format="reference" />
+</resources>

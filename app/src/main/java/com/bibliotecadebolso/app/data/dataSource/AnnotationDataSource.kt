@@ -1,6 +1,9 @@
 package com.bibliotecadebolso.app.data.dataSource
 
-import com.bibliotecadebolso.app.data.model.Annotation
+import com.bibliotecadebolso.app.data.model.AnnotationObject
+import com.bibliotecadebolso.app.data.model.ListAnnotationObject
+import com.bibliotecadebolso.app.data.model.SaveAnnotation
+import com.bibliotecadebolso.app.data.model.UpdateAnnotation
 import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
@@ -15,15 +18,12 @@ object AnnotationDataSource {
         bookId: Int,
         title: String,
         text: String,
-        page: Int = 0
+        reference: String
     ): Result<AnnotationResponse> {
         val result: Result<AnnotationResponse> = RequestUtils.returnOrThrowIfHasConnectionError {
-            val annotation = Annotation(bookId, title, text, page)
-
+            val annotation = SaveAnnotation(bookId, title, text, reference)
             val response = api.saveAnnotation("Bearer $accessToken", annotation)
-
-            val returnedResult = RequestUtils.isResponseSuccessful(response)
-
+            val returnedResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (returnedResult is Result.Success)
                 Result.Success(returnedResult.response)
             else
@@ -31,6 +31,47 @@ object AnnotationDataSource {
         }
 
         return result
+    }
+
+    suspend fun getlist(accessToken: String, bookId: Int, page: Int): Result<ListAnnotationObject> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.getAnnotationList("Bearer $accessToken", page, bookId)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response)
+            else
+                responseResult as Result.Error
+        }
+
+    }
+
+    suspend fun getById(accessToken: String, annotationId: Int): Result<AnnotationObject> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.getAnnotationById("Bearer $accessToken", annotationId)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response)
+            else
+                responseResult as Result.Error
+        }
+    }
+
+    suspend fun updateAnnotation(
+        accessToken: String,
+        annotationId: Int,
+        title: String,
+        text: String,
+        reference: String
+    ): Result<AnnotationObject> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val updateAnnotation = UpdateAnnotation(annotationId, title, text, reference)
+            val response = api.updateAnnotation("Bearer $accessToken", updateAnnotation)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response)
+            else
+                responseResult as Result.Error
+        }
     }
 
 

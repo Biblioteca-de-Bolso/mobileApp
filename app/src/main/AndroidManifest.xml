@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.bibliotecadebolso.app" >
+    package="com.bibliotecadebolso.app">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".application.MainApplication"
@@ -12,13 +16,24 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication" >
+        android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".ui.home.nav.DeleteAccountActivity"
-            android:label="@string/title_activity_delete_account"
+            android:name=".ui.edit.book.EditBookActivity"
+            android:theme="@style/Theme.MyApplication.PurpleTheme"
             android:exported="false" />
         <activity
-            android:name=".ui.add.annotation.AddAnnotationActivity"
+            android:name=".ui.bookInfo.annotationList.AnnotationListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.bookInfo.BookInfoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme" />
+        <activity
+            android:name=".ui.home.nav.DeleteAccountActivity"
+            android:exported="false"
+            android:label="@string/title_activity_delete_account" />
+        <activity
+            android:name=".ui.add.annotation.AnnotationEditorActivity"
             android:exported="false" />
         <activity
             android:name=".ui.list.annotation.AnnotationListedByBookActivity"
@@ -31,7 +46,7 @@
         <activity
             android:name=".ui.init.InitActivity"
             android:exported="true"
-            android:theme="@style/Theme.LoadingTheme" >
+            android:theme="@style/Theme.LoadingTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
+import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.util.Result
 import kotlinx.coroutines.launch
 
 class AddBookViewModel : ViewModel() {
 
     val isBookCreatedResponse = MutableLiveData<Result<CreatedBook>>()
-    val booksSearchContent = MutableLiveData<Result<List<Book>>>()
+    val booksSearchContent = MutableLiveData<Result<List<BookSearch>>>()
 
     fun apiCreateBook(accessToken: String,
                       title: String,

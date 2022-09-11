@@ -4,21 +4,35 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="#FAE8CD"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/wheatColor">
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:id="@+id/progress_sending"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:trackColor="?attr/colorSecondaryVariant" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintBottom_toTopOf="@id/toolbar"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/toolbar">
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:id="@+id/ll_content"
@@ -26,34 +40,58 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/et_book_title"
-                    style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_margin="20dp"
-                    android:hint="@string/label_title"
-                    app:boxBackgroundColor="#FAE8CD">
+                    android:orientation="horizontal">
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/et_book_title"
+                        style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
+                        android:layout_width="250dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="16dp"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/label_title"
+                        app:boxBackgroundColor="?attr/wheatColor">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:inputType="text"
+                            android:textColor="@color/gray_transparent_80" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/et_book_reference"
+                        style="@style/Theme.MyApplication.TextInputLayout.FilledBlack"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:inputType="text"
-                        android:textColor="@color/gray_transparent_80" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:layout_marginVertical="16dp"
+                        android:layout_marginTop="8dp"
+                        android:hint="@string/label_reference_with_example"
+                        app:boxBackgroundColor="?attr/wheatColor">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:inputType="text"
+                            android:textColor="@color/gray_transparent_80" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
 
                 <jp.wasabeef.richeditor.RichEditor
                     android:id="@+id/rich_editor"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="#FAE8CD"
                     android:layout_marginHorizontal="20dp"
                     android:layout_marginBottom="1200dp"
+                    android:background="?attr/wheatColor"
                     android:minHeight="400dp"
-                    tools:visibility="invisible"/>
+                    tools:visibility="invisible" />
 
             </LinearLayout>
         </ScrollView>
@@ -62,10 +100,10 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f2faff"
+            android:background="?attr/colorOnPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -178,15 +216,15 @@
         android:id="@+id/fab_save_annotation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
         android:layout_marginEnd="8dp"
-        android:backgroundTint="@color/white_blue"
+        android:layout_marginBottom="60dp"
+        app:backgroundTint="?attr/colorPrimary"
+        android:contentDescription="@string/label_save_annotation"
         android:elevation="8dp"
         android:src="@drawable/ic_save"
-        app:tint="@color/white"
         app:layout_anchor="@id/fl_transaction_content"
         app:layout_anchorGravity="top|end"
-        android:contentDescription="@string/label_save_annotation" />
+        app:tint="@color/natural_pallet_blue3" />
 
     <FrameLayout
         android:id="@+id/fl_transaction_content"

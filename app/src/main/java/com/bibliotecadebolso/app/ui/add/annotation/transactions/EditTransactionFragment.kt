@@ -6,15 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.activityViewModels
-import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.enum.TransactionOptions
 import com.bibliotecadebolso.app.databinding.FragmentEditTransactionBinding
-import com.bibliotecadebolso.app.ui.add.annotation.AddAnnotationContentViewModel
+import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorViewModel
 
 class EditTransactionFragment : Fragment() {
 
     private lateinit var binding: FragmentEditTransactionBinding
-    private val viewModel: AddAnnotationContentViewModel by activityViewModels()
+    private val viewModel: AnnotationEditorViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

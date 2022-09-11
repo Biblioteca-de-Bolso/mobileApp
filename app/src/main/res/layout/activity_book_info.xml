@@ -1,0 +1,393 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.add.book.AddBookActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MyApplication.AppBarOverlay"
+        app:elevation="1dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/splash_screen_dark_purple"
+            app:popupTheme="@style/purpleTopBarWithNoOverlay"
+            app:title="@string/label_book_details" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:background="@color/splash_screen_dark_purple">
+
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progress_sending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:indeterminate="true"
+                android:visibility="gone"
+                app:indicatorColor="?attr/colorPrimary"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackColor="@color/splash_screen_dark_purple" />
+
+            <FrameLayout
+                android:id="@+id/fl_book_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="30dp"
+                app:layout_constraintEnd_toStartOf="@id/tv_book_title"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/progress_sending">
+
+                <ImageView
+                    android:id="@+id/iv_book_preview"
+                    android:layout_width="160dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/label_book_image"
+                    android:minHeight="240dp"
+                    android:src="@drawable/ic_item_book" />
+
+                <ImageView
+                    android:id="@+id/iv_btn_edit_image"
+                    android:layout_width="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:contentDescription="@string/label_book_image"
+
+                    android:background="@color/gd_blue_purple_1"
+                    android:src="@drawable/ic_pen_edit" />
+
+                <ImageView
+                    android:id="@+id/iv_btn_save_image"
+                    android:layout_width="40dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_height="40dp"
+                    android:padding="8dp"
+                    android:visibility="gone"
+                    android:layout_marginEnd="50dp"
+                    android:contentDescription="@string/label_book_image"
+
+                    android:background="@color/gd_blue_yellow_3"
+                    android:src="@drawable/ic_save" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tv_book_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="12dp"
+                android:text="@string/label_loading_three_dots"
+                android:textAlignment="textStart"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/fl_book_image"
+                app:layout_constraintTop_toTopOf="@id/fl_book_image" />
+
+            <TextView
+                android:id="@+id/tv_label_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_author"
+                android:textColor="@color/gd_blue_purple_3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_book_title"
+                app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
+
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_loading_three_dots"
+                android:textColor="@color/gd_blue_purple_3"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/tv_label_author"
+                app:layout_constraintTop_toBottomOf="@id/tv_label_author" />
+
+            <Button
+                android:id="@+id/btn_edit_book"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:backgroundTint="@color/gd_blue_purple_1"
+                android:text="@string/label_edit_book"
+                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
+                app:layout_constraintStart_toStartOf="@id/fl_book_image"
+                app:layout_constraintTop_toBottomOf="@id/fl_book_image" />
+
+            <Button
+                android:id="@+id/btn_delete_book"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:text="@string/label_delete"
+                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
+                app:layout_constraintStart_toStartOf="@id/fl_book_image"
+                app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
+
+            <Spinner
+                android:id="@+id/spinner_reading_status"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:entries="@array/spinner_book_reading_status_value"
+                app:layout_constraintBottom_toBottomOf="@id/btn_edit_book"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/btn_edit_book"
+                app:layout_constraintTop_toTopOf="@id/btn_edit_book"
+                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/divider_purple_to_white"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="56dp"
+                app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_additional_info"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_add_book_offline"
+                android:minHeight="500sp"
+                android:padding="16dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider_purple_to_white"
+                app:layout_constraintVertical_bias="1.0"
+                tools:layout_editor_absoluteX="0dp">
+
+                <TextView
+                    android:id="@+id/tv_label_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_Description"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="9sp"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/label_loading_three_dots"
+                    android:textColor="@color/gray_transparent_80"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_label_description"
+                    tools:text="Lorem impsum fnausof fsnaofsa fnasofna fnsaionfsa faisnfosa fnaifnaofnsa fpamfpsa" />
+
+                <TextView
+                    android:id="@+id/tv_description_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="end"
+                    android:text="@string/label_show_more"
+                    android:textColor="@color/gd_blue_purple_0"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_description" />
+
+                <TextView
+                    android:id="@+id/tv_label_annotations"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_annotations"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_description_show_more" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_annotation_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:src="@drawable/ic_annotation_yellow"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_label_annotations" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_annotation_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_annotation_yellow"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_1"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_1" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_annotation_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_annotation_yellow"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_2"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_2" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_annotation_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_annotation_yellow"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_3"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_3" />
+
+
+                <TextView
+                    android:id="@+id/tv_annotation_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="end"
+                    android:text="@string/label_show_more"
+                    android:textColor="@color/gd_blue_purple_0"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_ic_annotation_4" />
+
+                <TextView
+                    android:id="@+id/tv_label_abstracts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_abstracts"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_annotation_show_more" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_abstract_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="32dp"
+                    android:src="@drawable/ic_abstract"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_label_abstracts" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_abstract_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_abstract"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_1"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_1" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_abstract_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_abstract"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_2"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_2" />
+
+                <ImageView
+                    android:id="@+id/iv_ic_abstract_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_abstract"
+                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_3"
+                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_3" />
+
+                <TextView
+                    android:id="@+id/tv_abstract_show_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="end"
+                    android:text="@string/label_show_more"
+                    android:textColor="@color/gd_blue_purple_0"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/iv_ic_abstract_4" />
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_show_add_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp"
+        android:backgroundTint="@color/gd_blue_purple_0"
+        android:contentDescription="@string/label_add_annotation_or_abstract"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/white" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_abstract"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="80dp"
+        android:backgroundTint="@color/dark_gray_1"
+        android:contentDescription="@string/label_add_annotation_or_abstract"
+        android:visibility="gone"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_abstract_transparent_color_white"
+        app:tint="@color/white"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_annotation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="135dp"
+        android:backgroundTint="@color/yellow_gray_1"
+        android:contentDescription="@string/label_add_annotation_or_abstract"
+        android:visibility="gone"
+        app:borderWidth="0dp"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/ic_annotation_yellow"
+        app:tint="@color/white"
+        tools:visibility="visible" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

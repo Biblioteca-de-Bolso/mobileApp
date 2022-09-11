@@ -73,4 +73,41 @@
     <string name="annotation_placeholder_insert_text_here">Insert text here...</string>
     <string name="label_save_annotation">Save annotation</string>
     <string name="alert_token_expired">Token expired, please log in again</string>
+    <string name="label_edit_book">Edit book</string>
+    <string name="label_book_not_found">Book not found</string>
+    <string name="label_book_details">Book details</string>
+    <string name="label_show_more">Show more</string>
+    <string name="error_invalid_token">Invalid Token! Please log in again</string>
+    <string name="label_loading_three_dots">loading...</string>
+    <string name="label_Description">Description</string>
+    <string name="label_annotations">Annotations</string>
+    <string name="label_abstracts">Abstracts</string>
+    <string name="label_add_annotation_or_abstract">Add an annotation or abstract</string>
+    <string name="label_no_internet_connection">No internet connection</string>
+    <string name="label_show_less">show less</string>
+    <string name="label_are_you_sure">Are you sure?</string>
+    <string name="label_are_you_sure_delete_book">Are you sure you want to delete this book?</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_delete">delete</string>
+    <string name="label_book_removed">Book removed successfully</string>
+    <string name="label_reference_with_example">Loc: Cap.X</string>
+    <string name="label_annotation_saved_successfully">Annotation saved successfully!</string>
+    <string name="label_action_not_valid">Action type not valid</string>
+    <string name="label_annotation_id_not_valid">Annotation ID invalid</string>
+    <string name="label_book_id_not_valid">Book ID invalid</string>
+    <string name="label_book_updated_sucessfully">Book updated successfully</string>
+    <string name="label_update">Update</string>
+    <string name="label_book_status_updated">Book status updated</string>
+    <string name="label_image_compressed">Image compressed</string>
+    <string name="label_compressing_image">Compressing image</string>
+    <string name="label_updated_successfully">Updated successfully</string>
+    <string name="label_theres_not_an_image_to_update">There\'s not an image to update</string>
+    <string name="label_book_created">Book Created</string>
+
+    <string-array name="spinner_book_reading_status_value">
+        <item>Planning</item>
+        <item>Reading</item>
+        <item>Concluded</item>
+        <item>Dropped</item>
+    </string-array>
 </resources>
