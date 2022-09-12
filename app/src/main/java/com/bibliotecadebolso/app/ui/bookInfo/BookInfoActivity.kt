@@ -250,7 +250,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun selectReadStatusOnSpinner(readStatusEnum: ReadStatusEnum?) {
-        if (readStatusEnum != null && readStatusEnum != ReadStatusEnum.NO_STATUS) {
+        if (readStatusEnum != null) {
             val indexOfReadingStatusLabel =
                 viewModel.getReadStatusEnumIndexOnSpinner(readStatusEnum)
             val readingStatusKey = viewModel.getReadingStatusKeyByIndex(indexOfReadingStatusLabel)
@@ -369,28 +369,27 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         if (!userIsInteracting) return
         val itemLabelSelected: String = p0?.getItemAtPosition(p2).toString()
         val readingStatusSelected: ReadStatusEnum =
-            getReadingStatusOrSetAsNoStatus(itemLabelSelected)
+            getReadingStatusOrSetAsPlanning(itemLabelSelected)
 
-        if (readingStatusSelected != ReadStatusEnum.NO_STATUS)
-            MaterialAlertDialogBuilder(this)
-                .setTitle(resources.getString(R.string.label_are_you_sure))
-                .setMessage("Are you sure you want to change the book status? New status: $itemLabelSelected")
-                .setNegativeButton(getString(R.string.label_cancel)) { _, _ ->
-                }
-                .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
-                    updateStatus(readingStatusSelected)
-                }
-                .show()
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.label_are_you_sure))
+            .setMessage("Are you sure you want to change the book status? New status: $itemLabelSelected")
+            .setNegativeButton(getString(R.string.label_cancel)) { _, _ ->
+            }
+            .setPositiveButton(resources.getString(R.string.label_update)) { dialog, which ->
+                updateStatus(readingStatusSelected)
+            }
+            .show()
     }
 
-    private fun getReadingStatusOrSetAsNoStatus(itemLabelSelected: String): ReadStatusEnum {
+    private fun getReadingStatusOrSetAsPlanning(itemLabelSelected: String): ReadStatusEnum {
         return viewModel.readingStatusValuesKey[itemLabelSelected]?.let { readStatusString: String ->
             try {
                 ReadStatusEnum.valueOf(readStatusString)
             } catch (e: IllegalArgumentException) {
-                ReadStatusEnum.NO_STATUS
+                ReadStatusEnum.PLANNING
             }
-        } ?: ReadStatusEnum.NO_STATUS
+        } ?: ReadStatusEnum.PLANNING
     }
 
 

@@ -15,7 +15,7 @@ class EditBookViewModel : ViewModel() {
 
     val bookLiveData = MutableLiveData<Result<Book>>()
     val updatedBookLiveData = MutableLiveData<Result<UpdatedBook>>()
-    var lastReadingStatus = ReadStatusEnum.NO_STATUS
+    var lastReadingStatus = ReadStatusEnum.PLANNING
         private set
 
 
@@ -23,7 +23,7 @@ class EditBookViewModel : ViewModel() {
         viewModelScope.launch {
             val result = BookDataSource.getBookById(accessToken, bookId.toInt())
             if (result is Result.Success) {
-                lastReadingStatus = result.response.readStatus ?: ReadStatusEnum.NO_STATUS
+                lastReadingStatus = result.response.readStatus ?: ReadStatusEnum.PLANNING
             }
 
             bookLiveData.postValue(result)

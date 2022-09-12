@@ -28,7 +28,6 @@ class HomeViewModel : ViewModel() {
                     ReadStatusEnum.READING -> bookListReading.postValue(response)
                     ReadStatusEnum.DROPPED -> bookListDropped.postValue(response)
                     ReadStatusEnum.CONCLUDED -> bookListConcluded.postValue(response)
-                    ReadStatusEnum.NO_STATUS -> {}
                 }
             }
 

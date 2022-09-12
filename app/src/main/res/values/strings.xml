@@ -90,7 +90,7 @@
     <string name="label_cancel">Cancel</string>
     <string name="label_delete">delete</string>
     <string name="label_book_removed">Book removed successfully</string>
-    <string name="label_reference_with_example">Loc: Cap.X</string>
+    <string name="label_reference_with_example" translatable="false">Loc: Cap.X</string>
     <string name="label_annotation_saved_successfully">Annotation saved successfully!</string>
     <string name="label_action_not_valid">Action type not valid</string>
     <string name="label_annotation_id_not_valid">Annotation ID invalid</string>
@@ -108,6 +108,7 @@
     <string name="label_planning_to_read">Planning to read</string>
     <string name="label_concluded">Concluded</string>
     <string name="label_dropped">Dropped</string>
+    <string name="label_invalid_read_status">Invalid read status</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
