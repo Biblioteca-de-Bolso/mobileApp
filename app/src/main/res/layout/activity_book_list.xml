@@ -7,6 +7,7 @@
     tools:context=".ui.book.gridList.BookListActivity">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:padding="20dp"
         android:id="@+id/rv_list_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

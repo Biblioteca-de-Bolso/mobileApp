@@ -109,6 +109,7 @@
     <string name="label_concluded">Concluded</string>
     <string name="label_dropped">Dropped</string>
     <string name="label_invalid_read_status">Invalid read status</string>
+    <string name="label_book">Books:</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
