@@ -34,6 +34,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     private lateinit var fragmentAdapterConcluded: BookListAdapter
     private lateinit var fragmentAdapterDropped: BookListAdapter
     private lateinit var viewModel: HomeViewModel
+    private var getListCount = 0
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -52,6 +53,11 @@ class BookListFragment : Fragment(), RvOnClickListener {
         setupOnClickShowMoreListener()
         setupBookListObserver()
         setupFabButtonListener()
+
+        binding.swlRefreshHome.setOnRefreshListener {
+            getListCount = 4
+            getList()
+        }
 
         getList()
         return root
@@ -85,10 +91,25 @@ class BookListFragment : Fragment(), RvOnClickListener {
     }
 
     private fun setupOnClickShowMoreListener() {
+
         binding.ivViewMorePlanning.setOnClickListener {
-            val intent = Intent(requireContext(), BookListActivity::class.java)
-            startActivity(intent)
+            startBookListActivity(enumChoosed = ReadStatusEnum.PLANNING)
         }
+        binding.ivViewMoreReading.setOnClickListener {
+            startBookListActivity(enumChoosed = ReadStatusEnum.READING)
+        }
+        binding.ivViewMoreConcluded.setOnClickListener {
+            startBookListActivity(enumChoosed = ReadStatusEnum.CONCLUDED)
+        }
+        binding.ivViewMoreDropped.setOnClickListener {
+            startBookListActivity(enumChoosed = ReadStatusEnum.DROPPED)
+        }
+    }
+
+    private fun startBookListActivity(enumChoosed: ReadStatusEnum) {
+        val intent = Intent(requireContext(), BookListActivity::class.java)
+        intent.putExtra("readStatusEnum", enumChoosed.toString())
+        startActivity(intent)
     }
 
 
@@ -112,6 +133,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     }
 
     private fun loadBookList(result: Result<List<CreatedBook>>, readStatusEnum: ReadStatusEnum) {
+        reduceListCountAndSetRefreshingAsFalse()
         when (result) {
             is Result.Success<List<CreatedBook>> -> {
                 showBookListOnCorrectCategory(readStatusEnum, result.response)
@@ -120,6 +142,11 @@ class BookListFragment : Fragment(), RvOnClickListener {
                 showLongSnackBar(result.errorBody.message)
             }
         }
+    }
+
+    private fun reduceListCountAndSetRefreshingAsFalse() {
+        getListCount--
+        if (getListCount == 0) binding.swlRefreshHome.isRefreshing = false
     }
 
     private fun showBookListOnCorrectCategory(readStatusEnum: ReadStatusEnum, list: List<CreatedBook>) {
@@ -165,7 +192,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
 
         showBookList(fragmentAdapter, list)
         showErrorMessageIfListIsEmpty(list, rvListBook, labelError)
-        hideArrowIfListHasLessThan10(list, showMoreArrow)
+        hideArrowIfListHasLessThan5OrShow(list, showMoreArrow)
     }
 
     private fun showBookList(fragmentAdapter: BookListAdapter, list: List<CreatedBook>) {
@@ -184,8 +211,8 @@ class BookListFragment : Fragment(), RvOnClickListener {
         }
     }
 
-    private fun hideArrowIfListHasLessThan10(list: List<CreatedBook>, showMoreArrow: ImageView) {
-        if (list.size < 10) showMoreArrow.visibility = View.GONE
+    private fun hideArrowIfListHasLessThan5OrShow(list: List<CreatedBook>, showMoreArrow: ImageView) {
+        showMoreArrow.visibility = if (list.size <= 5) View.GONE else View.VISIBLE
     }
 
     private fun showLongSnackBar(message: String) {
@@ -229,9 +256,6 @@ class BookListFragment : Fragment(), RvOnClickListener {
         val intent = Intent(context, BookInfoActivity::class.java)
         intent.putExtra("id", position)
         startActivityForResult(intent, VIEW_DETAIL_BOOK)
-
-        //val modalBottomSheet = BookItemBottomSheet(position)
-        //modalBottomSheet.show(this.parentFragmentManager, BookItemBottomSheet.TAG)
     }
 
     companion object {

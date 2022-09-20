@@ -7,10 +7,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookListBinding
+import com.bibliotecadebolso.app.ui.adapter.BookLinearListAdapter
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.bookInfo.BookInfoActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
@@ -20,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 
 class BookListActivity : AppCompatActivity(), RvOnClickListener {
     private lateinit var binding: ActivityBookListBinding
-    private lateinit var bookListAdapter: BookListAdapter
+    private lateinit var bookListAdapter: BookLinearListAdapter
     private lateinit var viewModel: BookListViewModel
     var isLoadingNewItems = false
     var scrollWasOnBottom = false
@@ -63,18 +65,12 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
 
 
     private fun setupRecyclerView() {
-        bookListAdapter = BookListAdapter(this, this)
-        val layoutManager = GridLayoutManager(this, 2)
+        bookListAdapter = BookLinearListAdapter(this, this)
+        val layoutManager = LinearLayoutManager(this)
 
         binding.rvListBook.apply {
             setLayoutManager(layoutManager)
             adapter = bookListAdapter
-            addItemDecoration(
-                BookListDividerDecoration(
-                    resources.getDimensionPixelSize(R.dimen.book_list_spacing),
-                    resources.getInteger(R.integer.book_list_preview_columns)
-                )
-            )
         }
     }
 
