@@ -171,6 +171,17 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 showLongToast(getString(R.string.label_book_removed))
 
                 val returnResult = Intent()
+                returnResult.putExtra("id", getIdFromExtrasOrMinus1())
+
+                val lastReadStatusEnum =
+                    if (viewModel.liveDataUpdateBook.value != null &&
+                        viewModel.liveDataUpdateBook.value is Result.Success)
+                        (viewModel.liveDataUpdateBook.value as Result.Success).response.readStatus
+                else (viewModel.liveDataBookInfo.value as Result.Success).response.readStatus
+
+                if (lastReadStatusEnum != null)
+                    returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
+
                 setResult(BookListFragment.REMOVE_BOOK, returnResult)
                 finish()
             } else if (it is Result.Error) {
@@ -204,8 +215,13 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         viewModel.liveDataBookInfo.observe(this) {
             if (it is Result.Success)
                 loadActivityWithBookInfo(it.response)
-            else
+            else {
                 showLongToast((it as Result.Error).errorBody.message)
+                binding.btnDeleteBook.isEnabled = false
+                binding.btnEditBook.isEnabled = false
+                binding.spinnerReadingStatus.isEnabled = false
+                finish()
+            }
         }
     }
 

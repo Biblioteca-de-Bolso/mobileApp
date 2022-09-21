@@ -35,7 +35,6 @@ class BookInfoViewModel : ViewModel() {
     val readingStatusValuesKey = HashMap<String, String>()
     var isToShowConfirmationDisplay = false
         private set
-
     fun setDisplayStatusConfirmation(boolean: Boolean) {
         Log.e("onViewModel", boolean.toString())
         isToShowConfirmationDisplay = boolean

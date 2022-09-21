@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.CreatedBook
-import com.bibliotecadebolso.app.databinding.ItemBookBinding
 import com.bibliotecadebolso.app.databinding.ItemBookBindingFullLengthBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
 import com.bumptech.glide.Glide
@@ -60,6 +59,7 @@ class BookLinearListAdapter(
         holder.binding.root.setOnClickListener { rvOnClickListener.onItemCLick(createdBook.id) }
 
     }
+
 
     override fun getItemCount(): Int = differ.currentList.size
 }

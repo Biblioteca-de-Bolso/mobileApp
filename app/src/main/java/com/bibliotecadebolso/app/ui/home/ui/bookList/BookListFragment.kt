@@ -2,11 +2,13 @@ package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -255,7 +257,33 @@ class BookListFragment : Fragment(), RvOnClickListener {
     override fun onItemCLick(position: Int) {
         val intent = Intent(context, BookInfoActivity::class.java)
         intent.putExtra("id", position)
-        startActivityForResult(intent, VIEW_DETAIL_BOOK)
+        bookInfoActivityResult.launch(intent)
+    }
+
+    private val bookInfoActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == REMOVE_BOOK) {
+
+            val readStatusEnum = ReadStatusEnum.valueOf(result.data!!.extras!!.getString("readStatusEnum", "PLANNING"))
+            Log.e("readStatusEnum", readStatusEnum.toString())
+            val adapter = when (readStatusEnum) {
+                ReadStatusEnum.PLANNING -> fragmentAdapterPlanning
+                ReadStatusEnum.READING -> fragmentAdapterReading
+                ReadStatusEnum.CONCLUDED -> fragmentAdapterConcluded
+                ReadStatusEnum.DROPPED -> fragmentAdapterDropped
+            }
+            val list = adapter.differ.currentList.toMutableList()
+            list.forEach {
+                Log.i("book", it.id.toString())
+            }
+            Log.e("resultExtra", result.data!!.extras!!.get("id").toString())
+            val book = list.find { it.id == result.data!!.extras!!.getInt("id") }
+            if (book != null) Log.e("bookId", book.id.toString())
+            if (book != null) list.remove(book)
+            adapter.differ.submitList(list)
+        } else if (result.resultCode == BOOK_ADDED)
+            getList()
     }
 
     companion object {
