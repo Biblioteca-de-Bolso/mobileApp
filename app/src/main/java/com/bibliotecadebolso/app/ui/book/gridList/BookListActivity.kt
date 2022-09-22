@@ -3,7 +3,10 @@ package com.bibliotecadebolso.app.ui.book.gridList
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
 import android.view.View
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
@@ -35,6 +38,19 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
 
         val enumString = intent.extras?.getString("readStatusEnum")
 
+        setEnumChoosed(enumString)
+        viewModel = ViewModelProvider(this)[BookListViewModel::class.java]
+
+        setupRecyclerView()
+        setupBookListObserver()
+        setupSearchListListener()
+
+        if (viewModel.normalList.bookListLiveData.value == null) getList()
+
+        setContentView(binding.root)
+    }
+
+    private fun setEnumChoosed(enumString: String?) {
         if (enumString != null) {
             try {
                 enumChoosed = ReadStatusEnum.valueOf(enumString)
@@ -47,15 +63,69 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
                 finishAffinity()
             }
         }
+    }
 
-        viewModel = ViewModelProvider(this)[BookListViewModel::class.java]
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
 
-        setupRecyclerView()
-        setupBookListObserver()
+        val searchItem = menu?.findItem(R.id.action_search)
+        val searchView = searchItem?.actionView as SearchView
+        searchView.queryHint = getString(R.string.label_search)
 
-        if (viewModel.bookListLiveData.value == null) getList()
+        searchView.setQuery(viewModel.searchList.searchContent, true)
+        searchView.setOnSearchClickListener {
+            viewModel.listType = ListType.SEARCH
+            changeList()
+        }
+        searchView.setOnCloseListener {
+            viewModel.listType = ListType.NORMAL_LIST
+            scrollState.setAllBooleanAs(false)
+            changeList()
 
-        setContentView(binding.root)
+            true
+        }
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                if (p0.isNullOrEmpty()) {
+                    viewModel.listType = ListType.NORMAL_LIST
+                    changeList()
+                } else {
+                    viewModel.listType = ListType.SEARCH
+                    viewModel.searchList.searchContent = p0.toString()
+                    getSearchList(viewModel.searchList.searchContent, true)
+                }
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                if (p0.isNullOrEmpty()) {
+                    scrollState.setAllBooleanAs(false)
+                    viewModel.listType = ListType.NORMAL_LIST
+                    changeList()
+                    return true
+                }
+                return false
+            }
+
+        })
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun changeList() {
+        Log.e("listType", viewModel.listType.toString())
+        when (viewModel.listType) {
+            ListType.NORMAL_LIST -> {
+                bookListAdapter.differ.submitList(
+                    viewModel.normalList.bookListPreviousSuccessResponse!!
+                )
+                bookListAdapter.notifyDataSetChanged()
+            }
+            ListType.SEARCH -> bookListAdapter.differ.submitList(
+                viewModel.searchList.bookListPreviousSuccessResponse ?: emptyList()
+            )
+        }
     }
 
     private fun getList() {
@@ -63,13 +133,47 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
 
         if (viewModel.bookListReachedOnTheEnd()) {
-            showLongSnackBar(viewModel.reachedOnTheEndErrorResponse().message)
+            showLongSnackBar(BookListViewModel.reachedOnTheEndErrorResponse().message)
             return
         }
 
         binding.pgLoading.visibility = View.VISIBLE
         viewModel.getBookList(accessToken, readStatusEnum = enumChoosed)
 
+    }
+
+    private fun getSearchList(searchContent: String, newSearchContent: Boolean = false) {
+        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+        if (!newSearchContent && viewModel.searchList.bookListReachedOnTheEnd()) {
+            showLongSnackBar(BookListViewModel.reachedOnTheEndErrorResponse().message)
+        } else {
+
+            binding.pgLoading.visibility = View.VISIBLE
+            viewModel.searchBook(
+                accessToken,
+                searchContent,
+                readStatusEnum = enumChoosed,
+                newSearchContent = newSearchContent
+            )
+        }
+    }
+
+    private fun setupSearchListListener() {
+        viewModel.searchList.bookListLiveData.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    bookListAdapter.differ.submitList(it.response)
+                    Log.e("ListSize", it.response.size.toString())
+                }
+                is Result.Error -> {
+                    showLongSnackBar(it.errorBody.message)
+                }
+            }
+            scrollState.setAllBooleanAs(false)
+            binding.pgLoading.visibility = View.GONE
+        }
     }
 
 
@@ -85,11 +189,9 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     }
 
     private fun setupBookListObserver() {
-        viewModel.bookListLiveData.observe(this) {
+        viewModel.normalList.bookListLiveData.observe(this) {
             when (it) {
                 is Result.Success -> {
-                    val oldCount = bookListAdapter.itemCount
-                    val newCount = oldCount + it.response.size
                     bookListAdapter.differ.submitList(it.response)
                 }
                 is Result.Error -> {
@@ -107,7 +209,10 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
             if (!recyclerView.canScrollVertically(1)) {
                 if (!scrollState.scrollOnBottom && !scrollState.isLoadingNewItems) {
                     scrollState.setAllBooleanAs(true)
-                    getList()
+                    when (viewModel.listType) {
+                        ListType.NORMAL_LIST -> getList()
+                        ListType.SEARCH -> getSearchList(viewModel.searchList.searchContent)
+                    }
                 }
             }
         }
@@ -138,7 +243,6 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         }
     }
 }
-
 
 
 data class ScrollState(
