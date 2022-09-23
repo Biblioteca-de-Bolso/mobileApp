@@ -229,6 +229,8 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private fun loadActivityWithBookInfo(book: Book) {
         binding.tvBookTitle.text = book.title
         binding.tvAuthor.text = book.author
+        binding.tvIsbn10.text = "ISBN-10: ${book.isbn10}"
+        binding.tvIsbn13.text = "ISBN-13: ${book.isbn13}"
         if (book.thumbnail.isNotEmpty())
             Glide.with(this).load(book.thumbnail)
                 .centerInside()
@@ -255,6 +257,8 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private fun setTvDescriptionShowMore(description: StringBuilder) {
         if (viewModel.isAShortDescription(description)) {
             binding.tvDescriptionShowMore.text = ""
+            if (description.isEmpty())
+                binding.tvDescription.text = getString(R.string.label_no_description)
         } else {
             changeTvDescriptionShowMore(viewModel.isDescriptionShowMoreActive)
         }
@@ -378,11 +382,14 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun setTvAnnotationShowMoreOnClickListener() {
-        binding.tvAnnotationShowMore.setOnClickListener {
-            val intent = Intent(this, AnnotationListActivity::class.java)
-            intent.putExtra("bookId", getIdFromExtrasOrMinus1())
-            startActivity(intent)
-        }
+        binding.ivIcAnnotation1.setOnClickListener(annotationListOnClickListener)
+        binding.tvAnnotationShowMore.setOnClickListener(annotationListOnClickListener)
+    }
+
+    private val annotationListOnClickListener = View.OnClickListener {
+        val intent = Intent(this@BookInfoActivity, AnnotationListActivity::class.java)
+        intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+        startActivity(intent)
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

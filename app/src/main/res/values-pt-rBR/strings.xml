@@ -111,5 +111,9 @@
     <string name="label_invalid_read_status">Status de leitura inválido</string>
     <string name="label_book">Livros:</string>
     <string name="label_reached_in_the_end">Você chegou no fim</string>
+    <string name="label_annotation_image">Imagem clicavel da anotação</string>
+    <string name="label_more_info">Mais informações</string>
+    <string name="label_lendings">Empréstimos</string>
+    <string name="label_no_description">Sem descrição</string>
 
 </resources>

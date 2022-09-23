@@ -111,6 +111,10 @@
     <string name="label_invalid_read_status">Invalid read status</string>
     <string name="label_book">Books:</string>
     <string name="label_reached_in_the_end">Reached in the end</string>
+    <string name="label_annotation_image">annotation image</string>
+    <string name="label_more_info">More info</string>
+    <string name="label_lendings">Lendings</string>
+    <string name="label_no_description">No description</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
