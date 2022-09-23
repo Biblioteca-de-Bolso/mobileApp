@@ -5,7 +5,7 @@ import com.bibliotecadebolso.app.ui.book.gridList.BookListViewModel
 import com.bibliotecadebolso.app.util.Result
 
 open class SearchListContent<T> (
-    var searchContent: String = ""
+    var searchContent: String? = null
 ) : ListContent<T>() {
 
     fun handleBookListResponse(

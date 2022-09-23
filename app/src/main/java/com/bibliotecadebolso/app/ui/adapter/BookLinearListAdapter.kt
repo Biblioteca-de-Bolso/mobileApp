@@ -50,6 +50,8 @@ class BookLinearListAdapter(
 
         holder.binding.tvTitle.text = createdBook.title
         holder.binding.tvAuthor.text = createdBook.author
+        holder.binding.tvIsbn10.text = "ISBN-10: ${createdBook.isbn10}"
+        holder.binding.tvIsbn13.text = "ISBN-13: ${createdBook.isbn13}"
 
         Glide.with(context)
             .load(createdBook.thumbnail.ifEmpty { defaultThumbnailInt })

@@ -73,6 +73,7 @@ class EditBookActivity : AppCompatActivity() {
                 book.isbn13.ifEmpty { book.isbn10 })
             etBookDescription.editText?.setText(book.description)
             etBookPublisher.editText?.setText(book.publisher)
+            viewModel.bookThumbnail = book.thumbnail
             if (book.thumbnail.isNotEmpty())
                 Glide.with(this@EditBookActivity).load(book.thumbnail)
                     .centerCrop()
@@ -157,6 +158,7 @@ class EditBookActivity : AppCompatActivity() {
                 author,
                 isbn,
                 publisher,
+                viewModel.bookThumbnail,
                 description,
                 viewModel.lastReadingStatus
             )

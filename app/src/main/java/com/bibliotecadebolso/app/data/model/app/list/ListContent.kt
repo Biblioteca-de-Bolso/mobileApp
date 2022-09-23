@@ -31,7 +31,10 @@ open class ListContent<T>(
     }
 
     fun bookListReachedOnTheEnd(): Boolean {
-        if (bookListPreviousSuccessResponse != null && bookListPreviousSuccessResponse!!.size % 10 != 0) return true
+        if (bookListPreviousSuccessResponse != null) {
+            if (bookListPreviousSuccessResponse!!.isEmpty()) return true
+            if (bookListPreviousSuccessResponse!!.size % 10 != 0) return true
+        }
 
         return false
     }

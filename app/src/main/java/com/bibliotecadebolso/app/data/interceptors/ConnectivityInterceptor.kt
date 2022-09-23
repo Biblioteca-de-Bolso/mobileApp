@@ -7,6 +7,7 @@ import okhttp3.Interceptor
 import okhttp3.MultipartBody
 import okhttp3.Response
 import java.net.SocketTimeoutException
+import java.util.concurrent.TimeoutException
 
 class ConnectivityInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -17,6 +18,10 @@ class ConnectivityInterceptor : Interceptor {
                 return chain.proceed(chain.request())
             } catch (e: SocketTimeoutException) {
                 throw NoInternetException("Too long time request")
+            } catch (e: TimeoutException) {
+                throw NoInternetException("Too long time request")
+            } catch (e: Throwable) {
+                throw NoInternetException(e.message.toString())
             }
         }
     }

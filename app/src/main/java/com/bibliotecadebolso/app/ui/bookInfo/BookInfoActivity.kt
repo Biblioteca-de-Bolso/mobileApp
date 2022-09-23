@@ -28,6 +28,7 @@ import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
+import com.bibliotecadebolso.app.util.WifiService
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
@@ -344,6 +345,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun setOnClickSaveNewImage() {
         binding.ivBtnSaveImage.setOnClickListener {
+            if (WifiService.instance.isNotOnline()) {
+                showLongToast(getString(R.string.label_no_internet_connection))
+                return@setOnClickListener
+            }
             val imageFile = viewModel.liveDataImageCompressed.value
             if (imageFile == null) {
                 showLongToast(getString(R.string.label_theres_not_an_image_to_update))
@@ -358,17 +363,16 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             viewModel.updateImageBookById(this, accessToken, getIdFromExtrasOrMinus1(), imageFile)
             showLoadingBar()
             binding.ivBtnSaveImage.visibility = View.GONE
-
-
         }
     }
 
     private fun setOnImageUpdatedListener() {
         viewModel.liveDataUpdateImage.observe(this) {
             hideLoadingBar()
-            if (it is Result.Error)
+            if (it is Result.Error) {
                 showLongToast(it.errorBody.message)
-            else
+                binding.ivBtnSaveImage.visibility = View.VISIBLE
+            } else
                 showLongToast((it as Result.Success).response)
         }
     }

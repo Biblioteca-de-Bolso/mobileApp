@@ -110,4 +110,6 @@
     <string name="label_dropped">Parei de ler</string>
     <string name="label_invalid_read_status">Status de leitura inválido</string>
     <string name="label_book">Livros:</string>
+    <string name="label_reached_in_the_end">Você chegou no fim</string>
+
 </resources>

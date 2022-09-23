@@ -15,24 +15,11 @@ import kotlinx.coroutines.launch
 
 class BookListViewModel : ViewModel() {
 
-    var listType: ListType = ListType.NORMAL_LIST
-
     val searchList = SearchListContent<CreatedBook>()
-    val normalList = ListContent<CreatedBook>()
-
-    fun getBookList(
-        accessToken: String,
-        pageNum: Int = -1,
-        readStatusEnum: ReadStatusEnum? = null
-    ) {
-        viewModelScope.launch {
-            requestGetContent(normalList, accessToken, pageNum, readStatusEnum)
-        }
-    }
 
     fun searchBook(
         accessToken: String,
-        searchContent: String,
+        searchContent: String?,
         pageNum: Int = -1,
         readStatusEnum: ReadStatusEnum? = null,
         newSearchContent: Boolean = false
@@ -50,7 +37,7 @@ class BookListViewModel : ViewModel() {
     }
 
     private suspend fun requestGetContent(
-        listContent: ListContent<CreatedBook>,
+        listContent: SearchListContent<CreatedBook>,
         accessToken: String,
         pageNum: Int = -1,
         readStatusEnum: ReadStatusEnum? = null,
@@ -58,25 +45,17 @@ class BookListViewModel : ViewModel() {
         isNewSearchContent: Boolean = false,
     ) {
         try {
-            if (listContent is SearchListContent && isNewSearchContent) {
-                if (isNewSearchContent) listContent.page = 1
-            } else {
-                throwIfListReachedOnTheEnd(listContent)
-            }
+            if (isNewSearchContent) listContent.page = 1
+            else throwIfListReachedOnTheEnd()
 
             val page = if (isInvalidPage(pageNum)) listContent.page else pageNum
-
             val response = BookDataSource.list(accessToken, page, readStatusEnum, searchContent)
 
-            if (listContent is SearchListContent) {
-                listContent.bookListLiveData.postValue(
-                    listContent.handleBookListResponse(response, isNewSearchContent)
-                )
-            } else {
-                listContent.bookListLiveData.postValue(listContent.handleBookListResponse(response))
-            }
+            listContent.bookListLiveData.postValue(
+                listContent.handleBookListResponse(response, isNewSearchContent)
+            )
 
-            if (usedInternalPageNum(pageNum) && !listContent.reachedOnTheEnd) listContent.page++
+            if (isInvalidPage(pageNum) && !listContent.reachedOnTheEnd) listContent.page++
         } catch (e: ListReachedOnTheEndException) {
             listContent.bookListLiveData.postValue(
                 Result.Error(
@@ -89,52 +68,16 @@ class BookListViewModel : ViewModel() {
 
     private fun isInvalidPage(pageNum: Int) = pageNum == -1
 
-    private fun usedInternalPageNum(pageNum: Int): Boolean = isInvalidPage(pageNum)
-
-    private fun throwIfListReachedOnTheEnd(listContent: ListContent<CreatedBook>) {
+    private fun throwIfListReachedOnTheEnd() {
         if (bookListReachedOnTheEnd()) throw ListReachedOnTheEndException()
     }
 
     fun bookListReachedOnTheEnd(): Boolean {
-        return when (listType) {
-            ListType.NORMAL_LIST -> normalList.bookListReachedOnTheEnd()
-            ListType.SEARCH -> searchList.bookListReachedOnTheEnd()
-        }
+        return searchList.bookListReachedOnTheEnd()
     }
 
     companion object {
         fun reachedOnTheEndErrorResponse() =
             ErrorResponse("error", "reachedOnTheEnd", "list reached on the end")
-    }
-}
-
-enum class ListType {
-    SEARCH,
-    NORMAL_LIST
-}
-
-data class SearchContent(
-    var searchContent: String = ""
-) : ListContent<CreatedBook>() {
-
-    fun handleBookListResponse(
-        response: Result<List<CreatedBook>>,
-        isNewSearchContent: Boolean = false
-    ): Result<List<CreatedBook>> {
-        if (response is Result.Success) {
-            if (bookListPreviousSuccessResponse == null || isNewSearchContent) {
-                bookListPreviousSuccessResponse = response.response.toMutableList()
-            } else {
-                val oldList = bookListPreviousSuccessResponse!!
-                val newList = response.response
-                if (newList.isEmpty())
-                    return Result.Error(null, BookListViewModel.reachedOnTheEndErrorResponse())
-                oldList.addAll(newList)
-            }
-            return Result.Success(bookListPreviousSuccessResponse!!.toList())
-        }
-
-        return response
-
     }
 }

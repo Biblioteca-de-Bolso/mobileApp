@@ -30,4 +30,6 @@ class WifiService{
         }
         return false
     }
+
+    fun isNotOnline(): Boolean = !isOnline()
 }

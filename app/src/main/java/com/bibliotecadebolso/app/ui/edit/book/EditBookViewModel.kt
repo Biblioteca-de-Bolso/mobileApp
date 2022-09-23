@@ -17,7 +17,7 @@ class EditBookViewModel : ViewModel() {
     val updatedBookLiveData = MutableLiveData<Result<UpdatedBook>>()
     var lastReadingStatus = ReadStatusEnum.PLANNING
         private set
-
+    var bookThumbnail = ""
 
     fun getBookById(accessToken: String, bookId: Long) {
         viewModelScope.launch {

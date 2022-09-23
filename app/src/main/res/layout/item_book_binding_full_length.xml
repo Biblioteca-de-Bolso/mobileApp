@@ -45,6 +45,28 @@
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 tools:text="Gustavo guanabara" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_marginBottom="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/tv_isbn_10"
+                android:layout_marginTop="20dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_isbn_13"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="ISBN-10: 0123456789"
+                />
+            <TextView
+                android:id="@+id/tv_isbn_13"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="ISBN-13: 0123456789123"
+                />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </LinearLayout>
 
