@@ -12,10 +12,10 @@
         tools:layout="@layout/fragment_book_list" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.bibliotecadebolso.app.ui.home.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_borrow"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.borrowList.BorrowFragment"
+        android:label="@string/title_borrow"
+        tools:layout="@layout/fragment_borrow" />
 
     <fragment
         android:id="@+id/navigation_notifications"

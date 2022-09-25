@@ -6,4 +6,9 @@
         android:icon="@drawable/ic_book"
         android:title="@string/title_home" />
 
+    <item
+        android:id="@+id/navigation_borrow"
+        android:icon="@drawable/book_clock_outline"
+        android:title="@string/title_borrow" />
+
 </menu>

@@ -115,6 +115,16 @@
     <string name="label_more_info">More info</string>
     <string name="label_lendings">Lendings</string>
     <string name="label_no_description">No description</string>
+    <string name="title_borrow">Borrows</string>
+    <string name="label_returned">Returned</string>
+    <string name="label_borrowed">Borrowed</string>
+
+    <string name="label_x_month_ago">%1$s month ago</string>
+    <string name="label_x_months_ago">%1$s months ago</string>
+    <string name="label_x_week_ago">%1$s week ago</string>
+    <string name="label_x_weeks_ago">%1$s weeks ago</string>
+    <string name="label_x_day_ago">%1$s day ago</string>
+    <string name="label_x_days_ago">%1$s days ago</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
