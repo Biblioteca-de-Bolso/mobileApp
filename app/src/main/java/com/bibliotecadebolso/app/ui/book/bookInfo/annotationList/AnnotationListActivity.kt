@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.bookInfo.annotationList
+package com.bibliotecadebolso.app.ui.book.bookInfo.annotationList
 
 import BookListDividerDecoration
 import android.content.Intent

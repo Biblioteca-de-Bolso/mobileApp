@@ -2,6 +2,10 @@ package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.SaveAnnotation
+import com.bibliotecadebolso.app.data.model.response.BorrowObject
+import com.bibliotecadebolso.app.data.model.request.CreateBorrow
+import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
+import com.bibliotecadebolso.app.data.model.request.EditBorrow
 import com.bibliotecadebolso.app.data.model.response.*
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -118,4 +122,38 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Path("id") id: Int
     ): Response<APIResponse<AnnotationObject>>
+
+    @POST("borrow")
+    suspend fun createBorrow(
+        @Header("Authorization") accessToken: String,
+        @Body createBorrow: CreateBorrow
+    ): Response<APIResponse<BorrowObject>>
+
+    @GET("borrow/{id}")
+    suspend fun getBorrowById(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int
+    ): Response<APIResponse<BorrowObject>>
+
+    @GET("borrow")
+    suspend fun getBorrowList(
+        @Header("Authorization") accessToken: String,
+        @Query("page") page: Int = 1,
+        @Query("bookId") bookId: Int,
+        @Query("search") searchContent: String? = null
+    ): Response<APIResponse<BorrowObject>>
+
+    @DELETE("borrow")
+    suspend fun deleteBorrow(
+        @Header("Authorization") accessToken: String,
+        @Body deleteBorrow: DeleteBorrow
+    ): Response<APIResponse<Nothing>>
+
+    @PATCH
+    suspend fun editBorrow(
+        @Header("Authorization") accessToken: String,
+        @Body editBorrow: EditBorrow
+    ): Response<APIResponse<BorrowObject>>
+
+
 }

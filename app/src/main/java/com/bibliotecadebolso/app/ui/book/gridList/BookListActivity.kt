@@ -15,9 +15,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
+import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookLinearListAdapter
-import com.bibliotecadebolso.app.ui.bookInfo.BookInfoActivity
+import com.bibliotecadebolso.app.ui.book.bookInfo.BookInfoActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.*
 import com.google.android.material.snackbar.BaseTransientBottomBar

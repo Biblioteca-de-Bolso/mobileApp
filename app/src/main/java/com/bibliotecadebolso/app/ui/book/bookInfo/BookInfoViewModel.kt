@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.bookInfo
+package com.bibliotecadebolso.app.ui.book.bookInfo
 
 import android.content.Context
 import android.graphics.Bitmap

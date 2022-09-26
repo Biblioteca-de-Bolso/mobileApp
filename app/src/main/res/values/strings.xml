@@ -110,6 +110,7 @@
     <string name="label_dropped">Dropped</string>
     <string name="label_invalid_read_status">Invalid read status</string>
     <string name="label_book">Books:</string>
+    <string name="label_book_unique">Book</string>
     <string name="label_reached_in_the_end">Reached in the end</string>
     <string name="label_annotation_image">annotation image</string>
     <string name="label_more_info">More info</string>
@@ -125,6 +126,7 @@
     <string name="label_x_weeks_ago">%1$s weeks ago</string>
     <string name="label_x_day_ago">%1$s day ago</string>
     <string name="label_x_days_ago">%1$s days ago</string>
+    <string name="label_contact_name">Contact name</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

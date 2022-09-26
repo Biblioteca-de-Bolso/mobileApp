@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.edit.book
+package com.bibliotecadebolso.app.ui.book.edit
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,7 +9,6 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.response.BookResponse
-import com.bibliotecadebolso.app.data.validator.BookValidator
 import com.bibliotecadebolso.app.data.validator.Validation
 import com.bibliotecadebolso.app.data.validator.ValidationError
 import com.bibliotecadebolso.app.data.validator.validations.BookValidation

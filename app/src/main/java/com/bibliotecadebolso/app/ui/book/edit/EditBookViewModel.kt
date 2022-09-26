@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.edit.book
+package com.bibliotecadebolso.app.ui.book.edit
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

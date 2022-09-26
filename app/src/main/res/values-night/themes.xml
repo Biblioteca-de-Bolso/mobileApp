@@ -17,6 +17,10 @@
         <!-- Customize your theme here. -->
     </style>
 
+    <style name="Theme.MyApplication.TwoSearchField" parent="Theme.MyApplication">
+        <item name="actionBarSize">100dip</item>
+    </style>
+
     <style name="Theme.LoadingTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">#492376</item>

@@ -19,7 +19,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".BookLinearListActivity"
+            android:name=".ui.borrow.add.AddBorrowActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.borrow.list.BorrowListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.TwoSearchField">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.book.linearList.BookLinearListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -29,14 +44,14 @@
             android:name=".ui.book.gridList.BookListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.edit.book.EditBookActivity"
+            android:name=".ui.book.edit.EditBookActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication.PurpleTheme" />
         <activity
-            android:name=".ui.bookInfo.annotationList.AnnotationListActivity"
+            android:name=".ui.book.bookInfo.annotationList.AnnotationListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.bookInfo.BookInfoActivity"
+            android:name=".ui.book.bookInfo.BookInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication.PurpleTheme" />
         <activity

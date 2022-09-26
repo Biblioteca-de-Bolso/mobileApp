@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:background="@color/purple_primary"
+    >
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+        <android.widget.SearchView
+            android:id="@+id/search1"
+
+            android:searchIcon="@drawable/book_clock_outline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:queryHint="@string/label_contact_name"
+            android:iconifiedByDefault="false"
+            android:visibility="visible" />
+        <android.widget.SearchView
+            android:id="@+id/search2"
+            android:searchIcon="@drawable/ic_item_book"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:queryHint="@string/label_book"
+            android:iconifiedByDefault="false"
+            android:visibility="visible" />
+    </LinearLayout>
+    <ImageButton
+        android:id="@+id/btn_search_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:backgroundTint="@android:color/transparent"
+        android:src="@drawable/ic_search" />
+
+</LinearLayout>
