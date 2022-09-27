@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
-import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookLinearListAdapter
 import com.bibliotecadebolso.app.ui.book.bookInfo.BookInfoActivity
@@ -28,12 +27,18 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * @param readStatusEnum read status enum, can be null
+ * @param toReturnEnum can be null
+ *
+ **/
 class BookListActivity : AppCompatActivity(), RvOnClickListener {
     private lateinit var binding: ActivityBookListBinding
     private lateinit var bookListAdapter: BookLinearListAdapter
     private lateinit var viewModel: BookListViewModel
     val scrollState: ScrollState = ScrollState()
     private var enumChoosed: ReadStatusEnum? = null
+    private var toReturnEnum: TO_RETURN = TO_RETURN.NOTHING
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +48,9 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         supportActionBar?.title = actionBarTitle
 
         val enumString = intent.extras?.getString("readStatusEnum")
-
+        val toReturnEnumChoosed = intent.extras?.get("toReturnEnum") as TO_RETURN?
         setEnumChoosed(enumString)
+        setToReturnEnumChoosed(toReturnEnumChoosed)
         viewModel = ViewModelProvider(this)[BookListViewModel::class.java]
 
         setupRecyclerView()
@@ -68,6 +74,10 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
                 finishAffinity()
             }
         }
+    }
+
+    private fun setToReturnEnumChoosed(toReturnEnumChoosed: TO_RETURN?) {
+        toReturnEnum = toReturnEnumChoosed ?: TO_RETURN.NOTHING
     }
 
     private fun setupRecyclerView() {
@@ -177,9 +187,24 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     }
 
     override fun onItemCLick(position: Int) {
+        when (toReturnEnum) {
+            TO_RETURN.NOTHING -> startBookInfoActivity(position)
+            TO_RETURN.BOOKID -> returnBookId(position)
+        }
+    }
+
+    private fun startBookInfoActivity(id: Int) {
         val intent = Intent(this, BookInfoActivity::class.java)
-        intent.putExtra("id", position)
+        intent.putExtra("id", id)
         bookInfoActivityResult.launch(intent)
+    }
+
+    private fun returnBookId(id: Int) {
+        val returnResult = Intent()
+        returnResult.putExtra("bookId", id)
+        setResult(RETURN_BOOK_ID, returnResult)
+        finish()
+
     }
 
     private val bookInfoActivityResult = registerForActivityResult(
@@ -189,6 +214,14 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
             val list = viewModel.searchList.bookListPreviousSuccessResponse!!.toMutableList()
             list.remove(list.find { it.id == result.data!!.extras!!.getInt("id") })
             bookListAdapter.differ.submitList(list)
+        }
+    }
+
+    companion object {
+        const val RETURN_BOOK_ID = 21
+        public enum class TO_RETURN{
+            NOTHING,
+            BOOKID,
         }
     }
 }

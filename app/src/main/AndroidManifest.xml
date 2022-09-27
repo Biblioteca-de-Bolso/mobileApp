@@ -20,7 +20,8 @@
         android:theme="@style/Theme.MyApplication">
         <activity
             android:name=".ui.borrow.add.AddBorrowActivity"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

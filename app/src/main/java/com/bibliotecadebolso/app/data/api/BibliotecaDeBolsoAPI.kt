@@ -139,9 +139,9 @@ interface BibliotecaDeBolsoAPI {
     suspend fun getBorrowList(
         @Header("Authorization") accessToken: String,
         @Query("page") page: Int = 1,
-        @Query("bookId") bookId: Int,
+        @Query("bookId") bookId: Int? = null,
         @Query("search") searchContent: String? = null
-    ): Response<APIResponse<BorrowObject>>
+    ): Response<APIResponse<BorrowsObject>>
 
     @DELETE("borrow")
     suspend fun deleteBorrow(

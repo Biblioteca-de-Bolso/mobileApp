@@ -127,6 +127,7 @@
     <string name="label_x_day_ago">%1$s day ago</string>
     <string name="label_x_days_ago">%1$s days ago</string>
     <string name="label_contact_name">Contact name</string>
+    <string name="label_add_your_loan">Add your loan</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>
