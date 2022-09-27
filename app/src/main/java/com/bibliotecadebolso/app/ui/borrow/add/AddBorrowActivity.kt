@@ -6,9 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
+import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.databinding.ActivityAddBorrowBinding
 import com.bibliotecadebolso.app.ui.book.gridList.BookListActivity
 import com.bibliotecadebolso.app.util.Constants
@@ -25,11 +27,13 @@ class AddBorrowActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this)[AddBorrowViewModel::class.java]
 
-        binding.itemBook.apply{
-            val colorWhite = R.color.yellow_orange_1
+        binding.itemBook.apply {
             tvTitle.text = "No book selected"
             tvAuthor.text = "No book selected"
         }
+
+        binding.tilContactName.editText?.setText(viewModel.inputs.contactName)
+
         binding.btnSelectBorrowBook.setOnClickListener {
             getBookByLaunchingBookListActivity()
         }
@@ -55,8 +59,44 @@ class AddBorrowActivity : AppCompatActivity() {
         }
 
         binding.btnAddLoan.setOnClickListener {
+
+            if (viewModel.inputs.contactName.isEmpty()) {
+                binding.tilContactName.error = "Must not be empty"
+                return@setOnClickListener
+            } else {
+                binding.tilContactName.error = ""
+            }
+
             binding.pgLoading.visibility = View.VISIBLE
 
+            val accessToken = SharedPreferencesUtils.getAccessToken(
+                getSharedPreferences(
+                    Constants.Prefs.USER_TOKENS,
+                    MODE_PRIVATE
+                )
+            )
+
+            viewModel.addBorrow(
+                accessToken,
+                CreateBorrow(viewModel.lastSelectedBookId.value!!, viewModel.inputs.contactName)
+            )
+
+
+        }
+
+        binding.tilContactName.editText?.addTextChangedListener {
+            viewModel.inputs.contactName = it.toString()
+        }
+
+        viewModel.createBorrowLiveData.observe(this) {
+            binding.pgLoading.visibility = View.GONE
+
+            when (it) {
+                is Result.Success ->
+                    finish()
+                is Result.Error ->
+                    Toast.makeText(this, it.errorBody.message, Toast.LENGTH_LONG).show()
+            }
         }
 
         setContentView(binding.root)

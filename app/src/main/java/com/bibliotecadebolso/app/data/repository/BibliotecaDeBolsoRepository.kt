@@ -35,7 +35,7 @@ object BibliotecaDeBolsoRepository {
             ): LocalDateTime? {
                 return LocalDateTime.parse(
                     json.asJsonPrimitive.asString,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
+                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.[SSS][SS]'Z'")
                 )
             }
         }).create()

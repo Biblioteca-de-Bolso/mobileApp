@@ -19,58 +19,73 @@
         app:layout_constraintTop_toTopOf="parent"
         app:trackColor="@color/white" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_contact_name"
+    <ScrollView
+        android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:gravity="center"
-        android:hint="Who did you loan it to?"
-        android:textColorHint="@color/white"
-        app:boxBackgroundColor="@color/splash_screen_dark_purple"
-        app:boxStrokeColor="@color/text_input_layout_white_stroke_color"
-        app:boxStrokeErrorColor="@color/error_tint_on_dark_color"
-        app:errorIconTint="@color/error_tint_on_dark_color"
-        app:errorTextColor="@color/error_tint_on_dark_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/pg_loading">
 
-        <com.google.android.material.textfield.TextInputEditText
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:inputType="text"
-            android:textColor="@color/white" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/btn_select_borrow_book"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="@string/label_select_book"
+                app:layout_constraintBottom_toTopOf="@id/ll_book_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
 
 
+            <LinearLayout
+                android:id="@+id/ll_book_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                app:layout_constraintBottom_toTopOf="@id/til_contact_name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
-    <Button
-        android:id="@+id/btn_select_borrow_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Select book which you borrow"
-        app:layout_constraintBottom_toTopOf="@id/ll_book_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+                <include
+                    android:id="@+id/item_book"
+                    layout="@layout/item_book_binding_full_length" />
+            </LinearLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:hint="@string/label_who_did_you_loan_it_to"
+                android:textColorHint="@color/white"
+                app:boxBackgroundColor="@color/splash_screen_dark_purple"
+                app:boxStrokeColor="@color/text_input_layout_white_stroke_color"
+                app:boxStrokeErrorColor="@color/error_tint_on_dark_color"
+                app:errorIconTint="@color/error_tint_on_dark_color"
+                app:errorTextColor="@color/error_tint_on_dark_color"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-    <LinearLayout
-        android:id="@+id/ll_book_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="40dp"
-        app:layout_constraintBottom_toTopOf="@id/til_contact_name"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left"
+                    android:inputType="text"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-        <include
-            android:id="@+id/item_book"
-            layout="@layout/item_book_binding_full_length" />
-    </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
 
     <Button
         android:id="@+id/btn_add_loan"

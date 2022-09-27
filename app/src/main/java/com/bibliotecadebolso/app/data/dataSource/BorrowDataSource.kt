@@ -27,7 +27,7 @@ class BorrowDataSource {
 
     suspend fun createBorrow(accessToken: String, borrow: CreateBorrow): Result<Borrow> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.createBorrow(accessToken, borrow)
+            val response = api.createBorrow("Bearer $accessToken", borrow)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.borrow)
@@ -38,7 +38,7 @@ class BorrowDataSource {
 
     suspend fun listBorrow(accessToken: String, page: Int = -1,bookId: Int? = null, searchString: String? = null): Result<List<Borrow>> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.getBorrowList(accessToken, page, bookId, searchString)
+            val response = api.getBorrowList("Bearer $accessToken", page, bookId, searchString)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.borrows)
@@ -49,7 +49,7 @@ class BorrowDataSource {
 
     suspend fun editBorrow(accessToken: String, editBorrow: EditBorrow): Result<Borrow> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.editBorrow(accessToken,editBorrow)
+            val response = api.editBorrow("Bearer $accessToken",editBorrow)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.borrow)
@@ -60,7 +60,7 @@ class BorrowDataSource {
 
     suspend fun deleteBorrow(accessToken: String, deleteBorrow: DeleteBorrow): Result<Nothing> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.deleteBorrow(accessToken,deleteBorrow)
+            val response = api.deleteBorrow("Bearer $accessToken",deleteBorrow)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response)

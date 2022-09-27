@@ -18,12 +18,15 @@ class AddBorrowViewModel: ViewModel() {
     val bookLiveData = MutableLiveData<Result<Book>>()
     val createBorrowLiveData = MutableLiveData<Result<Borrow>>()
     var lastSelectedBookId = MutableLiveData<Int>(-1)
+
+    val inputs = Inputs()
     fun getBookById(accessToken: String, bookId: Int) {
         viewModelScope.launch {
             val result = BookDataSource.getBookById(accessToken, bookId)
             bookLiveData.postValue(result)
         }
     }
+
 
     fun addBorrow(accessToken: String, borrow: CreateBorrow) {
         viewModelScope.launch {
@@ -33,5 +36,9 @@ class AddBorrowViewModel: ViewModel() {
         }
     }
 
+    data class Inputs(
+        var contactName:String = ""
+    )
 
 }
+
