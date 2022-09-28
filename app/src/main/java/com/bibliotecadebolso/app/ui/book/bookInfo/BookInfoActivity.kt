@@ -24,6 +24,7 @@ import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.book.bookInfo.annotationList.AnnotationListActivity
 import com.bibliotecadebolso.app.ui.book.edit.EditBookActivity
+import com.bibliotecadebolso.app.ui.borrow.list.BorrowListActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -399,7 +400,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private val borrowListOnClickListener = View.OnClickListener {
-        val intent = Intent(this@BookInfoActivity, AnnotationListActivity::class.java)
+        val intent = Intent(this@BookInfoActivity, BorrowListActivity::class.java)
         intent.putExtra("bookId", getIdFromExtrasOrMinus1())
         startActivity(intent)
     }
