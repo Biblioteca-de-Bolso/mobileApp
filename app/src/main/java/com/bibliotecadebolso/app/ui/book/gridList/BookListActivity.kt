@@ -126,7 +126,6 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
             when (it) {
                 is Result.Success -> {
                     bookListAdapter.differ.submitList(it.response)
-                    Log.e("ListSize", it.response.size.toString())
                 }
                 is Result.Error -> {
                     when (it.errorBody.code) {

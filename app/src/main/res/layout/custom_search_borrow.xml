@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:background="@color/purple_primary"
-    >
+    tools:background="@color/purple_primary">
+
+    <ImageView
+        android:id="@+id/iv_book_custom_search_borrow"
+        android:layout_width="30sp"
+        android:layout_height="30sp"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:src="@drawable/ic_item_book"
+
+        />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="vertical">
+
         <android.widget.SearchView
             android:id="@+id/search1"
 
-            android:searchIcon="@drawable/book_clock_outline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:iconifiedByDefault="false"
             android:queryHint="@string/label_contact_name"
-            android:iconifiedByDefault="false"
-            android:visibility="visible" />
-        <android.widget.SearchView
-            android:id="@+id/search2"
-            android:searchIcon="@drawable/ic_item_book"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:queryHint="@string/label_book"
-            android:iconifiedByDefault="false"
+            android:searchIcon="@drawable/book_clock_outline"
             android:visibility="visible" />
     </LinearLayout>
+
     <ImageButton
         android:id="@+id/btn_search_content"
         android:layout_width="match_parent"

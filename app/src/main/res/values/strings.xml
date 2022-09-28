@@ -126,10 +126,17 @@
     <string name="label_x_weeks_ago">%1$s weeks ago</string>
     <string name="label_x_day_ago">%1$s day ago</string>
     <string name="label_x_days_ago">%1$s days ago</string>
+    <string name="label_x_hour_ago">%1$s hour ago</string>
+    <string name="label_x_hours_ago">%1$s hours ago</string>
+    <string name="label_x_minute_ago">%1$s minute ago</string>
+    <string name="label_x_minutes_ago">%1$s minutes ago</string>
+    <string name="label_x_second_ago">%1$s second ago</string>
+    <string name="label_x_seconds_ago">%1$s seconds ago</string>
     <string name="label_contact_name">Contact name</string>
     <string name="label_add_your_loan">Add your loan</string>
     <string name="label_who_did_you_loan_it_to">Who did you loan it to?</string>
     <string name="label_select_book">Select book</string>
+    <string name="label_profile">Profile</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

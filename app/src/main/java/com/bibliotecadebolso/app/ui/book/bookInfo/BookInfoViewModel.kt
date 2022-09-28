@@ -36,7 +36,6 @@ class BookInfoViewModel : ViewModel() {
     var isToShowConfirmationDisplay = false
         private set
     fun setDisplayStatusConfirmation(boolean: Boolean) {
-        Log.e("onViewModel", boolean.toString())
         isToShowConfirmationDisplay = boolean
     }
 
@@ -90,13 +89,11 @@ class BookInfoViewModel : ViewModel() {
     fun compressImage(context: Context, imagePath: String) {
         viewModelScope.launch {
             val file = File(imagePath)
-            Log.e("compressedImageSize", getReadableFileSize(file.length()))
             val compressedFile = Compressor.compress(context, file) {
                 format(Bitmap.CompressFormat.WEBP)
                 size(400_000)
             }
 
-            Log.e("BookInfoViewModel", "Image compressed")
             liveDataImageCompressed.postValue(compressedFile)
 
         }

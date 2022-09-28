@@ -29,13 +29,15 @@
                 android:orientation="vertical"
                 >
                 <TextView
+                    android:maxWidth="240sp"
                     android:id="@+id/tv_book_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="240sp"
                     android:layout_height="wrap_content"
                     tools:text="Harry potter e a pedra filosofal"
                     android:textSize="16sp"
                     />
                 <TextView
+                    android:maxWidth="200sp"
                     android:id="@+id/tv_borrower_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -43,6 +45,7 @@
                     android:textColor="@color/dark_gray_1"
                     />
                 <TextView
+                    android:maxWidth="200sp"
                     android:id="@+id/tv_borrow_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

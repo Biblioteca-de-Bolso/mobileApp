@@ -266,7 +266,6 @@ class BookListFragment : Fragment(), RvOnClickListener {
         if (result.resultCode == REMOVE_BOOK) {
 
             val readStatusEnum = ReadStatusEnum.valueOf(result.data!!.extras!!.getString("readStatusEnum", "PLANNING"))
-            Log.e("readStatusEnum", readStatusEnum.toString())
             val adapter = when (readStatusEnum) {
                 ReadStatusEnum.PLANNING -> fragmentAdapterPlanning
                 ReadStatusEnum.READING -> fragmentAdapterReading
@@ -275,11 +274,8 @@ class BookListFragment : Fragment(), RvOnClickListener {
             }
             val list = adapter.differ.currentList.toMutableList()
             list.forEach {
-                Log.i("book", it.id.toString())
             }
-            Log.e("resultExtra", result.data!!.extras!!.get("id").toString())
             val book = list.find { it.id == result.data!!.extras!!.getInt("id") }
-            if (book != null) Log.e("bookId", book.id.toString())
             if (book != null) list.remove(book)
             adapter.differ.submitList(list)
         } else if (result.resultCode == BOOK_ADDED)

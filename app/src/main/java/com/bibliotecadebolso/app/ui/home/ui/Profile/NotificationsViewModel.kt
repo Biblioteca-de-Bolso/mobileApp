@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.home.ui.notifications
+package com.bibliotecadebolso.app.ui.home.ui.Profile
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

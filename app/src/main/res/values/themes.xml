@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/white_blue</item>
         <item name="colorPrimaryVariant">#007AB3</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="readablePrimaryColor">@color/white_blue</item>
+        <item name="readablePrimaryColor">@color/purple_primary</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/splash_screen_dark_purple</item>

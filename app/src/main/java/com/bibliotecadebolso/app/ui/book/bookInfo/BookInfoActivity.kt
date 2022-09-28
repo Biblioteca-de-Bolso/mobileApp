@@ -90,6 +90,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setOnClickSaveNewImage()
         setOnImageUpdatedListener()
         setTvAnnotationShowMoreOnClickListener()
+        setBorrowShowMoreOnClickListener()
         updateStatusListener()
     }
 
@@ -387,6 +388,17 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private val annotationListOnClickListener = View.OnClickListener {
+        val intent = Intent(this@BookInfoActivity, AnnotationListActivity::class.java)
+        intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+        startActivity(intent)
+    }
+
+    private fun setBorrowShowMoreOnClickListener() {
+        binding.ivIcBorrow.setOnClickListener(borrowListOnClickListener)
+        binding.tvBorrowShowMore.setOnClickListener(borrowListOnClickListener)
+    }
+
+    private val borrowListOnClickListener = View.OnClickListener {
         val intent = Intent(this@BookInfoActivity, AnnotationListActivity::class.java)
         intent.putExtra("bookId", getIdFromExtrasOrMinus1())
         startActivity(intent)

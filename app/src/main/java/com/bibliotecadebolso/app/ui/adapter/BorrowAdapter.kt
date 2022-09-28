@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.ui.adapter
 
 import android.content.Context
 import android.os.strictmode.WebViewMethodCalledOnWrongThreadViolation
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.bibliotecadebolso.app.databinding.ItemBorrowPendingPassedTimeBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
 import java.time.Clock
 import java.time.LocalDateTime
+import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.Date
@@ -53,10 +55,9 @@ class BorrowAdapter(
             return VIEW_RETURNED
         } else {
             val dateTimeNow = LocalDateTime.now(Clock.systemUTC())
-
-            return if (borrow.borrowDate >= dateTimeNow.plusMonths(1)) {
+            return if (borrow.borrowDate.until(dateTimeNow, ChronoUnit.MONTHS) >= 1) {
                 VIEW_PENDING_LATE
-            } else if (borrow.borrowDate >= dateTimeNow.plusWeeks(1)) {
+            } else if (borrow.borrowDate.until(dateTimeNow, ChronoUnit.WEEKS) >= 1) {
                 VIEW_PENDING_PASSED_TIME
             } else {
                 VIEW_PENDING_NOT_PASSED_TIME
@@ -80,7 +81,8 @@ class BorrowAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             VIEW_RETURNED -> {
-                val binding = ItemBorrowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val binding =
+                    ItemBorrowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 return BorrowViewHolderReturned(
                     binding
                 )
@@ -90,7 +92,11 @@ class BorrowAdapter(
 
             )
             VIEW_PENDING_PASSED_TIME -> BorrowViewHolderPendingPassedTime(
-                ItemBorrowPendingPassedTimeBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                ItemBorrowPendingPassedTimeBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
             )
             VIEW_PENDING_NOT_PASSED_TIME -> BorrowViewHolderPendingNotPassedTIme(
                 ItemBorrowPendingNotPassedTimeBinding.inflate(
@@ -122,7 +128,7 @@ class BorrowAdapter(
                     tvBorrowDate.text = borrow.borrowDate.format(dateMonthYearFormatter)
                     tvBorrowerName.text = borrow.contactName
                     val timeUntilDevolution =
-                        dateTimeNow.until(borrow.borrowDate, ChronoUnit.MONTHS)
+                        borrow.borrowDate.until(dateTimeNow, ChronoUnit.MONTHS)
                     tvTimeUntilDevolution.text =
                         context.getString(
                             if (timeUntilDevolution > 1) R.string.label_x_months_ago else R.string.label_x_month_ago,
@@ -135,7 +141,7 @@ class BorrowAdapter(
                     tvBookTitle.text = borrow.book.title
                     tvBorrowDate.text = borrow.borrowDate.format(dateMonthYearFormatter)
                     tvBorrowerName.text = borrow.contactName
-                    val timeUntilDevolution = dateTimeNow.until(borrow.borrowDate, ChronoUnit.WEEKS)
+                    val timeUntilDevolution = borrow.borrowDate.until(dateTimeNow, ChronoUnit.WEEKS)
                     tvTimeUntilDevolution.text =
                         context.getString(
                             if (timeUntilDevolution > 1) R.string.label_x_weeks_ago else R.string.label_x_week_ago,
@@ -148,10 +154,34 @@ class BorrowAdapter(
                     tvBookTitle.text = borrow.book.title
                     tvBorrowDate.text = borrow.borrowDate.format(dateMonthYearFormatter)
                     tvBorrowerName.text = borrow.contactName
-                    val timeUntilDevolution = dateTimeNow.until(borrow.borrowDate, ChronoUnit.DAYS)
+                    var type = DataType.DAYS
+                    var timeUntilDevolution = borrow.borrowDate.until(dateTimeNow, ChronoUnit.DAYS)
+                    if (timeUntilDevolution == 0L) {
+                        type = DataType.HOURS
+                        timeUntilDevolution =
+                            borrow.borrowDate.until(dateTimeNow, ChronoUnit.HOURS)
+                        if (timeUntilDevolution == 0L) {
+                            type = DataType.MINUTES
+                            timeUntilDevolution =
+                                borrow.borrowDate.until(dateTimeNow, ChronoUnit.MINUTES)
+
+                            if (timeUntilDevolution == 0L) {
+                                type = DataType.SECONDS
+                                timeUntilDevolution =
+                                    borrow.borrowDate.until(dateTimeNow, ChronoUnit.SECONDS)
+                            }
+                        }
+                    }
+
+                    val idString = when (type) {
+                        DataType.DAYS -> if (timeGreaterThanOne(timeUntilDevolution)) R.string.label_x_days_ago else R.string.label_x_day_ago
+                        DataType.HOURS -> if (timeGreaterThanOne(timeUntilDevolution)) R.string.label_x_hours_ago else R.string.label_x_hour_ago
+                        DataType.MINUTES -> if (timeGreaterThanOne(timeUntilDevolution)) R.string.label_x_minutes_ago else R.string.label_x_minute_ago
+                        DataType.SECONDS -> if (timeGreaterThanOne(timeUntilDevolution)) R.string.label_x_seconds_ago else R.string.label_x_second_ago
+                    }
                     tvTimeUntilDevolution.text =
                         context.getString(
-                            if (timeUntilDevolution > 1) R.string.label_x_days_ago else R.string.label_x_day_ago,
+                            idString,
                             timeUntilDevolution
                         )
 
@@ -161,6 +191,15 @@ class BorrowAdapter(
 
         holder.itemView.setOnClickListener {
         }
+    }
+
+    private fun timeGreaterThanOne(time: Long) = time > 1
+
+    enum class DataType {
+        DAYS,
+        HOURS,
+        MINUTES,
+        SECONDS
     }
 
     override fun getItemCount(): Int = differ.currentList.size

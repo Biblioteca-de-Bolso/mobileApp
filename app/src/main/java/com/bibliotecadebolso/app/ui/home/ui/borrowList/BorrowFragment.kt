@@ -77,6 +77,5 @@ class BorrowFragment : Fragment(), RvOnClickListener {
 
 
     override fun onItemCLick(position: Int) {
-
     }
 }
