@@ -149,7 +149,7 @@ interface BibliotecaDeBolsoAPI {
         @Body deleteBorrow: DeleteBorrow
     ): Response<APIResponse<Nothing>>
 
-    @PATCH
+    @PATCH("borrow")
     suspend fun editBorrow(
         @Header("Authorization") accessToken: String,
         @Body editBorrow: EditBorrow

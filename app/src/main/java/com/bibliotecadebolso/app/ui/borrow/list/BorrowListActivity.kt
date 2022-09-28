@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.borrow.list
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBorrowListBinding
 import com.bibliotecadebolso.app.ui.adapter.BorrowAdapter
 import com.bibliotecadebolso.app.ui.book.gridList.BookListViewModel
+import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
 import com.bibliotecadebolso.app.util.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -191,6 +193,9 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
 
     override fun onItemCLick(position: Int) {
-        TODO("Not yet implemented")
+        val intent = Intent(this, EditBorrowActivity::class.java)
+        intent.putExtra("borrowId", position)
+
+        startActivity(intent)
     }
 }

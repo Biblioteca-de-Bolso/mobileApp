@@ -16,7 +16,7 @@ object BorrowGeneratorUtils {
                 else if (i % 3 == 0) now.plusWeeks(1).plusDays(1)
                 else now.plusMonths(1).plusDays(1)
 
-            val borrow = Borrow(i, i, i.toByte().times(4).toString(),
+            val borrow = Borrow(i, i, i, i.toByte().times(4).toString(),
                 BorrowStatus.RETURNED,date,null,now,now,
                 BookTitle("teste")
             )
@@ -36,7 +36,7 @@ object BorrowGeneratorUtils {
                 else if (i/times.toFloat() in 0.34..0.67) now.minusWeeks(1).minusDays(1)
                 else now.minusMonths(1).minusWeeks(1)
 
-            val borrow = Borrow(i, i, i.toByte().times(4).toString(),status,date,null,now,now,
+            val borrow = Borrow(i, i, i, i.toByte().times(4).toString(),status,date,null,now,now,
                 BookTitle("teste")
             )
             list.add(

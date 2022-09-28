@@ -14,12 +14,12 @@ class BorrowDataSource {
 
     private val api = BibliotecaDeBolsoRepository.retrofit()
 
-    suspend fun updateBookById(accessToken: String, book: UpdateBook): Result<UpdatedBook> {
+    suspend fun getBorrowById(accessToken: String, borrowId: Int): Result<Borrow> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.updateBookById("Bearer $accessToken", book)
+            val response = api.getBorrowById("Bearer $accessToken", borrowId)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
-                Result.Success(responseResult.response.book)
+                Result.Success(responseResult.response.borrow)
             else
                 responseResult as Result.Error
         }

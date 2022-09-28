@@ -1,16 +1,13 @@
 package com.bibliotecadebolso.app.ui.adapter
 
 import android.content.Context
-import android.os.strictmode.WebViewMethodCalledOnWrongThreadViolation
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ItemBorrowBinding
@@ -20,10 +17,8 @@ import com.bibliotecadebolso.app.databinding.ItemBorrowPendingPassedTimeBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
 import java.time.Clock
 import java.time.LocalDateTime
-import java.time.Month
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
-import java.util.Date
 
 class BorrowAdapter(
     private var context: Context,
@@ -51,7 +46,8 @@ class BorrowAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val borrow = differ.currentList[position]
-        if (borrow.BorrowStatus == BorrowStatus.RETURNED) {
+        Log.e("borrowStatus", borrow.borrowStatus.toString())
+        if (borrow.borrowStatus == BorrowStatus.RETURNED) {
             return VIEW_RETURNED
         } else {
             val dateTimeNow = LocalDateTime.now(Clock.systemUTC())
@@ -83,7 +79,7 @@ class BorrowAdapter(
             VIEW_RETURNED -> {
                 val binding =
                     ItemBorrowBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-                return BorrowViewHolderReturned(
+                BorrowViewHolderReturned(
                     binding
                 )
             }
@@ -190,6 +186,7 @@ class BorrowAdapter(
         }
 
         holder.itemView.setOnClickListener {
+            rvOnClickListener.onItemCLick(borrow.id)
         }
     }
 
