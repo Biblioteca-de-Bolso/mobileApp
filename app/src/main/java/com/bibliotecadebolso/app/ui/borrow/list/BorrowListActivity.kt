@@ -2,7 +2,6 @@ package com.bibliotecadebolso.app.ui.borrow.list
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
@@ -11,6 +10,7 @@ import android.widget.SearchView
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.request.Borrow
@@ -22,10 +22,7 @@ import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
 import com.bibliotecadebolso.app.util.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 /**
  * @param borrowStatus can be null or BorrowStatusEnum value
@@ -34,7 +31,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
     private lateinit var binding: ActivityBorrowListBinding
     private lateinit var borrowListAdapter: BorrowAdapter
-    private lateinit var viewmodel: BorrowListViewModel
+    private lateinit var viewModel: BorrowListViewModel
     var borrowStatus: BorrowStatus? = null
     var bookId: Int? = null
 
@@ -53,8 +50,18 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
         setToolBarCustomSearchListener()
         searchListListener()
-        getSearchList(null,true)
         setContentView(binding.root)
+
+        lifecycleScope.launch {
+            delay(500L)
+            getSearchList(null,true)
+        }
+    }
+
+
+    override fun finishAfterTransition() {
+        super.finishAfterTransition()
+        getSearchList(null,true)
     }
 
     private fun setCustomSearchSupportActionBar() {
@@ -68,7 +75,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         borrowStatus = intent.extras?.get("borrowStatus") as BorrowStatus?
         bookId = intent.extras?.getInt("bookId")
         if (bookId != null && bookId == 0 ) bookId = null
-        viewmodel = ViewModelProvider(this)[BorrowListViewModel::class.java]
+        viewModel = ViewModelProvider(this)[BorrowListViewModel::class.java]
         val actionBarCustomView = supportActionBar?.customView
         searchViewName = actionBarCustomView?.findViewById(R.id.search1)
 
@@ -84,8 +91,8 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
                 else -> BorrowGeneratorUtils.fillListWithOnlyPending(10,mutableList)
             }
 
-            viewmodel.searchList.bookListPreviousSuccessResponse = mutableListOf()
-            viewmodel.searchList.bookListLiveData.postValue(Result.Success<List<Borrow>>(mutableList))
+            viewModel.searchList.listLastSucessfullyResponse = mutableListOf()
+            viewModel.searchList.listLiveData.postValue(Result.Success<List<Borrow>>(mutableList))
 
         }
     }
@@ -95,7 +102,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
         when (borrowStatus) {
             null -> BorrowGeneratorUtils.fillListWithOnlyReturned(10, list)
-            BorrowStatus.PENDING -> viewmodel
+            BorrowStatus.PENDING -> viewModel
             BorrowStatus.RETURNED -> BorrowGeneratorUtils.fillListWithOnlyReturned(10, list)
         }
 
@@ -124,8 +131,8 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
             job?.cancel()
             job = MainScope().launch {
                 delay(Constants.SEARCH_NEWS_DELAY)
-                val oldContent = viewmodel.searchList.searchContent
-                viewmodel.searchList.searchContent =
+                val oldContent = viewModel.searchList.searchContent
+                viewModel.searchList.searchContent =
                     if (p0.isNullOrEmpty())
                         null
                     else p0.toString()
@@ -133,7 +140,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
                 val isNewContent = oldContent != p0
 
-                getSearchList(viewmodel.searchList.searchContent, isNewContent)
+                getSearchList(viewModel.searchList.searchContent, isNewContent)
             }
             return false
         }
@@ -144,21 +151,22 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
         val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
 
-        if (!newContent && viewmodel.searchList.bookListReachedOnTheEnd()) {
+        if (!newContent && viewModel.searchList.bookListReachedOnTheEnd()) {
             showLongSnackBar(BookListViewModel.reachedOnTheEndErrorResponse().message)
         } else {
             binding.pgLoading.visibility = View.VISIBLE
-            viewmodel.searchBook(
+            viewModel.searchListBorrow(
                 accessToken,
                 searchContent,
                 bookId=bookId,
-                newSearchContent = newContent
+                newSearchContent = newContent,
+                borrowStatusEnum = borrowStatus
             )
         }
     }
 
     private fun searchListListener() {
-        viewmodel.searchList.bookListLiveData.observe(this) {
+        viewModel.searchList.listLiveData.observe(this) {
             binding.pgLoading.visibility = View.GONE
             when (it) {
                 is Result.Success -> {
@@ -197,5 +205,9 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         intent.putExtra("borrowId", position)
 
         startActivity(intent)
+        this.overridePendingTransition(
+            androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
+            androidx.transition.R.anim.abc_fade_out
+        )
     }
 }

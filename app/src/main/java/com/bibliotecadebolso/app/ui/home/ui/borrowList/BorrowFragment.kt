@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.home.ui.borrowList
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.FragmentBorrowBinding
@@ -35,7 +37,12 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         binding.ivViewMoreBorrowed.setOnClickListener {
             val intent = Intent(this.requireContext(), BorrowListActivity::class.java)
             intent.putExtra("borrowStatus", BorrowStatus.PENDING)
-            startActivity(intent)
+            startActivity(
+                intent,
+                ActivityOptions.makeSceneTransitionAnimation(this.requireActivity()).toBundle()
+            )
+            this.requireActivity()
+                .overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right)
         }
 
         binding.ivViewMoreReturned.setOnClickListener {
@@ -47,6 +54,10 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         binding.fabAddBorrow.setOnClickListener {
             val intent = Intent(this.requireContext(), AddBorrowActivity::class.java)
             startActivity(intent)
+            this.requireActivity().overridePendingTransition(
+                androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
+                com.google.android.material.R.anim.abc_fade_out
+            )
         }
 
         return binding.root
@@ -66,7 +77,7 @@ class BorrowFragment : Fragment(), RvOnClickListener {
 
     private fun fillRecyclerViewsWithBorrowGeneration() {
         val list1: MutableList<Borrow> = mutableListOf()
-        BorrowGeneratorUtils.fillListWithOnlyPending(3,list1)
+        BorrowGeneratorUtils.fillListWithOnlyPending(3, list1)
         borrowAdapterPending.differ.submitList(list1)
 
 

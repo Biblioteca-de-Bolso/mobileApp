@@ -14,7 +14,7 @@
     <string name="prompt_username">username</string>
     <string name="button_register">Register</string>
     <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Livros</string>
+    <string name="title_home">Books</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
     <string name="label_app_name">Biblioteca de bolso</string>
@@ -139,6 +139,7 @@
     <string name="label_select_book">Select book</string>
     <string name="label_profile">Profile</string>
     <string name="label_edit">Edit</string>
+    <string name="label_borrow_status">Borrow status:</string>
 
     <string-array name="spinner_book_reading_status_value">
         <item>Planning</item>

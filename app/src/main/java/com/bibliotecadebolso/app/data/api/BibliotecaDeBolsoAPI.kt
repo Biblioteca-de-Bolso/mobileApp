@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.*
 import com.bibliotecadebolso.app.data.model.SaveAnnotation
+import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.data.model.response.BorrowObject
 import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
@@ -140,10 +141,11 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Query("page") page: Int = 1,
         @Query("bookId") bookId: Int? = null,
-        @Query("search") searchContent: String? = null
+        @Query("search") searchContent: String? = null,
+        @Query("borrowStatus") borrowStatus: BorrowStatus? = null
     ): Response<APIResponse<BorrowsObject>>
 
-    @DELETE("borrow")
+    @HTTP(method = "DELETE", path = "borrow", hasBody = true)
     suspend fun deleteBorrow(
         @Header("Authorization") accessToken: String,
         @Body deleteBorrow: DeleteBorrow

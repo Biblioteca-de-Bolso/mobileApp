@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.MyApplication.PurpleTheme"
-    tools:background="@color/purple_primary"
-    >
+    tools:background="@color/purple_primary">
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
         android:id="@+id/pg_loading"
@@ -14,15 +13,19 @@
         android:layout_height="wrap_content"
         android:indeterminate="true"
         android:visibility="gone"
+        app:indicatorColor="?attr/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:trackColor="@color/white" />
+        app:trackColor="@color/splash_screen_dark_purple"
+        />
 
     <ScrollView
+        app:layout_constraintVertical_bias="0.4"
         android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -72,15 +75,28 @@
                     android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/label_borrow_status"
+                android:textSize="13sp"
+                android:layout_marginStart="5dp"
+
+                app:layout_constraintBottom_toTopOf="@id/spinner_borrow_status"
+                app:layout_constraintEnd_toEndOf="@id/spinner_borrow_status"
+                app:layout_constraintStart_toStartOf="@id/spinner_borrow_status" />
+
             <Spinner
+                app:layout_constraintVertical_bias="0.45"
                 android:id="@+id/spinner_borrow_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/til_contact_name"
+                android:layout_marginHorizontal="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/til_contact_name"
+                tools:listitem="@layout/spinner_item" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -90,7 +106,7 @@
         android:id="@+id/btn_edit_loan"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="22dp"
         android:backgroundTint="@color/gd_blue_purple_1"
         android:enabled="false"
         android:text="@string/label_edit"
@@ -101,7 +117,7 @@
         android:id="@+id/btn_remove_borrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_margin="22dp"
         android:backgroundTint="@android:color/holo_red_light"
         android:enabled="false"
         android:text="@string/label_delete"

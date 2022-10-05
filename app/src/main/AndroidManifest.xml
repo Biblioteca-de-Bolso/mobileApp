@@ -17,11 +17,33 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
+        android:theme="@style/Theme.MyApplication"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
+        <activity
+            android:name=".ui.user.ChangePasswordActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true" android:label="test"
+                >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https"/>
+                <data android:host="bibliotecadebolso.com"/>
+                <data android:path="/recover"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".ui.borrow.edit.EditBorrowActivity"
-            android:theme="@style/Theme.MyApplication.PurpleTheme"
-            android:exported="false">
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

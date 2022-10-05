@@ -49,6 +49,15 @@
                 android:layout_marginBottom="8dp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tv_borrow_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/splash_screen_strong_orange"
+                    app:layout_constraintBottom_toTopOf="@id/tv_isbn_10"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textSize="16sp"
+                    tools:text="BORROWED" />
             <TextView
                 android:id="@+id/tv_isbn_10"
                 android:layout_marginTop="20dp"

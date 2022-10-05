@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.request.Borrow
@@ -19,6 +20,8 @@ import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * @param borrowId bookId as Int. If pass null, activity will finish
@@ -46,8 +49,12 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
         setBtnOnClickRemoveBorrow()
         setBtnOnClickEditBorrow()
 
-        getBorrow()
         setContentView(binding.root)
+
+        lifecycleScope.launch{
+            delay(200L)
+            getBorrow()
+        }
     }
 
     private fun initVariables() {
@@ -85,8 +92,8 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
     }
 
     private fun getBorrowByIdListener() {
-        binding.pgLoading.visibility = View.GONE
         viewModel.borrowLiveData.observe(this) {
+            binding.pgLoading.visibility = View.GONE
             when (it) {
                 is Result.Success -> loadContent(it.response)
                 is Result.Error -> {
@@ -119,8 +126,8 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
     }
 
     private fun getBookByIdListener() {
-        binding.pgLoading.visibility = View.GONE
         viewModel.bookLiveData.observe(this) {
+            binding.pgLoading.visibility = View.GONE
             when (it) {
                 is Result.Success -> loadBookContent(it.response)
                 is Result.Error -> {

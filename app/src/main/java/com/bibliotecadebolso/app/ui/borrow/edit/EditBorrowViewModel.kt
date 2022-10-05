@@ -18,7 +18,7 @@ class EditBorrowViewModel : ViewModel() {
     private val borrowDataSource = BorrowDataSource()
 
     val editBorrowLiveData = MutableLiveData<Result<Borrow>>()
-    val removeBorrowLiveData = MutableLiveData<Result<Nothing>>()
+    val removeBorrowLiveData = MutableLiveData<Result<Boolean>>()
     val borrowLiveData = MutableLiveData<Result<Borrow>>()
     val bookLiveData = MutableLiveData<Result<Book>>()
 

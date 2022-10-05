@@ -1,29 +1,28 @@
 package com.bibliotecadebolso.app.data.model.app.list
 
 import androidx.lifecycle.MutableLiveData
-import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.ui.book.gridList.BookListViewModel
 import com.bibliotecadebolso.app.util.Result
 
 open class ListContent<T>(
-    val bookListLiveData: MutableLiveData<Result<List<T>>> = MutableLiveData(),
-    var bookListPreviousSuccessResponse: MutableList<T>? = null,
+    val listLiveData: MutableLiveData<Result<List<T>>> = MutableLiveData(),
+    var listLastSucessfullyResponse: MutableList<T>? = null,
     val reachedOnTheEnd: Boolean = false,
     var page: Int = 1,
 ) {
 
     fun handleBookListResponse(response: Result<List<T>>): Result<List<T>> {
         if (response is Result.Success) {
-            if (bookListPreviousSuccessResponse == null) {
-                bookListPreviousSuccessResponse = response.response.toMutableList()
+            if (listLastSucessfullyResponse == null) {
+                listLastSucessfullyResponse = response.response.toMutableList()
             } else {
-                bookListPreviousSuccessResponse!!
+                listLastSucessfullyResponse!!
                 val newList = response.response
                 if (newList.isEmpty())
                     return Result.Error(null, BookListViewModel.reachedOnTheEndErrorResponse())
-                bookListPreviousSuccessResponse!!.addAll(newList)
+                listLastSucessfullyResponse!!.addAll(newList)
             }
-            return Result.Success(bookListPreviousSuccessResponse!!.toList())
+            return Result.Success(listLastSucessfullyResponse!!.toList())
         }
 
         return response
@@ -31,9 +30,9 @@ open class ListContent<T>(
     }
 
     fun bookListReachedOnTheEnd(): Boolean {
-        if (bookListPreviousSuccessResponse != null) {
-            if (bookListPreviousSuccessResponse!!.isEmpty()) return true
-            if (bookListPreviousSuccessResponse!!.size % 10 != 0) return true
+        if (listLastSucessfullyResponse != null) {
+            if (listLastSucessfullyResponse!!.isEmpty()) return true
+            if (listLastSucessfullyResponse!!.size % 10 != 0) return true
         }
 
         return false

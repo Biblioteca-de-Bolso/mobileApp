@@ -2,10 +2,7 @@ package com.bibliotecadebolso.app.ui.borrow.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bibliotecadebolso.app.data.dataSource.BookDataSource
 import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
-import com.bibliotecadebolso.app.data.model.CreatedBook
-import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.app.list.SearchListContent
 import com.bibliotecadebolso.app.data.model.exceptions.ListReachedOnTheEndException
 import com.bibliotecadebolso.app.data.model.request.Borrow
@@ -20,7 +17,7 @@ class BorrowListViewModel: ViewModel() {
 
     val borrowDataSource = BorrowDataSource()
 
-    fun searchBook(
+    fun searchListBorrow(
         accessToken: String,
         searchContent: String?,
         pageNum: Int = -1,
@@ -55,15 +52,15 @@ class BorrowListViewModel: ViewModel() {
             else throwIfListReachedOnTheEnd()
 
             val page = if (isInvalidPage(pageNum)) listContent.page else pageNum
-            val response = borrowDataSource.listBorrow(accessToken, page, bookId, searchContent)
+            val response = borrowDataSource.listBorrow(accessToken, page, bookId, searchContent, borrowStatusEnum)
 
-            listContent.bookListLiveData.postValue(
+            listContent.listLiveData.postValue(
                 listContent.handleBookListResponse(response, isNewSearchContent)
             )
 
             if (isInvalidPage(pageNum) && !listContent.reachedOnTheEnd) listContent.page++
         } catch (e: ListReachedOnTheEndException) {
-            listContent.bookListLiveData.postValue(
+            listContent.listLiveData.postValue(
                 Result.Error(
                     null,
                     reachedOnTheEndErrorResponse()

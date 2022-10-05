@@ -1,12 +1,10 @@
 package com.bibliotecadebolso.app.ui.book.gridList
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
-import com.bibliotecadebolso.app.data.model.app.list.ListContent
 import com.bibliotecadebolso.app.data.model.app.list.SearchListContent
 import com.bibliotecadebolso.app.data.model.exceptions.ListReachedOnTheEndException
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
@@ -51,13 +49,13 @@ class BookListViewModel : ViewModel() {
             val page = if (isInvalidPage(pageNum)) listContent.page else pageNum
             val response = BookDataSource.list(accessToken, page, readStatusEnum, searchContent)
 
-            listContent.bookListLiveData.postValue(
+            listContent.listLiveData.postValue(
                 listContent.handleBookListResponse(response, isNewSearchContent)
             )
 
             if (isInvalidPage(pageNum) && !listContent.reachedOnTheEnd) listContent.page++
         } catch (e: ListReachedOnTheEndException) {
-            listContent.bookListLiveData.postValue(
+            listContent.listLiveData.postValue(
                 Result.Error(
                     null,
                     reachedOnTheEndErrorResponse()

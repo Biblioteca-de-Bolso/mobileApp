@@ -3,7 +3,6 @@ package com.bibliotecadebolso.app.ui.book.gridList
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
@@ -56,7 +55,7 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         setupRecyclerView()
         setupSearchListListener()
 
-        if (viewModel.searchList.bookListLiveData.value == null) getSearchList(null, true)
+        if (viewModel.searchList.listLiveData.value == null) getSearchList(null, true)
 
         setContentView(binding.root)
     }
@@ -122,7 +121,7 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     }
 
     private fun setupSearchListListener() {
-        viewModel.searchList.bookListLiveData.observe(this) {
+        viewModel.searchList.listLiveData.observe(this) {
             when (it) {
                 is Result.Success -> {
                     bookListAdapter.differ.submitList(it.response)
@@ -210,7 +209,7 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if (result.resultCode == BookListFragment.REMOVE_BOOK) {
-            val list = viewModel.searchList.bookListPreviousSuccessResponse!!.toMutableList()
+            val list = viewModel.searchList.listLastSucessfullyResponse!!.toMutableList()
             list.remove(list.find { it.id == result.data!!.extras!!.getInt("id") })
             bookListAdapter.differ.submitList(list)
         }

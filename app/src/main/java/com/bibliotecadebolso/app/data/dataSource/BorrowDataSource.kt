@@ -2,10 +2,7 @@ package com.bibliotecadebolso.app.data.dataSource
 
 import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
-import com.bibliotecadebolso.app.data.model.request.Borrow
-import com.bibliotecadebolso.app.data.model.request.CreateBorrow
-import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
-import com.bibliotecadebolso.app.data.model.request.EditBorrow
+import com.bibliotecadebolso.app.data.model.request.*
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
@@ -36,9 +33,16 @@ class BorrowDataSource {
         }
     }
 
-    suspend fun listBorrow(accessToken: String, page: Int = -1,bookId: Int? = null, searchString: String? = null): Result<List<Borrow>> {
+    suspend fun listBorrow(
+        accessToken: String,
+        page: Int = -1,
+        bookId: Int? = null,
+        searchString: String? = null,
+        borrowStatus: BorrowStatus? = null
+    ): Result<List<Borrow>> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.getBorrowList("Bearer $accessToken", page, bookId, searchString)
+            val response =
+                api.getBorrowList("Bearer $accessToken", page, bookId, searchString, borrowStatus)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.borrows)
@@ -49,7 +53,7 @@ class BorrowDataSource {
 
     suspend fun editBorrow(accessToken: String, editBorrow: EditBorrow): Result<Borrow> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.editBorrow("Bearer $accessToken",editBorrow)
+            val response = api.editBorrow("Bearer $accessToken", editBorrow)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response.borrow)
@@ -58,12 +62,12 @@ class BorrowDataSource {
         }
     }
 
-    suspend fun deleteBorrow(accessToken: String, deleteBorrow: DeleteBorrow): Result<Nothing> {
+    suspend fun deleteBorrow(accessToken: String, deleteBorrow: DeleteBorrow): Result<Boolean> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.deleteBorrow("Bearer $accessToken",deleteBorrow)
+            val response = api.deleteBorrow("Bearer $accessToken", deleteBorrow)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
-                Result.Success(responseResult.response)
+                Result.Success(true)
             else
                 responseResult as Result.Error
         }

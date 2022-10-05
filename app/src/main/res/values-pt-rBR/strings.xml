@@ -115,5 +115,28 @@
     <string name="label_more_info">Mais informações</string>
     <string name="label_lendings">Empréstimos</string>
     <string name="label_no_description">Sem descrição</string>
+    <string name="title_borrow">Empréstimos</string>
+    <string name="label_returned">Devolvido</string>
+    <string name="label_borrowed">Emprestado</string>
+    <string name="label_x_month_ago">%1$s mês atrás</string>
+    <string name="label_x_months_ago">%1$s meses atrás</string>
+    <string name="label_x_week_ago">%1$s semana atrás</string>
+    <string name="label_x_weeks_ago">%1$s semanas atrás</string>
+    <string name="label_x_day_ago">%1$s dia atrás</string>
+    <string name="label_x_days_ago">%1$s dias atrás</string>
+    <string name="label_x_hour_ago">%1$s hora atrás</string>
+    <string name="label_x_hours_ago">%1$s horas atrás</string>
+    <string name="label_x_minute_ago">%1$s minuto atrás</string>
+    <string name="label_x_minutes_ago">%1$s minutos atrás</string>
+    <string name="label_x_second_ago">%1$s segundo atrás</string>
+    <string name="label_x_seconds_ago">%1$s segundos atrás</string>
+    <string name="label_contact_name">Nome de contato</string>
+    <string name="label_add_your_loan">Adicionar seu empréstimo</string>
+    <string name="label_who_did_you_loan_it_to">Para quem você emprestou?</string>
+    <string name="label_select_book">Selecionar livro</string>
+    <string name="label_profile">Perfil</string>
+    <string name="label_edit">Editar</string>
+    <string name="label_borrow_status">Status do empréstimo:</string>
+    <string name="label_are_you_sure_delete_borrow">Tem certeza que deseja deletar esse empréstimo?</string>
 
 </resources>

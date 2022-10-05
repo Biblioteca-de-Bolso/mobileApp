@@ -46,7 +46,6 @@ class BorrowAdapter(
 
     override fun getItemViewType(position: Int): Int {
         val borrow = differ.currentList[position]
-        Log.e("borrowStatus", borrow.borrowStatus.toString())
         if (borrow.borrowStatus == BorrowStatus.RETURNED) {
             return VIEW_RETURNED
         } else {
