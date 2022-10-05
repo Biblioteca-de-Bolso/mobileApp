@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.bibliotecadebolso.app",
+    "sha256_cert_fingerprints":
+    ["6C:C4:7D:18:31:B1:9A:17:02:B5:17:D4:A1:3C:C7:DB:59:92:18:A2:F5:81:BC:0C:FE:F5:54:7A:A1:30:49:91"]
+  }
+}]

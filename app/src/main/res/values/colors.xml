@@ -56,6 +56,14 @@
 
     <color name="highlight_purple">#ae33ff</color>
     <color name="highlight_blue">#0037fe</color>
+    <color name="yellow_orange_1">#F1C40F</color>
+    <color name="color_borrow_returned">#1EB9FF</color>
+    <color name="color_borrow_returned_bg">#0D1EB9FF</color>
+    <color name="borrow_color_too_late">#F61515</color>
+    <color name="borrow_color_too_late_bg">#0DF61515</color>
+    <color name="borrow_color_has_passed_time">#F68F15</color>
+    <color name="borrow_color_has_passed_time_bg">#0DF68F15</color>
+    <color name="borrow_color_not_passed_time">#E4F615</color>
 
 
 </resources>

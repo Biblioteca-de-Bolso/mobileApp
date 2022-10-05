@@ -45,123 +45,154 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:trackColor="@color/splash_screen_dark_purple" />
 
-            <FrameLayout
-                android:id="@+id/fl_book_image"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_top"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="30dp"
-                app:layout_constraintEnd_toStartOf="@id/tv_book_title"
-                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/progress_sending">
 
-                <ImageView
-                    android:id="@+id/iv_book_preview"
-                    android:layout_width="160dp"
+                <FrameLayout
+                    android:id="@+id/fl_book_image"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/label_book_image"
-                    android:minHeight="240dp"
-                    android:src="@drawable/ic_item_book" />
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="30dp"
+                    app:layout_constraintEnd_toStartOf="@id/tv_book_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                <ImageView
-                    android:id="@+id/iv_btn_edit_image"
-                    android:layout_width="40dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_height="40dp"
-                    android:padding="8dp"
-                    android:contentDescription="@string/label_book_image"
+                    <ImageView
+                        android:id="@+id/iv_book_preview"
+                        android:layout_width="160dp"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/label_book_image"
+                        android:minHeight="240dp"
+                        android:src="@drawable/ic_item_book" />
 
-                    android:background="@color/gd_blue_purple_1"
-                    android:src="@drawable/ic_pen_edit" />
+                    <ImageView
+                        android:id="@+id/iv_btn_edit_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@color/gd_blue_purple_1"
+                        android:contentDescription="@string/label_book_image"
 
-                <ImageView
-                    android:id="@+id/iv_btn_save_image"
-                    android:layout_width="40dp"
-                    android:layout_gravity="bottom|end"
-                    android:layout_height="40dp"
-                    android:padding="8dp"
-                    android:visibility="gone"
-                    android:layout_marginEnd="50dp"
-                    android:contentDescription="@string/label_book_image"
+                        android:padding="8dp"
+                        android:src="@drawable/ic_pen_edit" />
 
-                    android:background="@color/gd_blue_yellow_3"
-                    android:src="@drawable/ic_save" />
-            </FrameLayout>
+                    <ImageView
+                        android:id="@+id/iv_btn_save_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="50dp"
+                        android:background="@color/gd_blue_yellow_3"
+                        android:contentDescription="@string/label_book_image"
+                        android:padding="8dp"
 
-            <TextView
-                android:id="@+id/tv_book_title"
-                android:layout_width="0dp"
+                        android:src="@drawable/ic_save"
+                        android:visibility="gone" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tv_book_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="12dp"
+                    android:text="@string/label_loading_three_dots"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/fl_book_image"
+                    app:layout_constraintTop_toTopOf="@id/fl_book_image" />
+
+                <TextView
+                    android:id="@+id/tv_label_author"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="12dp"
+                    android:text="@string/label_author"
+                    android:textColor="@color/gd_blue_purple_3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_book_title"
+                    app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
+
+                <TextView
+                    android:id="@+id/tv_author"
+                    android:layout_width="0dp"
+                    android:layout_marginEnd="12dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_loading_three_dots"
+                    android:textColor="@color/gd_blue_purple_3"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/tv_label_author"
+                    app:layout_constraintTop_toBottomOf="@id/tv_label_author" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_btn_edit_book"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="12dp"
-                android:text="@string/label_loading_three_dots"
-                android:textAlignment="textStart"
-                android:textColor="@color/white"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/fl_book_image"
-                app:layout_constraintTop_toTopOf="@id/fl_book_image" />
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:gravity="start"
+                app:layout_constraintTop_toBottomOf="@id/cl_top">
 
-            <TextView
-                android:id="@+id/tv_label_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/label_author"
-                android:textColor="@color/gd_blue_purple_3"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_book_title"
-                app:layout_constraintTop_toBottomOf="@id/tv_book_title" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/label_loading_three_dots"
-                android:textColor="@color/gd_blue_purple_3"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/tv_label_author"
-                app:layout_constraintTop_toBottomOf="@id/tv_label_author" />
+                    <Button
+                        android:id="@+id/btn_edit_book"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="16dp"
+                        android:backgroundTint="@color/gd_blue_purple_1"
+                        android:paddingHorizontal="25dp"
+                        android:text="@string/label_edit_book" />
 
-            <Button
-                android:id="@+id/btn_edit_book"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:backgroundTint="@color/gd_blue_purple_1"
-                android:text="@string/label_edit_book"
-                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
-                app:layout_constraintStart_toStartOf="@id/fl_book_image"
-                app:layout_constraintTop_toBottomOf="@id/fl_book_image" />
+                    <Button
+                        android:id="@+id/btn_delete_book"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:backgroundTint="@android:color/holo_red_light"
+                        android:text="@string/label_delete"
+                        app:layout_constraintEnd_toEndOf="@id/fl_book_image"
+                        app:layout_constraintStart_toStartOf="@id/fl_book_image"
+                        app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
+                </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_delete_book"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="32dp"
-                android:backgroundTint="@android:color/holo_red_light"
-                android:text="@string/label_delete"
-                app:layout_constraintEnd_toEndOf="@id/fl_book_image"
-                app:layout_constraintStart_toStartOf="@id/fl_book_image"
-                app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
 
-            <Spinner
-                android:id="@+id/spinner_reading_status"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:entries="@array/spinner_book_reading_status_value"
-                app:layout_constraintBottom_toBottomOf="@id/btn_edit_book"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_edit_book"
-                app:layout_constraintTop_toTopOf="@id/btn_edit_book"
-                tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+                <Spinner
+                    android:layout_weight="0.95"
+                    android:id="@+id/spinner_reading_status"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/spinner_book_reading_status_value"
+                    app:layout_constraintBottom_toBottomOf="@id/btn_edit_book"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_edit_book"
+                    app:layout_constraintTop_toTopOf="@id/tv_author"
+                    tools:listitem="@android:layout/simple_spinner_dropdown_item" />
+
+            </LinearLayout>
 
             <com.google.android.material.divider.MaterialDivider
                 android:id="@+id/divider_purple_to_white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="56dp"
-                app:layout_constraintTop_toBottomOf="@id/btn_edit_book" />
+                android:layout_marginTop="20dp"
+                app:layout_constraintTop_toBottomOf="@id/ll_btn_edit_book" />
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -170,7 +201,9 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_add_book_offline"
                 android:minHeight="500sp"
-                android:padding="16dp"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="120dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider_purple_to_white"
                 app:layout_constraintVertical_bias="1.0"
@@ -217,129 +250,143 @@
                     app:layout_constraintTop_toBottomOf="@id/tv_description" />
 
                 <TextView
-                    android:id="@+id/tv_label_annotations"
+                    android:id="@+id/tv_label_more_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/label_annotations"
+                    android:text="@string/label_more_info"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tv_description_show_more" />
 
-                <ImageView
-                    android:id="@+id/iv_ic_annotation_1"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_isbn_10"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:src="@drawable/ic_annotation_yellow"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="9sp"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/label_loading_three_dots"
+                    android:textColor="@color/gray_transparent_80"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_label_annotations" />
-
-                <ImageView
-                    android:id="@+id/iv_ic_annotation_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_annotation_yellow"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_1"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_1" />
-
-                <ImageView
-                    android:id="@+id/iv_ic_annotation_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_annotation_yellow"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_2"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_2" />
-
-                <ImageView
-                    android:id="@+id/iv_ic_annotation_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_annotation_yellow"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_annotation_3"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_annotation_3" />
-
+                    app:layout_constraintTop_toBottomOf="@id/tv_label_more_info"
+                    tools:text="ISBN-10: 0123456789" />
 
                 <TextView
-                    android:id="@+id/tv_annotation_show_more"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_isbn_13"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="end"
-                    android:text="@string/label_show_more"
-                    android:textColor="@color/gd_blue_purple_0"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="9sp"
+                    android:paddingHorizontal="16dp"
+                    android:text="@string/label_loading_three_dots"
+                    android:textColor="@color/gray_transparent_80"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_isbn_10"
+                    tools:text="ISBN-13: 0123456789123" />
+
+
+                <LinearLayout
+                    android:id="@+id/ll_annotation_and_borrow"
+                    android:layout_marginTop="16dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_ic_annotation_4" />
+                    app:layout_constraintTop_toBottomOf="@id/tv_isbn_13"
+                    >
 
-                <TextView
-                    android:id="@+id/tv_label_abstracts"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_abstracts"
-                    android:textColor="@color/black"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_annotation_show_more" />
+                    <LinearLayout
+                        android:layout_weight="0.5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/iv_ic_abstract_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="32dp"
-                    android:src="@drawable/ic_abstract"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_label_abstracts" />
+                        <TextView
+                            android:id="@+id/tv_label_annotations"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_annotations"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:gravity="start"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_description_show_more" />
 
-                <ImageView
-                    android:id="@+id/iv_ic_abstract_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_abstract"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_1"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_1" />
 
-                <ImageView
-                    android:id="@+id/iv_ic_abstract_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_abstract"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_2"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_2" />
+                        <ImageView
+                            android:id="@+id/iv_ic_annotation_1"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_annotation_yellow"
+                            android:contentDescription="@string/label_annotation_image" />
 
-                <ImageView
-                    android:id="@+id/iv_ic_abstract_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:src="@drawable/ic_abstract"
-                    app:layout_constraintStart_toEndOf="@id/iv_ic_abstract_3"
-                    app:layout_constraintTop_toTopOf="@id/iv_ic_abstract_3" />
 
-                <TextView
-                    android:id="@+id/tv_abstract_show_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="end"
-                    android:text="@string/label_show_more"
-                    android:textColor="@color/gd_blue_purple_0"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iv_ic_abstract_4" />
+                        <TextView
+                            android:id="@+id/tv_annotation_show_more"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="@string/label_show_more"
+                            android:textColor="@color/gd_blue_purple_0"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tv_label_borrow"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/label_lendings"
+                            android:textColor="@color/black"
+                            android:textSize="20sp"
+                            android:gravity="end"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_description_show_more" />
+
+
+                        <ImageView
+                            android:id="@+id/iv_ic_borrow"
+                            android:layout_width="120dp"
+                            android:layout_height="120dp"
+                            android:src="@drawable/book_clock_outline"
+                            app:tint="@color/yellow_orange_1"
+                            android:contentDescription="@string/label_annotation_image" />
+
+
+                        <TextView
+                            android:id="@+id/tv_borrow_show_more"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="16dp"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:text="@string/label_show_more"
+                            android:textColor="@color/gd_blue_purple_0"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+
+                </LinearLayout>
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -371,7 +418,7 @@
         android:visibility="gone"
         app:borderWidth="0dp"
         app:fabSize="mini"
-        app:srcCompat="@drawable/ic_abstract_transparent_color_white"
+        app:srcCompat="@drawable/book_clock_outline"
         app:tint="@color/white"
         tools:visibility="visible" />
 

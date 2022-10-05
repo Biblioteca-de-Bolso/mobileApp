@@ -12,14 +12,20 @@
         tools:layout="@layout/fragment_book_list" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.bibliotecadebolso.app.ui.home.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_annotation"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.annotation.AnnotationListFragment"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/fragment_annotation_list" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.bibliotecadebolso.app.ui.home.ui.notifications.NotificationsFragment"
+        android:id="@+id/navigation_borrow"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.borrowList.BorrowFragment"
+        android:label="@string/title_borrow"
+        tools:layout="@layout/fragment_borrow" />
+
+    <fragment
+        android:id="@+id/navigation_profile"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.Profile.ProfileFragment"
         android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        tools:layout="@layout/fragment_profile" />
 </navigation>

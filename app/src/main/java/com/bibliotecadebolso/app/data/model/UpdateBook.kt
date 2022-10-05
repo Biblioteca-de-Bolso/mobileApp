@@ -6,6 +6,7 @@ data class UpdateBook(
     val author: String? = null,
     val isbn: String? = null,
     val publisher: String? = null,
+    val thumbnail: String? = null,
     val description: String? = null,
     val readStatus: ReadStatusEnum? = null,
 )

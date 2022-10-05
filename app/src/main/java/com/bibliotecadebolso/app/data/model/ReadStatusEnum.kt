@@ -5,5 +5,4 @@ enum class ReadStatusEnum {
     READING,
     CONCLUDED,
     DROPPED,
-    NO_STATUS
 }

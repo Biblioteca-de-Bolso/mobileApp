@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -11,7 +12,6 @@ import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.databinding.ItemBookBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
 import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 
 class BookListAdapter(private var context: Context, private var rvOnClickListener: RvOnClickListener) :
     RecyclerView.Adapter<BookListAdapter.BookViewHolder>() {
@@ -49,12 +49,16 @@ class BookListAdapter(private var context: Context, private var rvOnClickListene
         return BookViewHolder(binding)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: BookViewHolder, position: Int) {
         val CreatedBook: CreatedBook = differ.currentList[position]
         val defaultThumbnailInt = R.drawable.ic_item_book
 
-        holder.binding.tvTitle.text = CreatedBook.title
-        holder.binding.tvAuthor.text = CreatedBook.author
+        val isALongTitle = CreatedBook.title.length > 16
+        val titleMaxSize = if (isALongTitle) 16 else CreatedBook.title.length
+        val titleComplement = if (isALongTitle) "..." else ""
+        holder.binding.tvTitle.text = CreatedBook.title.subSequence(0,titleMaxSize).toString() + titleComplement
+
 
         Glide.with(context)
             .load(

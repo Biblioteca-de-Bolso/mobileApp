@@ -6,4 +6,9 @@
         <item>CONCLUDED</item>
         <item>DROPPED</item>
     </string-array>
+
+    <string-array name="spinner_book_borrow_status_key">
+        <item>PENDING</item>
+        <item>RETURNED</item>
+    </string-array>
 </resources>

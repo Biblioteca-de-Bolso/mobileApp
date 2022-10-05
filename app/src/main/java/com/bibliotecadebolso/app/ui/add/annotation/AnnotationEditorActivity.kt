@@ -126,7 +126,6 @@ class AnnotationEditorActivity : AppCompatActivity() {
             actionHighlighterGreen.setOnClickListener(object : View.OnClickListener {
                 var isToDisable = false
                 override fun onClick(v: View) {
-                    Log.e("actionHighlighter", isToDisable.toString())
                     mEditor.changeHighlight(isToDisable)
                     isToDisable = !isToDisable
                 }

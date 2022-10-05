@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -16,16 +17,72 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MyApplication">
+        android:theme="@style/Theme.MyApplication"
+        xmlns:tools="http://schemas.android.com/tools">
+
+
         <activity
-            android:name=".ui.edit.book.EditBookActivity"
-            android:theme="@style/Theme.MyApplication.PurpleTheme"
+            android:name=".ui.user.ChangePasswordActivity"
+            android:exported="true">
+            <intent-filter android:autoVerify="true" android:label="test"
+                >
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="https"/>
+                <data android:host="bibliotecadebolso.com"/>
+                <data android:path="/recover"/>
+            </intent-filter>
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.borrow.edit.EditBorrowActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.borrow.add.AddBorrowActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.borrow.list.BorrowListActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.TwoSearchField">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.book.linearList.BookLinearListActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".ui.book.gridList.BookListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.bookInfo.annotationList.AnnotationListActivity"
+            android:name=".ui.book.edit.EditBookActivity"
+            android:exported="false"
+            android:theme="@style/Theme.MyApplication.PurpleTheme" />
+        <activity
+            android:name=".ui.book.bookInfo.annotationList.AnnotationListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.bookInfo.BookInfoActivity"
+            android:name=".ui.book.bookInfo.BookInfoActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication.PurpleTheme" />
         <activity
