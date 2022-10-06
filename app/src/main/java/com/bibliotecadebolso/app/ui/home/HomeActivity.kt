@@ -2,10 +2,11 @@ package com.bibliotecadebolso.app.ui.home
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -37,11 +38,10 @@ class HomeActivity : AppCompatActivity() {
 
         bottomNavView = binding.navView
         drawerLayout = binding.container
-
         setupTopBarNavigation()
         setupBottomBarNavigation()
-        setupNavigationDrawer()
 
+        setupTopBarNavigationDrawer()
     }
 
     private fun setupTopBarNavigation() {
@@ -55,7 +55,8 @@ class HomeActivity : AppCompatActivity() {
             remove android:layout_margin from AppBarLayout in Activity
          */
         val radius: Float = resources.getDimension(R.dimen.default_toolbar_corner_radius)
-        val materialShapeDrawable: MaterialShapeDrawable = toolBar.background as MaterialShapeDrawable
+        val materialShapeDrawable: MaterialShapeDrawable =
+            toolBar.background as MaterialShapeDrawable
 
         materialShapeDrawable.shapeAppearanceModel = materialShapeDrawable.shapeAppearanceModel
             .toBuilder()
@@ -70,29 +71,36 @@ class HomeActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_home)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        val appBarConfiguration = AppBarConfiguration(
+        val appBarConfiguration = AppBarConfiguration.Builder(
             setOf(
                 R.id.navigation_home,
                 R.id.navigation_annotation,
                 R.id.navigation_borrow,
                 R.id.navigation_profile,
+                )
+        ).setOpenableLayout(drawerLayout)
+            .build()
 
-            )
-        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavView.setupWithNavController(navController)
     }
 
-    private fun setupNavigationDrawer() {
+    private fun setupTopBarNavigationDrawer() {
+        setupNavigationOptions()
+
         actionBarDrawerToggle = ActionBarDrawerToggle(
             this, drawerLayout, R.string.drawer_label_open,
             R.string.drawer_label_close
         )
         drawerLayout.addDrawerListener(actionBarDrawerToggle)
-        actionBarDrawerToggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        actionBarDrawerToggle.apply {
+            isDrawerIndicatorEnabled = true
+            toolbarNavigationClickListener =
+                View.OnClickListener { drawerLayout.openDrawer(GravityCompat.START) }
+        }
+        actionBarDrawerToggle.syncState()
 
-        setupNavigationOptions()
 
     }
 
@@ -113,17 +121,6 @@ class HomeActivity : AppCompatActivity() {
             true
         }
     }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        return super.onCreateOptionsMenu(menu)
-    }
-
-
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        menuInflater.inflate(R.menu.topbar_main_menu, menu)
-//
-//        return true
-//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) return true
@@ -151,6 +148,14 @@ class HomeActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         for (fragment in supportFragmentManager.fragments) {
             fragment.onActivityResult(requestCode, resultCode, data)
+        }
+    }
+
+    override fun onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START)
+        } else {
+            super.onBackPressed()
         }
     }
 }

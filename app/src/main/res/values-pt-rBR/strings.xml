@@ -138,5 +138,8 @@
     <string name="label_edit">Editar</string>
     <string name="label_borrow_status">Status do empréstimo:</string>
     <string name="label_are_you_sure_delete_borrow">Tem certeza que deseja deletar esse empréstimo?</string>
+    <string name="label_permission_granted_restart_app">Permission Granted, restart your app to apply your changes</string>
+    <string name="label_book_unique">Livro</string>
+    <string name="label_permission_not_granted">Permissão não garantida!</string>
 
 </resources>
