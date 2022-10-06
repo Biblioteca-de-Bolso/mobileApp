@@ -1,9 +1,11 @@
 package com.bibliotecadebolso.app.ui.book.bookInfo
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
@@ -178,9 +180,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
                 val lastReadStatusEnum =
                     if (viewModel.liveDataUpdateBook.value != null &&
-                        viewModel.liveDataUpdateBook.value is Result.Success)
+                        viewModel.liveDataUpdateBook.value is Result.Success
+                    )
                         (viewModel.liveDataUpdateBook.value as Result.Success).response.readStatus
-                else (viewModel.liveDataBookInfo.value as Result.Success).response.readStatus
+                    else (viewModel.liveDataBookInfo.value as Result.Success).response.readStatus
 
                 if (lastReadStatusEnum != null)
                     returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
@@ -296,9 +299,46 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun setOnClickEditImage() {
         binding.ivBtnEditImage.setOnClickListener {
-            val photoPickerIntent = Intent(Intent.ACTION_PICK)
-            photoPickerIntent.type = "image/*"
-            imagePickerActivityResult.launch(photoPickerIntent)
+            if (shouldAskPermission()) {
+                requestStoragePermission()
+                return@setOnClickListener
+            }
+            launchImagePickerIntent()
+        }
+    }
+
+    private fun launchImagePickerIntent() {
+        val photoPickerIntent = Intent(Intent.ACTION_PICK)
+        photoPickerIntent.type = "image/*"
+        imagePickerActivityResult.launch(photoPickerIntent)
+    }
+
+    private fun requestStoragePermission() {
+        val perms = arrayOf("android.permission.READ_EXTERNAL_STORAGE")
+
+        val permsRequestCode = 200
+
+        requestPermissions(perms, permsRequestCode)
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.isEmpty()) return
+        when (requestCode) {
+            200 -> {
+                val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+                if (!isReadPermissionAccepted) {
+                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    return
+                }
+                launchImagePickerIntent()
+
+
+            }
         }
     }
 
@@ -475,6 +515,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
 
     private fun showLoadingBar() {
         binding.progressSending.visibility = View.VISIBLE
+    }
+
+    private fun shouldAskPermission(): Boolean {
+        return Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1
     }
 
 
