@@ -3,6 +3,9 @@ package com.bibliotecadebolso.app.ui.adapter
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +17,9 @@ import com.bumptech.glide.Glide
 
 class BookLinearListAdapter(
     private var context: Context,
-    private var rvOnClickListener: RvOnClickListener
+    private var rvOnClickListener: RvOnClickListener,
+    private var toShowBorrowStatus: Boolean = false,
+    private var toCancelClickIfCurrentlyBorrowed: Boolean = false,
 ) : RecyclerView.Adapter<BookLinearListAdapter.BookViewHolder>() {
 
     inner class BookViewHolder(val binding: ItemBookBindingFullLengthBinding) :
@@ -37,7 +42,7 @@ class BookLinearListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ):BookViewHolder {
+    ): BookViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ItemBookBindingFullLengthBinding.inflate(inflater)
 
@@ -58,8 +63,46 @@ class BookLinearListAdapter(
             .centerInside()
             .into(holder.binding.ivThumbnail)
 
-        holder.binding.root.setOnClickListener { rvOnClickListener.onItemCLick(createdBook.id) }
+        val currentlyBorrowed = createdBook.currentlyBorrowed
 
+        if (!currentlyBorrowed) {
+            resetBorrowedStatusLayout(holder)
+        } else {
+            if (toShowBorrowStatus)
+                setTextAsBorrowed(holder.binding.tvBorrowStatus)
+
+            if (toCancelClickIfCurrentlyBorrowed)
+                setContentHalfTransparent(holder.binding.llContent)
+        }
+
+        holder.binding.root.setOnClickListener {
+            if (toCancelClickIfCurrentlyBorrowed && currentlyBorrowed) {
+                showShortToast(context.getString(R.string.book_already_borrowed_select_other))
+                return@setOnClickListener
+            }
+
+            rvOnClickListener.onItemCLick(createdBook.id)
+        }
+
+    }
+
+    private fun resetBorrowedStatusLayout(holder: BookLinearListAdapter.BookViewHolder) {
+        holder.binding.tvBorrowStatus.text = ""
+        holder.binding.llContent.alpha = 1.0f
+
+    }
+
+    private fun setTextAsBorrowed(tvBorrowStatus: TextView) {
+        tvBorrowStatus.text = context.getString(R.string.label_borrowed).uppercase()
+    }
+
+    private fun setContentHalfTransparent(llContent: LinearLayout) {
+        val fiftyPercentTransparent = 0.5f
+        llContent.alpha = fiftyPercentTransparent
+    }
+
+    private fun showShortToast(string: String) {
+        Toast.makeText(context, string, Toast.LENGTH_SHORT).show()
     }
 
 

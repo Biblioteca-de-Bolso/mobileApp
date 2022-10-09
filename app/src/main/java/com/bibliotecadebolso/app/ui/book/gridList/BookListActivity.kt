@@ -29,7 +29,8 @@ import kotlinx.coroutines.launch
 /**
  * @param readStatusEnum read status enum, can be null
  * @param toReturnEnum can be null
- *
+ * @param showBorrowStatus show borrow status. Default value: false
+ * @param cancelClickIfBorrowed cancel click if book is currently borrowed. Default value: false
  **/
 class BookListActivity : AppCompatActivity(), RvOnClickListener {
     private lateinit var binding: ActivityBookListBinding
@@ -38,6 +39,8 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     val scrollState: ScrollState = ScrollState()
     private var enumChoosed: ReadStatusEnum? = null
     private var toReturnEnum: TO_RETURN = TO_RETURN.NOTHING
+    private var showBorrowStatus: Boolean = false
+    private var cancelClickIfBorrowed: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,18 +49,25 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         val actionBarTitle = getString(R.string.label_book)
         supportActionBar?.title = actionBarTitle
 
-        val enumString = intent.extras?.getString("readStatusEnum")
-        val toReturnEnumChoosed = intent.extras?.get("toReturnEnum") as TO_RETURN?
-        setEnumChoosed(enumString)
-        setToReturnEnumChoosed(toReturnEnumChoosed)
         viewModel = ViewModelProvider(this)[BookListViewModel::class.java]
-
+        initVariables()
         setupRecyclerView()
         setupSearchListListener()
 
         if (viewModel.searchList.listLiveData.value == null) getSearchList(null, true)
 
         setContentView(binding.root)
+    }
+
+    private fun initVariables() {
+        val enumString = intent.extras?.getString("readStatusEnum")
+        val toReturnEnumChoosed = intent.extras?.get("toReturnEnum") as TO_RETURN?
+        showBorrowStatus =
+            intent.extras?.getBoolean("showBorrowStatus", false) ?: false
+        cancelClickIfBorrowed =
+            intent.extras?.getBoolean("cancelClickIfBorrowed", false) ?: false
+        setEnumChoosed(enumString)
+        setToReturnEnumChoosed(toReturnEnumChoosed)
     }
 
     private fun setEnumChoosed(enumString: String?) {
@@ -80,7 +90,7 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     }
 
     private fun setupRecyclerView() {
-        bookListAdapter = BookLinearListAdapter(this, this)
+        bookListAdapter = BookLinearListAdapter(this, this, showBorrowStatus, cancelClickIfBorrowed)
         val layoutManager = LinearLayoutManager(this)
 
         binding.rvListBook.apply {
@@ -217,7 +227,8 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
 
     companion object {
         const val RETURN_BOOK_ID = 21
-        public enum class TO_RETURN{
+
+        public enum class TO_RETURN {
             NOTHING,
             BOOKID,
         }
