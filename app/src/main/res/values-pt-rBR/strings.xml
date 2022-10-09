@@ -141,5 +141,8 @@
     <string name="label_permission_granted_restart_app">Permission Granted, restart your app to apply your changes</string>
     <string name="label_book_unique">Livro</string>
     <string name="label_permission_not_granted">Permissão não garantida!</string>
+    <string name="book_already_borrowed_select_other">Livro já emprestado. Selecione outro</string>
+    <string name="label_empty">Vazio</string>
+    <string name="label_no_internet_connecton">Sem conexão com a internet</string>
 
 </resources>

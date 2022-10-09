@@ -63,6 +63,17 @@
                     tools:listitem="@layout/item_borrow_pending" />
 
                 <TextView
+                    android:id="@+id/tv_error_status_rv_pending"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_empty"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:layout_margin="20dp"
+                    />
+
+                <TextView
                     android:id="@+id/label_error_planning_to_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -108,6 +119,17 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_borrow" />
+
+                <TextView
+                    android:id="@+id/tv_error_status_rv_returned"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_empty"
+                    android:visibility="gone"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:layout_margin="20dp"
+                    />
 
             </LinearLayout>
         </ScrollView>
