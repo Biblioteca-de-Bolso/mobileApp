@@ -12,7 +12,7 @@ data class Borrow(
     val devolutionDate: LocalDateTime?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime,
-    val book: BookTitle
+    val book: BookTitle,
 )
 
 data class BookTitle(

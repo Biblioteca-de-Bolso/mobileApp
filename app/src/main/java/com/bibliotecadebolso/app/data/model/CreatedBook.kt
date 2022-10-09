@@ -14,4 +14,5 @@ data class CreatedBook(
     val borrowStatus: String,
     val createdAt: String,
     val updatedAt: String,
+    val currentlyBorrowed: Boolean,
 )

@@ -83,19 +83,20 @@
                     android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <Button
+                android:id="@+id/btn_add_loan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="22dp"
+                android:layout_marginBottom="80dp"
+                android:backgroundTint="@color/gd_blue_purple_1"
+                android:enabled="false"
+                android:text="@string/label_add_your_loan"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-
-    <Button
-        android:id="@+id/btn_add_loan"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:backgroundTint="@color/gd_blue_purple_1"
-        android:enabled="false"
-        android:text="@string/label_add_your_loan"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

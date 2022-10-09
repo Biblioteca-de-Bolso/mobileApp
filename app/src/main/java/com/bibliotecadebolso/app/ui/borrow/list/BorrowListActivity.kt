@@ -207,7 +207,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         startActivity(intent)
         this.overridePendingTransition(
             androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
-            androidx.transition.R.anim.abc_fade_out
+            androidx.transition.R.anim.abc_popup_exit
         )
     }
 }

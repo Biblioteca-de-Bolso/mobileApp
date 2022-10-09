@@ -105,6 +105,8 @@ class AddBorrowActivity : AppCompatActivity() {
     private fun getBookByLaunchingBookListActivity() {
         val intent = Intent(this, BookListActivity::class.java)
         intent.putExtra("toReturnEnum", BookListActivity.Companion.TO_RETURN.BOOKID)
+        intent.putExtra("showBorrowStatus", true)
+        intent.putExtra("cancelClickIfBorrowed", true)
 
         bookListActivityResult.launch(intent)
     }
