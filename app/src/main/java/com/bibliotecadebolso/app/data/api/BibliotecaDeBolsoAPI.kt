@@ -8,6 +8,8 @@ import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
 import com.bibliotecadebolso.app.data.model.request.EditBorrow
 import com.bibliotecadebolso.app.data.model.response.*
+import com.bibliotecadebolso.app.ui.user.requestChangePassword.ChangePasswordForm
+import com.bibliotecadebolso.app.ui.user.requestChangePassword.form.RequestChangePasswordForm
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Response
@@ -156,6 +158,16 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Body editBorrow: EditBorrow
     ): Response<APIResponse<BorrowObject>>
+
+    @POST("auth/recover")
+    suspend fun requestChangePassword(
+        @Body requestChangePasswordForm: RequestChangePasswordForm
+    ): Response<APIResponse<Nothing>>
+
+    @POST("auth/change")
+    suspend fun changePassword(
+        @Body changePasswordForm: ChangePasswordForm
+    ): Response<APIResponse<Nothing>>
 
 
 }

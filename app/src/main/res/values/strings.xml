@@ -159,4 +159,10 @@
     <string name="book_already_borrowed_select_other">Book already borrowed. Select other book</string>
     <string name="label_empty">Empty</string>
     <string name="label_no_internet_connecton">No internet connection</string>
+    <string name="label_forgot_password">Forgot Password</string>
+    <string name="label_request_to_change_your_password_via_email">Request to change your password via email:</string>
+    <string name="label_request_via_email">Request via email</string>
+    <string name="label_check_email_to_change_password">Check your email to change your password</string>
+    <string name="label_change_password">Change password</string>
+    <string name="label_password_changed">Password changed!!</string>
 </resources>

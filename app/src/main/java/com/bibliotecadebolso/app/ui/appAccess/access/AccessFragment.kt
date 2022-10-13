@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.appAccess.access
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.FragmentAccessBinding
+import com.bibliotecadebolso.app.ui.user.requestChangePassword.RequestChangePasswordActivity
 
 class AccessFragment : Fragment() {
 
@@ -21,6 +23,8 @@ class AccessFragment : Fragment() {
         setupOnClickLoginListener()
         setupOnClickRegisterListener()
 
+        setupOnClickForgotPasswordListener()
+
         return binding.root
     }
 
@@ -33,6 +37,13 @@ class AccessFragment : Fragment() {
     private fun setupOnClickRegisterListener() {
         binding.btnRegister.setOnClickListener {
             findNavController().navigate(R.id.action_accessActivity_to_signUpFragment)
+        }
+    }
+
+    private fun setupOnClickForgotPasswordListener() {
+        binding.tvForgotPassword.setOnClickListener{
+            val intent = Intent(requireContext(), RequestChangePasswordActivity::class.java)
+            startActivity(intent)
         }
     }
 }

@@ -6,6 +6,7 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
@@ -40,6 +41,21 @@ object RequestUtils {
             errorResponseTransformed(response)
         }
 
+    }
+
+    fun <T: Any> returnResponseTransformedIntoResult(response: Response<APIResponse<T>>): Result<T> {
+        val validationResponse = convertAPIResponseToResultClass(response)
+
+        return if (validationResponse is Result.Success) Result.Success(validationResponse.response)
+        else validationResponse as Result.Error
+    }
+
+    @JvmName("returnResponseTransformedIntoResult1")
+    fun returnResponseTransformedIntoResult(response: Response<APIResponse<Nothing>>): Result<Boolean> {
+        val validationResponse = convertAPIResponseToResultClass(response)
+
+        return if (validationResponse is Result.Success) Result.Success(true)
+        else validationResponse as Result.Error
     }
 
     private fun <T: Any> resultBasedOnStatusBody(response: Response<APIResponse<T>>): Result<T> {
