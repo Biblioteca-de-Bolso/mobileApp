@@ -12,7 +12,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.databinding.ActivityAddBorrowBinding
-import com.bibliotecadebolso.app.ui.book.gridList.BookListActivity
+import com.bibliotecadebolso.app.ui.book.linearList.BookListActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils

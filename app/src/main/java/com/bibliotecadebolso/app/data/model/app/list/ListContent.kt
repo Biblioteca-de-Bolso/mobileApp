@@ -1,7 +1,7 @@
 package com.bibliotecadebolso.app.data.model.app.list
 
 import androidx.lifecycle.MutableLiveData
-import com.bibliotecadebolso.app.ui.book.gridList.BookListViewModel
+import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
 import com.bibliotecadebolso.app.util.Result
 
 open class ListContent<T>(

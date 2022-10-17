@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.book.gridList
+package com.bibliotecadebolso.app.ui.book.linearList
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

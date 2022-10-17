@@ -34,7 +34,7 @@
             >
             <intent-filter
                 android:autoVerify="true"
-                android:label="test">
+                android:label="Biblioteca de bolso">
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -74,14 +74,7 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".ui.book.linearList.BookLinearListActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ui.book.gridList.BookListActivity"
+            android:name=".ui.book.linearList.BookListActivity"
             android:exported="false" />
         <activity
             android:name=".ui.book.edit.EditBookActivity"

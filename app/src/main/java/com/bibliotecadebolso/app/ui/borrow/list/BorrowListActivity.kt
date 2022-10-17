@@ -17,7 +17,7 @@ import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBorrowListBinding
 import com.bibliotecadebolso.app.ui.adapter.BorrowAdapter
-import com.bibliotecadebolso.app.ui.book.gridList.BookListViewModel
+import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
 import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
 import com.bibliotecadebolso.app.util.*
 import com.google.android.material.snackbar.BaseTransientBottomBar

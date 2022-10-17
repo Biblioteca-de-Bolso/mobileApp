@@ -7,15 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.response.UserObject
+import com.bibliotecadebolso.app.data.validator.IValidator
+import com.bibliotecadebolso.app.data.validator.validations.EmailValidation
+import com.bibliotecadebolso.app.data.validator.validations.PasswordValidator
+import com.bibliotecadebolso.app.data.validator.validations.UsernameValidator
 import com.bibliotecadebolso.app.databinding.FragmentSignUpBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessViewModel
 import com.bibliotecadebolso.app.util.Result
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 
 class SignUpFragment : Fragment() {
 
@@ -48,38 +51,39 @@ class SignUpFragment : Fragment() {
             val emailInput = binding.etEmail.editText?.text.toString()
             val passwordInput = binding.etPassword.editText?.text.toString()
             val confirmPasswordInput = binding.etConfirmPassword.editText?.text.toString()
-            var error = false
+            var hasError = false
+
+            val validators: Map<TextInputLayout,IValidator> = mapOf(
+                binding.etUsername to UsernameValidator(usernameInput),
+                binding.etEmail to EmailValidation(emailInput),
+                binding.etPassword to PasswordValidator(passwordInput),
+                binding.etConfirmPassword to PasswordValidator(confirmPasswordInput)
+            )
 
             if (passwordInput != confirmPasswordInput) {
-                binding.etPassword.error = getString(R.string.invalid_password)
-                binding.etConfirmPassword.error = getString(R.string.invalid_password)
-                error = true
+                binding.etPassword.error = getString(R.string.error_password_and_confirm_password_not_equals)
+                binding.etConfirmPassword.error = getString(R.string.error_password_and_confirm_password_not_equals)
+                hasError = true
             }
 
-            if (usernameInput.isEmpty()) {
-                binding.etUsername.error = getString(R.string.invalid_username)
-                error = true
-            }
+            val inputHasError = showErrorAndReturnIfHasError(validators)
+            hasError = (hasError || inputHasError)
 
-            if (emailInput.isEmpty()) {
-                binding.etEmail.error = getString(R.string.label_empty_email)
-                error = true
-            }
-
-            if (passwordInput.isEmpty()) {
-                binding.etPassword.error = getString(R.string.invalid_password)
-                error = true
-            }
-            if (confirmPasswordInput.isEmpty()) {
-                binding.etConfirmPassword.error = getString(R.string.invalid_password)
-                error = true
-            }
-
-            if (!error) {
+            if (!hasError) {
                 binding.pgLoading.visibility = View.VISIBLE
                 appAccessViewModel.register(usernameInput, emailInput, passwordInput)
             }
         }
+    }
+
+    private fun showErrorAndReturnIfHasError(map: Map<TextInputLayout, IValidator>): Boolean {
+        var hasError = false
+        map.forEach{
+            val validationResult = it.value.validate()
+            it.key.error = getString(validationResult.message)
+            if (!validationResult.isSuccess) hasError = true
+        }
+        return hasError
     }
 
     private fun setRegisterResponseObserver() {

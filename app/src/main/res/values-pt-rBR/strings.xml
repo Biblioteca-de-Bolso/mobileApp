@@ -144,5 +144,14 @@
     <string name="book_already_borrowed_select_other">Livro já emprestado. Selecione outro</string>
     <string name="label_empty">Vazio</string>
     <string name="label_no_internet_connecton">Sem conexão com a internet</string>
+    <string name="label_forgot_password">Esqueci a senha</string>
+    <string name="label_request_to_change_your_password_via_email">Pedir para trocar a senha via email:</string>
+    <string name="label_request_via_email">Pedir via email</string>
+    <string name="label_check_email_to_change_password">Verifique seu email para trocar sua senha</string>
+    <string name="label_change_password">Trocar senha</string>
+    <string name="label_password_changed">Senha trocada!!</string>
+    <string name="error_email_not_valid">Email não é válido</string>
+    <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
+    <string name="error_password_and_confirm_password_not_equals">Os campos \'Senha\' e \'Confirmar senha\' precisam ser iguais</string>
 
 </resources>
