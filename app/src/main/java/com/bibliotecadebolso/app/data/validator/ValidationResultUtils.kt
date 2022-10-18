@@ -7,7 +7,7 @@ import com.google.android.material.textfield.TextInputLayout
 object ValidationResultUtils {
     val emptySuccess = ValidationResult(true, R.string.empty_string)
 
-    fun showOnTextInputLayoutAndResultIfHasError(context: Context, map: Map<TextInputLayout, IValidator>): Boolean {
+    fun showErrorOnTextInputLayoutAndReturnIfHasError(context: Context, map: Map<TextInputLayout, IValidator>): Boolean {
         var hasError = false
         map.forEach{
             val validationResult = it.value.validate()

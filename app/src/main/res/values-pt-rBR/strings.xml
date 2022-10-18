@@ -150,8 +150,10 @@
     <string name="label_check_email_to_change_password">Verifique seu email para trocar sua senha</string>
     <string name="label_change_password">Trocar senha</string>
     <string name="label_password_changed">Senha trocada!!</string>
+
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
     <string name="error_password_and_confirm_password_not_equals">Os campos \'Senha\' e \'Confirmar senha\' precisam ser iguais</string>
+    <string name="error_borrow_must_have_between_1_and_64">Nome de contato deve ter entre 1 e 64 caracteres</string>
 
 </resources>

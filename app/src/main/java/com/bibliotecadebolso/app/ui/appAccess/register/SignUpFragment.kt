@@ -6,11 +6,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.validator.IValidator
+import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
 import com.bibliotecadebolso.app.data.validator.validations.EmailValidation
+import com.bibliotecadebolso.app.data.validator.validations.PasswordEqualsToConfirmPasswordValidator
 import com.bibliotecadebolso.app.data.validator.validations.PasswordValidator
 import com.bibliotecadebolso.app.data.validator.validations.UsernameValidator
 import com.bibliotecadebolso.app.databinding.FragmentSignUpBinding
@@ -33,8 +37,22 @@ class SignUpFragment : Fragment() {
         setRegisterResponseObserver()
         setOnClickRegisterListener()
 
+        setInputListener()
+
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val signUpInputs = appAccessViewModel.singUpInputs
+
+        binding.apply {
+            etEmail.editText?.setText(signUpInputs.email)
+            etUsername.editText?.setText(signUpInputs.username)
+            etPassword.editText?.setText(signUpInputs.password)
+            etConfirmPassword.editText?.setText(signUpInputs.confirmPassword)
+        }
     }
 
     private fun setOnClickRegisterListener() {
@@ -51,39 +69,27 @@ class SignUpFragment : Fragment() {
             val emailInput = binding.etEmail.editText?.text.toString()
             val passwordInput = binding.etPassword.editText?.text.toString()
             val confirmPasswordInput = binding.etConfirmPassword.editText?.text.toString()
-            var hasError = false
 
-            val validators: Map<TextInputLayout,IValidator> = mapOf(
+            val validators: Map<TextInputLayout, IValidator> = mapOf(
                 binding.etUsername to UsernameValidator(usernameInput),
                 binding.etEmail to EmailValidation(emailInput),
                 binding.etPassword to PasswordValidator(passwordInput),
-                binding.etConfirmPassword to PasswordValidator(confirmPasswordInput)
+                binding.etConfirmPassword to PasswordEqualsToConfirmPasswordValidator(
+                    passwordInput,
+                    confirmPasswordInput
+                )
             )
 
-            if (passwordInput != confirmPasswordInput) {
-                binding.etPassword.error = getString(R.string.error_password_and_confirm_password_not_equals)
-                binding.etConfirmPassword.error = getString(R.string.error_password_and_confirm_password_not_equals)
-                hasError = true
-            }
-
-            val inputHasError = showErrorAndReturnIfHasError(validators)
-            hasError = (hasError || inputHasError)
+            val hasError = ValidationResultUtils.showErrorOnTextInputLayoutAndReturnIfHasError(
+                requireContext(),
+                validators
+            )
 
             if (!hasError) {
                 binding.pgLoading.visibility = View.VISIBLE
                 appAccessViewModel.register(usernameInput, emailInput, passwordInput)
             }
         }
-    }
-
-    private fun showErrorAndReturnIfHasError(map: Map<TextInputLayout, IValidator>): Boolean {
-        var hasError = false
-        map.forEach{
-            val validationResult = it.value.validate()
-            it.key.error = getString(validationResult.message)
-            if (!validationResult.isSuccess) hasError = true
-        }
-        return hasError
     }
 
     private fun setRegisterResponseObserver() {
@@ -101,6 +107,21 @@ class SignUpFragment : Fragment() {
                     showLongSnackBar(it.errorBody.message)
                 }
             }
+        }
+    }
+
+    private fun setInputListener() {
+        binding.etEmail.editText?.addTextChangedListener {
+            appAccessViewModel.singUpInputs.email = it.toString()
+        }
+        binding.etPassword.editText?.addTextChangedListener {
+            appAccessViewModel.singUpInputs.password = it.toString()
+        }
+        binding.etUsername.editText?.addTextChangedListener {
+            appAccessViewModel.singUpInputs.username = it.toString()
+        }
+        binding.etConfirmPassword.editText?.addTextChangedListener {
+            appAccessViewModel.singUpInputs.confirmPassword = it.toString()
         }
     }
 

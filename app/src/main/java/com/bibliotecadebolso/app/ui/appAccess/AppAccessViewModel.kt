@@ -21,6 +21,9 @@ class AppAccessViewModel : ViewModel() {
     val loginResponse = MutableLiveData<Result<AuthTokens?>>()
     val registerResponse = MutableLiveData<Result<UserObject?>>()
 
+    val singUpInputs = SingUpInputs()
+
+
     fun login(email: String, password: String): Boolean {
         viewModelScope.launch {
             val response = loginDataSource.login(email, password)
@@ -45,4 +48,11 @@ class AppAccessViewModel : ViewModel() {
     fun isPasswordValid(password: String): Boolean {
         return PasswordValidator(password).validate().isSuccess
     }
+
+    inner class SingUpInputs(
+        var username: String = "",
+        var email: String = "",
+        var password: String = "",
+        var confirmPassword: String = ""
+        )
 }

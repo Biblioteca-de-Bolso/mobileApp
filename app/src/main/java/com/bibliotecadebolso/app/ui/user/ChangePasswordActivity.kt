@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
@@ -13,7 +12,6 @@ import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
 import com.bibliotecadebolso.app.data.validator.validations.EmailValidation
 import com.bibliotecadebolso.app.data.validator.validations.PasswordEqualsToConfirmPasswordValidator
 import com.bibliotecadebolso.app.data.validator.validations.PasswordValidator
-import com.bibliotecadebolso.app.data.validator.validations.UsernameValidator
 import com.bibliotecadebolso.app.databinding.ActivityChangePasswordBinding
 import com.bibliotecadebolso.app.ui.user.requestChangePassword.RequestChangePasswordViewModel
 import com.bibliotecadebolso.app.util.Result
@@ -52,7 +50,7 @@ class ChangePasswordActivity : AppCompatActivity() {
             )
 
             val hasErrors =
-                ValidationResultUtils.showOnTextInputLayoutAndResultIfHasError(this, validators)
+                ValidationResultUtils.showErrorOnTextInputLayoutAndReturnIfHasError(this, validators)
 
             Log.e("validation", hasErrors.toString())
 
