@@ -6,6 +6,8 @@ import com.bibliotecadebolso.app.data.model.RefreshTokenObject
 import com.bibliotecadebolso.app.data.model.response.DeleteAccountResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
+import com.bibliotecadebolso.app.ui.user.requestChangePassword.ChangePasswordForm
+import com.bibliotecadebolso.app.ui.user.requestChangePassword.form.RequestChangePasswordForm
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
 import retrofit2.Response
@@ -16,20 +18,14 @@ class LoginDataSource {
     suspend fun login(email: String, password: String): Result<AuthTokens?> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.login(email, password)
-            val validationResponse = RequestUtils.convertAPIResponseToResultClass(response)
-
-            if (validationResponse is Result.Success) Result.Success(validationResponse.response)
-            else validationResponse as Result.Error
+            RequestUtils.returnResponseTransformedIntoResult(response)
         }
     }
 
     suspend fun register(username: String, email: String, password: String): Result<UserObject?> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.register(email, username, password)
-            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
-
-            if (responseResult is Result.Success) Result.Success(responseResult.response)
-            else responseResult as Result.Error
+            RequestUtils.returnResponseTransformedIntoResult(response)
         }
     }
 
@@ -38,10 +34,7 @@ class LoginDataSource {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response =
                 api.getNewAccessToken("Bearer $accessToken", refreshTokenObject)
-            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
-
-            if (responseResult is Result.Success) Result.Success(responseResult.response)
-            else responseResult as Result.Error
+            RequestUtils.returnResponseTransformedIntoResult(response)
         }
     }
 
@@ -51,11 +44,25 @@ class LoginDataSource {
     ): Result<DeleteAccountResponse> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
             val response = api.delete("Bearer $accessTokens", deleteForm)
-            val validationResponse = RequestUtils.convertAPIResponseToResultClass(response)
-
-            if (validationResponse is Result.Success) Result.Success(validationResponse.response)
-            else validationResponse as Result.Error
+            RequestUtils.returnResponseTransformedIntoResult(response)
         }
+    }
+
+    suspend fun requestChangePassword(
+        requestChangePasswordForm: RequestChangePasswordForm
+    ): Result<Boolean> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.requestChangePassword(requestChangePasswordForm)
+            RequestUtils.returnResponseTransformedIntoResult(response)
+        }
+    }
+
+    suspend fun changePassword(changePasswordForm: ChangePasswordForm): Result<Boolean> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.changePassword(changePasswordForm)
+            RequestUtils.returnResponseTransformedIntoResult(response)
+        }
+
     }
 
     private fun errorResponseTransformed(response: Response<*>): Result.Error {

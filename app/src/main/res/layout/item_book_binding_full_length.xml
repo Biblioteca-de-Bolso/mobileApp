@@ -39,7 +39,7 @@
                 android:textStyle="bold"
 
                 tools:ignore="Suspicious0dp"
-                tools:text="@string/label256character" />
+                tools:text="Harry potter e a lenda de tals" />
 
             <TextView
                 android:id="@+id/tv_author"

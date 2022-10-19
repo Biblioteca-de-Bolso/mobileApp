@@ -14,6 +14,8 @@ import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.data.model.request.EditBorrow
+import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
+import com.bibliotecadebolso.app.data.validator.validations.ContactNameValidator
 import com.bibliotecadebolso.app.databinding.ActivityEditBorrowBinding
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -51,7 +53,7 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
         setContentView(binding.root)
 
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             delay(200L)
             getBorrow()
         }
@@ -225,7 +227,11 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
 
     private fun setBtnOnClickEditBorrow() {
         binding.btnEditLoan.setOnClickListener {
-            if (viewModel.inputs.contactName.isEmpty()) return@setOnClickListener
+            val hasError = ValidationResultUtils.showErrorOnTextInputLayoutAndReturnIfHasError(
+                this,
+                mapOf(binding.tilContactName to ContactNameValidator(viewModel.inputs.contactName))
+            )
+            if (hasError) return@setOnClickListener
 
             val accessToken = SharedPreferencesUtils.getAccessToken(
                 getSharedPreferences(

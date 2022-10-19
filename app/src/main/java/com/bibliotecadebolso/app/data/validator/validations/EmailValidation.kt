@@ -1,10 +1,19 @@
 package com.bibliotecadebolso.app.data.validator.validations
 
-import com.bibliotecadebolso.app.data.validator.FieldValidation
-import com.bibliotecadebolso.app.data.validator.ValidationError
+import android.text.TextUtils
+import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.validator.*
 
-class EmailValidation : FieldValidation {
-    override fun validate(): ValidationError? {
-        return null
+class EmailValidation(
+    val email: String
+) : IValidator {
+    override fun validate(): ValidationResult {
+        if (
+            TextUtils.isEmpty(email) ||
+            !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        ) return ValidationResult(false, R.string.error_email_not_valid)
+
+        return ValidationResultUtils.emptySuccess
     }
+
 }

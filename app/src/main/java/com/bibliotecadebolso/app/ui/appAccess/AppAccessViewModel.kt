@@ -9,6 +9,8 @@ import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
+import com.bibliotecadebolso.app.data.validator.validations.EmailValidation
+import com.bibliotecadebolso.app.data.validator.validations.PasswordValidator
 
 import kotlinx.coroutines.launch
 import java.net.SocketTimeoutException
@@ -18,6 +20,9 @@ class AppAccessViewModel : ViewModel() {
     private val loginDataSource = LoginDataSource()
     val loginResponse = MutableLiveData<Result<AuthTokens?>>()
     val registerResponse = MutableLiveData<Result<UserObject?>>()
+
+    val singUpInputs = SingUpInputs()
+
 
     fun login(email: String, password: String): Boolean {
         viewModelScope.launch {
@@ -36,12 +41,18 @@ class AppAccessViewModel : ViewModel() {
 
     // A placeholder username validation check
     fun isEmailValid(email: String): Boolean {
-        if (email.isNotEmpty() && email.contains("@")) return true
-        return false
+        return EmailValidation(email).validate().isSuccess
     }
 
     // A placeholder password validation check
     fun isPasswordValid(password: String): Boolean {
-        return true
+        return PasswordValidator(password).validate().isSuccess
     }
+
+    inner class SingUpInputs(
+        var username: String = "",
+        var email: String = "",
+        var password: String = "",
+        var confirmPassword: String = ""
+        )
 }

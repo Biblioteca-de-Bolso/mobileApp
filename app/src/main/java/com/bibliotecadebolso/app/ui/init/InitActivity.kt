@@ -47,10 +47,14 @@ class InitActivity : AppCompatActivity() {
         refreshToken: String
     ) {
         val accessDecoded: JWT
+        if (accessToken.isEmpty()) {
+            redirectToLoginOrHomeActivity("", true)
+            return
+        }
         try {
             accessDecoded = JWT(accessToken)
         } catch (e: DecodeException) {
-            redirectToHomeActivityIfHasNoPendingRequest(getString(R.string.error_invalid_token))
+            redirectToHomeActivityIfHasNoPendingRequest(getString(R.string.error_invalid_token), true)
             return
         }
 
@@ -59,7 +63,7 @@ class InitActivity : AppCompatActivity() {
             setIsWaitingRequest(true)
         } else {
             setIsWaitingRequest(false)
-            redirectToHomeActivityIfHasNoPendingRequest("")
+            redirectToHomeActivityIfHasNoPendingRequest("", false)
         }
     }
 
@@ -91,19 +95,19 @@ class InitActivity : AppCompatActivity() {
                 SharedPreferencesUtils.putAuthTokens(prefs, newAccessToken, newRefreshToken)
 
             setIsWaitingRequest(false)
-            redirectToHomeActivityIfHasNoPendingRequest(errorMessage)
+            redirectToHomeActivityIfHasNoPendingRequest(errorMessage, errorMessage.isEmpty())
         }
     }
 
-    private fun redirectToHomeActivityIfHasNoPendingRequest(errorMessage: String) {
+    private fun redirectToHomeActivityIfHasNoPendingRequest(errorMessage: String, hasError: Boolean) {
         if (isWaitingRequest) return
-        redirectToLoginOrHomeActivity(errorMessage)
+        redirectToLoginOrHomeActivity(errorMessage, hasError)
     }
 
-    private fun redirectToLoginOrHomeActivity(errorMessage: String) {
+    private fun redirectToLoginOrHomeActivity(errorMessage: String, hasError: Boolean) {
         val intent: Intent =
-            if (errorMessage.isNotEmpty()) {
-                showLongToast(errorMessage)
+            if (hasError) {
+                if (errorMessage.isNotEmpty()) showLongToast(errorMessage)
                 Intent(this, AppAccessActivity::class.java)
             } else {
                 Intent(this, HomeActivity::class.java)

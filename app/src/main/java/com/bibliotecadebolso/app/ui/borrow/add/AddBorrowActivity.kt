@@ -11,8 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.request.CreateBorrow
+import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
+import com.bibliotecadebolso.app.data.validator.validations.ContactNameValidator
 import com.bibliotecadebolso.app.databinding.ActivityAddBorrowBinding
-import com.bibliotecadebolso.app.ui.book.gridList.BookListActivity
+import com.bibliotecadebolso.app.ui.book.linearList.BookListActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
@@ -59,23 +61,24 @@ class AddBorrowActivity : AppCompatActivity() {
         }
 
         binding.btnAddLoan.setOnClickListener {
+            val validationResult = mapOf(
+                binding.tilContactName to ContactNameValidator(viewModel.inputs.contactName)
+            )
 
-            if (viewModel.inputs.contactName.isEmpty()) {
-                binding.tilContactName.error = "Must not be empty"
+            val hasError = ValidationResultUtils.showErrorOnTextInputLayoutAndReturnIfHasError(
+                this,
+                validationResult
+            )
+            if (hasError)
                 return@setOnClickListener
-            } else {
-                binding.tilContactName.error = ""
-            }
 
             binding.pgLoading.visibility = View.VISIBLE
-
             val accessToken = SharedPreferencesUtils.getAccessToken(
                 getSharedPreferences(
                     Constants.Prefs.USER_TOKENS,
                     MODE_PRIVATE
                 )
             )
-
             viewModel.addBorrow(
                 accessToken,
                 CreateBorrow(viewModel.lastSelectedBookId.value!!, viewModel.inputs.contactName)

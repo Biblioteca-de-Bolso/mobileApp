@@ -2,7 +2,6 @@ package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +18,7 @@ import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
-import com.bibliotecadebolso.app.ui.book.gridList.BookListActivity
+import com.bibliotecadebolso.app.ui.book.linearList.BookListActivity
 import com.bibliotecadebolso.app.ui.book.bookInfo.BookInfoActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result

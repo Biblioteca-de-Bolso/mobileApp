@@ -1,4 +1,4 @@
-package com.bibliotecadebolso.app.ui.book.gridList
+package com.bibliotecadebolso.app.ui.book.linearList
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
