@@ -13,7 +13,6 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Annotation
 import com.bibliotecadebolso.app.databinding.ItemAnnotationFullWidthBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
-import okhttp3.internal.toHexString
 import kotlin.math.pow
 
 class AnnotationLinearListAdapter(
