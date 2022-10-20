@@ -14,7 +14,7 @@ class AnnotationListViewModel : ViewModel() {
 
     fun getList(accessToken: String, bookId: Int, page: Int) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.getlist(accessToken, bookId, page)
+            val result = AnnotationDataSource.getListObject(accessToken, bookId, page)
             liveDataAnnotationList.postValue(result)
         }
     }

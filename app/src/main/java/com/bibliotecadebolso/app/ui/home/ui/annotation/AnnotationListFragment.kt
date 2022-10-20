@@ -1,60 +1,130 @@
 package com.bibliotecadebolso.app.ui.home.ui.annotation
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
+import com.bibliotecadebolso.app.databinding.FragmentAnnotationListBinding
+import com.bibliotecadebolso.app.ui.adapter.AnnotationLinearListAdapter
+import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
+import com.bibliotecadebolso.app.util.Constants
+import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.RvOnClickListener
+import com.bibliotecadebolso.app.util.SharedPreferencesUtils
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class AnnotationListFragment : Fragment(), RvOnClickListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [AnnotationListFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class AnnotationListFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
+    private lateinit var viewModel: AnnotationListViewModel
+    private lateinit var binding: FragmentAnnotationListBinding
+    val scrollState: ScrollState = ScrollState()
+    private val annotationListAdapter: AnnotationLinearListAdapter by lazy {
+        AnnotationLinearListAdapter(
+            requireContext(),
+            this
+        )
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_annotation_list, container, false)
+    ): View {
+        binding = FragmentAnnotationListBinding.inflate(inflater, container, false)
+        initVariables()
+        setupRecyclerView()
+        setupSearchListListener()
+
+        lifecycleScope.launch {
+            delay(500L)
+            getSearchList(null,true)
+        }
+        return binding.root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment AnnotationListFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            AnnotationListFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun initVariables() {
+        viewModel = ViewModelProvider(this)[AnnotationListViewModel::class.java]
+    }
+
+    private fun setupRecyclerView() {
+        val layoutManager = LinearLayoutManager(requireContext())
+
+        binding.rvListBook.apply {
+            setLayoutManager(layoutManager)
+            adapter = annotationListAdapter
+            addOnScrollListener(listenerGetContentOnScrollOnBottom)
+        }
+    }
+
+    private val listenerGetContentOnScrollOnBottom = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (!recyclerView.canScrollVertically(1)) {
+                if (!scrollState.scrollOnBottom && !scrollState.isLoadingNewItems) {
+                    scrollState.setAllBooleanAs(true)
+                    getSearchList(viewModel.searchList.searchContent)
                 }
             }
+        }
     }
+
+    private fun getSearchList(searchContent: String?, newSearchContent: Boolean = false) {
+        val prefs = requireContext().getSharedPreferences(
+            Constants.Prefs.USER_TOKENS,
+            AppCompatActivity.MODE_PRIVATE
+        )
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+        if (!newSearchContent && viewModel.searchList.bookListReachedOnTheEnd()) {
+            showLongSnackBar(BookListViewModel.reachedOnTheEndErrorResponse().message)
+        } else {
+
+            binding.pgLoading.visibility = View.VISIBLE
+            viewModel.searchBook(
+                accessToken,
+                searchContent,
+                newSearchContent = newSearchContent
+            )
+        }
+    }
+
+    private fun setupSearchListListener() {
+        viewModel.searchList.listLiveData.observe(viewLifecycleOwner) {
+            binding.pgLoading.visibility = View.GONE
+            when (it) {
+                is Result.Success -> {
+                    annotationListAdapter.differ.submitList(it.response)
+                }
+                is Result.Error -> {
+                    val message =
+                        if (it.errorBody.code == "reachedOnTheEnd") getString(R.string.label_reached_in_the_end)
+                        else it.errorBody.message
+                    showLongSnackBar(message)
+                }
+            }
+        }
+    }
+
+    private fun showLongSnackBar(message: String) {
+        Snackbar.make(binding.rvListBook, message, BaseTransientBottomBar.LENGTH_LONG)
+            .show()
+    }
+
+
+    override fun onItemCLick(position: Int) {
+        Log.e("AnnotationListFragment", "clicked in an item")
+    }
+
+
 }

@@ -4,9 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.book.linearList.BookListActivity">
+    tools:context=".ui.book.linearList.BookListActivity"
+    android:layout_marginTop="54dp"
+    >
 
     <com.google.android.material.progressindicator.LinearProgressIndicator
+        android:layout_marginHorizontal="16dp"
         android:id="@+id/pg_loading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -15,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
+        app:trackCornerRadius="16dp"
         android:indeterminate="true"
         android:visibility="visible" />
 
@@ -25,7 +29,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="20dp"
-        tools:listitem="@layout/item_book_binding_full_length" />
+        tools:listitem="@layout/item_annotation_full_width" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

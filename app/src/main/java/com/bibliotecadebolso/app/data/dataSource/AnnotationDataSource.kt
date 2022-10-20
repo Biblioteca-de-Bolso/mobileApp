@@ -8,6 +8,7 @@ import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.data.model.Annotation
 
 object AnnotationDataSource {
 
@@ -33,12 +34,34 @@ object AnnotationDataSource {
         return result
     }
 
-    suspend fun getlist(accessToken: String, bookId: Int, page: Int): Result<ListAnnotationObject> {
+    suspend fun getListObject(
+        accessToken: String,
+        bookId: Int,
+        page: Int,
+        searchContent: String? = null
+    ): Result<ListAnnotationObject> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.getAnnotationList("Bearer $accessToken", page, bookId)
+            val response = api.getAnnotationList("Bearer $accessToken", page, bookId, searchContent)
             val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
             if (responseResult is Result.Success)
                 Result.Success(responseResult.response)
+            else
+                responseResult as Result.Error
+        }
+
+    }
+
+    suspend fun getList(
+        accessToken: String,
+        bookId: Int? = null,
+        page: Int,
+        searchContent: String? = null
+    ): Result<List<Annotation>> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.getAnnotationList("Bearer $accessToken", page, bookId, searchContent)
+            val responseResult = RequestUtils.convertAPIResponseToResultClass(response)
+            if (responseResult is Result.Success)
+                Result.Success(responseResult.response.annotations)
             else
                 responseResult as Result.Error
         }

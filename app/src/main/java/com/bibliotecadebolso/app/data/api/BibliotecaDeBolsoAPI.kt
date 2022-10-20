@@ -117,7 +117,8 @@ interface BibliotecaDeBolsoAPI {
     suspend fun getAnnotationList(
         @Header("Authorization") accessToken: String,
         @Query("page") page: Int = 1,
-        @Query("bookId") bookId: Int,
+        @Query("bookId") bookId: Int? = null,
+        @Query("search") searchContent: String? = null,
     ): Response<APIResponse<ListAnnotationObject>>
 
     @GET("annotation/{id}")
