@@ -20,10 +20,10 @@
     <string name="label_app_name">Biblioteca de bolso</string>
     <string name="label_login">Login</string>
     <string name="label_register">Registrar</string>
-    <string name="label_user_logged">Você está logado</string>
+    <string name="label_user_logged">You are logged</string>
     <string name="label_you_dont_have_connection">You don\'t have internet connection</string>
     <string name="label_incorrect_credentials">Your credentials are not valid parameters</string>
-    <string name="label_loading">Loading...</string>
+    <string name="label_loading">Loading…</string>
     <string name="label_server_not_return_correctly">Error: Can\'t collect any data of the server</string>
     <string name="label_logout">Logout</string>
     <string name="drawer_label_open">open</string>
@@ -70,7 +70,7 @@
     <string name="label_about">About</string>
     <string name="label_account_deleted">Account deleted successfully</string>
     <string name="label_options">Options</string>
-    <string name="annotation_placeholder_insert_text_here">Insert text here...</string>
+    <string name="annotation_placeholder_insert_text_here">Insert text here…</string>
     <string name="label_save_annotation">Save annotation</string>
     <string name="alert_token_expired">Token expired, please log in again</string>
     <string name="label_edit_book">Edit book</string>
@@ -78,7 +78,7 @@
     <string name="label_book_details">Book details</string>
     <string name="label_show_more">Show more</string>
     <string name="error_invalid_token">Invalid Token! Please log in again</string>
-    <string name="label_loading_three_dots">loading...</string>
+    <string name="label_loading_three_dots">loading…</string>
     <string name="label_Description">Description</string>
     <string name="label_annotations">Annotations</string>
     <string name="label_abstracts">Abstracts</string>
@@ -115,7 +115,7 @@
     <string name="label_reached_in_the_end">Reached in the end</string>
     <string name="label_annotation_image">annotation image</string>
     <string name="label_more_info">More info</string>
-    <string name="label_lendings">Lendings</string>
+    <string name="label_lendings">Borrows</string>
     <string name="label_no_description">No description</string>
     <string name="title_borrow">Borrows</string>
     <string name="label_returned">Returned</string>
@@ -167,9 +167,13 @@
     <string name="label_change_password">Change password</string>
     <string name="label_password_changed">Password changed!!</string>
 
+    <string name="title_annotations">Annotations</string>
+    <string name="title_profile">Profile</string>
+
 
     <string name="error_email_not_valid">Email not valid</string>
     <string name="error_password_length_between_8_and_32">Password must have length between 8 and 32</string>
     <string name="error_password_and_confirm_password_not_equals">\'Password\' field must be equals to \'confirm password\' field</string>
     <string name="error_borrow_must_have_between_1_and_64">Contact name length must have between 1 and 64</string>
+
 </resources>
