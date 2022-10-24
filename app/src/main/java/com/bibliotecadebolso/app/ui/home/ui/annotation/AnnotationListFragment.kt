@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.home.ui.annotation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,9 +13,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.FragmentAnnotationListBinding
 import com.bibliotecadebolso.app.ui.adapter.AnnotationLinearListAdapter
+import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
+import com.bibliotecadebolso.app.ui.annotation.AnnotationLinearListActivity
 import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -46,6 +50,12 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         setupRecyclerView()
         setupSearchListListener()
 
+
+        binding.ivViewMoreNotes.setOnClickListener {
+            val intent = Intent(requireContext(), AnnotationLinearListActivity::class.java)
+            startActivity(intent)
+
+        }
         lifecycleScope.launch {
             delay(500L)
             getSearchList(null,true)
@@ -63,7 +73,6 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         binding.rvListBook.apply {
             setLayoutManager(layoutManager)
             adapter = annotationListAdapter
-            addOnScrollListener(listenerGetContentOnScrollOnBottom)
         }
     }
 
@@ -123,7 +132,10 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
 
 
     override fun onItemCLick(position: Int) {
-        Log.e("AnnotationListFragment", "clicked in an item")
+        val intent = Intent(requireContext(), AnnotationEditorActivity::class.java)
+        intent.putExtra("annotationId", position)
+        intent.putExtra("actionType", AnnotationActionEnum.EDIT.toString())
+        startActivity(intent)
     }
 
 

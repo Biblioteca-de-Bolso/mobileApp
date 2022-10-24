@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     tools:background="@drawable/bg_library">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -89,12 +89,11 @@
             android:layout_height="wrap_content"
             android:text="@string/label_login"
             android:textColor="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/btn_register"
+            android:layout_margin="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/et_password"
-            app:layout_constraintVertical_bias="0.509" />
+            />
 
 
         <Button
@@ -104,11 +103,11 @@
             android:layout_gravity="start"
             android:text="@string/action_sign_up"
             android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/pg_loading"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+             />
 
         <ProgressBar
             android:id="@+id/pg_loading"
@@ -117,12 +116,11 @@
             android:layout_gravity="center"
             android:layout_marginTop="64dp"
             android:layout_marginBottom="64dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/btn_login"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="@+id/et_password"
             app:layout_constraintStart_toStartOf="@+id/et_password"
             app:layout_constraintTop_toBottomOf="@id/et_password"
-            app:layout_constraintVertical_bias="0.3" />
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

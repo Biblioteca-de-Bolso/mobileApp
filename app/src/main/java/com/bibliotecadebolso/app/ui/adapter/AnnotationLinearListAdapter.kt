@@ -57,6 +57,10 @@ class AnnotationLinearListAdapter(
             val hexColor = java.lang.String.format("#%06X", 0xFFFFFF and rgbIntColor)
             ivBookColor.backgroundTintList = ColorStateList.valueOf(Color.parseColor(hexColor))
 
+            root.setOnClickListener {
+                rvOnClickListener.onItemCLick(annotation.id)
+            }
+
         }
     }
 

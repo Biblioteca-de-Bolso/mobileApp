@@ -20,6 +20,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
+            android:name=".ui.annotation.AnnotationLinearListActivity"
+            android:label="Notes:"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".ui.user.requestChangePassword.RequestChangePasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication.PurpleTheme">
@@ -30,8 +38,7 @@
         <activity
             android:name=".ui.user.ChangePasswordActivity"
             android:exported="true"
-            android:theme="@style/Theme.MyApplication.PurpleTheme"
-            >
+            android:theme="@style/Theme.MyApplication.PurpleTheme">
             <intent-filter
                 android:autoVerify="true"
                 android:label="Biblioteca de bolso">
