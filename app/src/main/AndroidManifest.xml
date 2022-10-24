@@ -21,7 +21,7 @@
         android:theme="@style/Theme.MyApplication">
         <activity
             android:name=".ui.annotation.AnnotationLinearListActivity"
-            android:label="Notes:"
+            android:label="@string/label_notes_two_point"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"

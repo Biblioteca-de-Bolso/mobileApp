@@ -166,14 +166,18 @@
     <string name="label_check_email_to_change_password">Check your email to change your password</string>
     <string name="label_change_password">Change password</string>
     <string name="label_password_changed">Password changed!!</string>
+    <string name="label_notes_two_point">Notes:</string>
+    <string name="label_export_to_pdf">Export to pdf</string>
 
     <string name="title_annotations">Annotations</string>
     <string name="title_profile">Profile</string>
+
 
 
     <string name="error_email_not_valid">Email not valid</string>
     <string name="error_password_length_between_8_and_32">Password must have length between 8 and 32</string>
     <string name="error_password_and_confirm_password_not_equals">\'Password\' field must be equals to \'confirm password\' field</string>
     <string name="error_borrow_must_have_between_1_and_64">Contact name length must have between 1 and 64</string>
+
 
 </resources>

@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -262,5 +263,16 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
     private fun showLongToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.annotation_editor_menu, menu)
+
+        val iconExportToPdf = menu?.findItem(R.id.action_export_to_pdf)
+        val iconDelete = menu?.findItem(R.id.action_delete)
+
+        //TODO criar conexão com os endpoints
+
+        return super.onCreateOptionsMenu(menu)
     }
 }

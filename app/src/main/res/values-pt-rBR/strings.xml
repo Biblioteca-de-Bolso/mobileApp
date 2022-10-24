@@ -152,6 +152,8 @@
     <string name="label_password_changed">Senha trocada!!</string>
     <string name="title_annotations">Anotações</string>
     <string name="title_profile">Perfil</string>
+    <string name="label_notes_two_point">Notas:</string>
+    <string name="label_export_to_pdf">Exportar para pdf</string>
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
