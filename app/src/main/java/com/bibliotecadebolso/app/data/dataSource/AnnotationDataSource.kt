@@ -97,5 +97,15 @@ object AnnotationDataSource {
         }
     }
 
+    suspend fun deleteAnnotation(
+        accessToken: String,
+        annotationId: Int,
+    ): Result<Boolean> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.deleteAnnotationById(accessToken, id = annotationId)
+            RequestUtils.returnResponseTransformedIntoResult(response)
+        }
+    }
+
 
 }

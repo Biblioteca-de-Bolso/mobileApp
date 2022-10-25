@@ -1,6 +1,5 @@
 package com.bibliotecadebolso.app.data.dataSource
 
-import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.data.model.request.*
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository

@@ -38,7 +38,9 @@ object BibliotecaDeBolsoRepository {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.[SSS][SS]'Z'")
                 )
             }
-        }).create()
+        })
+        .setLenient()
+        .create()
 
 
     private val client = OkHttpClient.Builder()
