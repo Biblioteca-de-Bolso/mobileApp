@@ -279,6 +279,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (actionType == AnnotationActionEnum.ADD) return super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.annotation_editor_menu, menu)
 
         topBarMenu = menu
