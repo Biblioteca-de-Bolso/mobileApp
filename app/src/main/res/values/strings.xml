@@ -173,6 +173,9 @@
     <string name="title_annotations">Annotations</string>
     <string name="title_profile">Profile</string>
 
+    <string name="label_created_at">Created at \n %1$s</string>
+    <string name="label_updated_at">Updated at \n %1$s</string>
+
 
 
     <string name="error_email_not_valid">Email not valid</string>

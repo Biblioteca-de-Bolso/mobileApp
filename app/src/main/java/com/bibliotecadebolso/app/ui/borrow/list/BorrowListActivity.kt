@@ -12,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBorrowListBinding
@@ -32,6 +34,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
     private lateinit var binding: ActivityBorrowListBinding
     private lateinit var borrowListAdapter: BorrowAdapter
     private lateinit var viewModel: BorrowListViewModel
+    val scrollState = ScrollState()
     var borrowStatus: BorrowStatus? = null
     var bookId: Int? = null
 
@@ -113,6 +116,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         borrowListAdapter = BorrowAdapter(this, this)
         binding.rvListBorrow.adapter = borrowListAdapter
         binding.rvListBorrow.layoutManager = LinearLayoutManager(this)
+        binding.rvListBorrow.addOnScrollListener(listenerGetContentOnScrollOnBottom)
     }
 
     private fun setToolBarCustomSearchListener() {
@@ -180,6 +184,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
                     }
                 }
             }
+            scrollState.setAllBooleanAs(false)
         }
     }
 
@@ -209,5 +214,17 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
             androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
             androidx.transition.R.anim.abc_popup_exit
         )
+    }
+
+    private val listenerGetContentOnScrollOnBottom = object : RecyclerView.OnScrollListener() {
+        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+            super.onScrollStateChanged(recyclerView, newState)
+            if (!recyclerView.canScrollVertically(1)) {
+                if (!scrollState.scrollOnBottom && !scrollState.isLoadingNewItems) {
+                    scrollState.setAllBooleanAs(true)
+                    getSearchList(viewModel.searchList.searchContent, false)
+                }
+            }
+        }
     }
 }

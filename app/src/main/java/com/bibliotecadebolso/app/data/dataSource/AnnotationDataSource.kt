@@ -102,7 +102,7 @@ object AnnotationDataSource {
         annotationId: Int,
     ): Result<Boolean> {
         return RequestUtils.returnOrThrowIfHasConnectionError {
-            val response = api.deleteAnnotationById(accessToken, id = annotationId)
+            val response = api.deleteAnnotationById("Bearer $accessToken", id = annotationId)
             RequestUtils.returnResponseTransformedIntoResult(response)
         }
     }

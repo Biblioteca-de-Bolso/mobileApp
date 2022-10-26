@@ -4,6 +4,7 @@ import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.DeleteForm
 import com.bibliotecadebolso.app.data.model.RefreshTokenObject
 import com.bibliotecadebolso.app.data.model.response.DeleteAccountResponse
+import com.bibliotecadebolso.app.data.model.response.ProfileResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.ui.user.requestChangePassword.ChangePasswordForm
@@ -63,6 +64,21 @@ class LoginDataSource {
             RequestUtils.returnResponseTransformedIntoResult(response)
         }
 
+    }
+
+    suspend fun viewProfile(
+        accessToken: String,
+        userId: Int,
+    ): Result<ProfileResponse> {
+        return RequestUtils.returnOrThrowIfHasConnectionError {
+            val response = api.getProfile("Bearer $accessToken", userId)
+            val validationResponse = RequestUtils.convertAPIResponseToResultClass(response)
+
+            if (validationResponse is Result.Success)
+                Result.Success(validationResponse.response.user)
+            else
+                validationResponse as Result.Error
+        }
     }
 
     private fun errorResponseTransformed(response: Response<*>): Result.Error {

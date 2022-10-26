@@ -177,5 +177,11 @@ interface BibliotecaDeBolsoAPI {
         @Body changePasswordForm: ChangePasswordForm
     ): Response<APIResponse<Nothing>>
 
+    @GET("user/{id}")
+    suspend fun getProfile(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int
+    ): Response<APIResponse<ProfileObject>>
+
 
 }

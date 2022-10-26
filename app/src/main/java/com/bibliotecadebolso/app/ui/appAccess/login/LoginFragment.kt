@@ -47,7 +47,7 @@ class LoginFragment : Fragment() {
 
     private fun setupLoginResponseObserver() {
         appAccessViewModel.loginResponse.observe(viewLifecycleOwner) {
-            binding.pgLoading.visibility = View.GONE
+            binding.pgLoading.visibility = View.INVISIBLE
             when (it) {
                 is Result.Success<AuthTokens?> -> {
                     showLongToast(getString(R.string.label_user_logged))
