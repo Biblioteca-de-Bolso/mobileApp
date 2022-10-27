@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
@@ -288,7 +289,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         val iconDelete = menu?.findItem(R.id.action_delete)
 
         iconExportToPdf?.setOnMenuItemClickListener {
-            requestExportToPdf(iconExportToPdf)
+            requestStoragePermission()
             true
         }
 
@@ -339,6 +340,53 @@ class AnnotationEditorActivity : AppCompatActivity() {
             onDownloadComplete,
             IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
         );
+    }
+
+    private fun requestStoragePermission() {
+        val permsBelowAndroid11 = arrayOf("android.permission.WRITE_EXTERNAL_STORAGE")
+
+        val perms = arrayOf("android.permission.READ_EXTERNAL_STORAGE")
+
+        val permsRequestCodeBelowAndroid11 = 200
+        val permsRequestCode = 201
+
+        if (android.os.Build.VERSION.SDK_INT <= 29)
+            requestPermissions(permsBelowAndroid11, permsRequestCodeBelowAndroid11)
+        else
+            requestPermissions(perms, permsRequestCode)
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.isEmpty()) return
+        when (requestCode) {
+            200 -> {
+                val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+                if (!isReadPermissionAccepted) {
+                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val iconExportToPdf = topBarMenu?.findItem(R.id.action_export_to_pdf)
+                requestExportToPdf(iconExportToPdf)
+            }
+            201 -> {
+                val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+                if (!isReadPermissionAccepted) {
+                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val iconExportToPdf = topBarMenu?.findItem(R.id.action_export_to_pdf)
+                requestExportToPdf(iconExportToPdf)
+            }
+        }
     }
 
     private fun disableMenuIcon(menuItem: MenuItem?) {
