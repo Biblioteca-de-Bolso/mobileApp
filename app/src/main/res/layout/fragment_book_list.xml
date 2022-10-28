@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.ui.bookList.BookListFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <com.bibliotecadebolso.app.view.SwipeRefreshLayoutToHorizontalScroll
         android:id="@+id/swl_refresh_home"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -229,7 +229,7 @@
             </LinearLayout>
         </ScrollView>
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </com.bibliotecadebolso.app.view.SwipeRefreshLayoutToHorizontalScroll>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_book"
