@@ -7,16 +7,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.ContentManager
+import com.bibliotecadebolso.app.data.model.app.RecyclerViewContentManager
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.FragmentBorrowBinding
+import com.bibliotecadebolso.app.databinding.LayoutErrorHalfSizeBinding
 import com.bibliotecadebolso.app.ui.adapter.BorrowAdapter
 import com.bibliotecadebolso.app.ui.borrow.add.AddBorrowActivity
 import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
@@ -24,10 +28,7 @@ import com.bibliotecadebolso.app.ui.borrow.list.BorrowListActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.RvOnClickListener
-import com.bibliotecadebolso.app.util.TextViewStatusUtils
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 
 class BorrowFragment : Fragment(), RvOnClickListener {
 
@@ -35,6 +36,9 @@ class BorrowFragment : Fragment(), RvOnClickListener {
     private lateinit var borrowAdapterPending: BorrowAdapter
     private lateinit var borrowAdapterReturned: BorrowAdapter
     private lateinit var viewModel: BorrowViewModel
+    private lateinit var borrowedContentManager: RecyclerViewContentManager
+    private lateinit var returnedContentManager: RecyclerViewContentManager
+    private lateinit var contentManager: ContentManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,6 +48,7 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         binding = FragmentBorrowBinding.inflate(layoutInflater)
         viewModel = ViewModelProvider(this)[BorrowViewModel::class.java]
 
+        setupContentManagers()
         setupRecyclerViewPending()
         setupRecyclerViewReturned()
         setRvObservers()
@@ -61,6 +66,25 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         }
 
         return binding.root
+    }
+
+    private fun setupContentManagers() {
+        borrowedContentManager = RecyclerViewContentManager(
+            binding.rvListBorrowBorrowed,
+            binding.ivViewMoreBorrowed,
+            binding.includeLlBorrowedError
+        )
+
+        returnedContentManager = RecyclerViewContentManager(
+            binding.rvListBorrowReturned,
+            binding.ivViewMoreReturned,
+            binding.includeLlReturnedError
+        )
+
+        contentManager = ContentManager(
+            binding.llContent,
+            binding.includeLlError
+        )
     }
 
     private fun setupRecyclerViewPending() {
@@ -88,27 +112,33 @@ class BorrowFragment : Fragment(), RvOnClickListener {
 
     private fun getBorrowListObserver(borrowStatus: BorrowStatus): Observer<Result<List<Borrow>>> {
         var adapter = borrowAdapterPending
-        var tvErrorStatus = binding.tvErrorStatusRvReturned
         if (borrowStatus == BorrowStatus.RETURNED) {
             adapter = borrowAdapterReturned
-            tvErrorStatus = binding.tvErrorStatusRvReturned
         }
 
         val observer = Observer<Result<List<Borrow>>> {
             when (it) {
                 is Result.Success -> {
+                    binding.swlRefreshHome.isRefreshing = false
+                    contentManager.showContent()
                     if (it.response.isEmpty()) {
-                        TextViewStatusUtils.showTvStatusMessage(
-                            tvErrorStatus,
-                            getString(R.string.label_empty)
-                        )
+                        val errorLabel = getString(R.string.label_empty)
+                        when (borrowStatus) {
+                            BorrowStatus.PENDING -> borrowedContentManager.showErrorContent(errorLabel)
+                            BorrowStatus.RETURNED -> returnedContentManager.showErrorContent(errorLabel)
+                        }
                         return@Observer
                     }
-                    TextViewStatusUtils.clearTvStatus(tvErrorStatus)
+
                     showThreeItemsInRecyclerView(adapter, it.response)
+                    when (borrowStatus) {
+                        BorrowStatus.PENDING -> borrowedContentManager.showContent()
+                        BorrowStatus.RETURNED -> returnedContentManager.showContent()
+                    }
+
                 }
                 is Result.Error -> {
-                    TextViewStatusUtils.showErrorOnTextView(requireContext(), tvErrorStatus, it)
+                    contentManager.showErrorContent(it.errorBody.message)
                 }
             }
             binding.swlRefreshHome.isRefreshing = false

@@ -19,6 +19,9 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:visibility="gone"
+                tools:visibility="visible"
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -61,6 +64,10 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_borrow_pending" />
+
+                <include
+                    android:id="@+id/include_ll_borrowed_error"
+                    layout="@layout/layout_error_half_size"/>
 
                 <TextView
                     android:id="@+id/tv_error_status_rv_pending"
@@ -120,19 +127,18 @@
                     tools:itemCount="3"
                     tools:listitem="@layout/item_borrow" />
 
-                <TextView
-                    android:id="@+id/tv_error_status_rv_returned"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_empty"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:layout_margin="20dp"
-                    />
+                <include
+                    android:id="@+id/include_ll_returned_error"
+                    layout="@layout/layout_error_half_size"/>
 
             </LinearLayout>
         </ScrollView>
+
+        <include
+            android:id="@+id/include_ll_error"
+            layout="@layout/layout_error_empty_full"/>
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

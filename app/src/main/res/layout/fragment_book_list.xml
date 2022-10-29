@@ -18,6 +18,7 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -68,6 +69,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="20dp"
+                    android:paddingBottom="30dp"
                     android:text="@string/label_book_list_empty"
                     android:visibility="gone" />
 
@@ -117,6 +119,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="20dp"
+                    android:paddingBottom="30dp"
                     android:text="@string/label_book_list_empty"
                     android:visibility="gone" />
 
@@ -166,6 +169,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="20dp"
+                    android:paddingBottom="30dp"
                     android:text="@string/label_book_list_empty"
                     android:visibility="gone" />
 
@@ -215,6 +219,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="20dp"
+                    android:paddingBottom="30dp"
                     android:text="@string/label_book_list_empty"
                     android:visibility="gone" />
 

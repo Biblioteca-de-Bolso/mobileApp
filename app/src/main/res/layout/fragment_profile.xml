@@ -28,6 +28,7 @@
         android:layout_height="match_parent">
 
         <ScrollView
+            android:id="@+id/sv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -112,6 +113,10 @@
                     android:text="@string/title_activity_delete_account" />
             </LinearLayout>
         </ScrollView>
+
+        <include
+            android:id="@+id/include_ll_error"
+            layout="@layout/layout_error_empty_full"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

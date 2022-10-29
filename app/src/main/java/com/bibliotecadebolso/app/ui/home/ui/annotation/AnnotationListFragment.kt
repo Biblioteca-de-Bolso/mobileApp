@@ -2,7 +2,6 @@ package com.bibliotecadebolso.app.ui.home.ui.annotation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
+import com.bibliotecadebolso.app.data.model.ContentManager
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.FragmentAnnotationListBinding
@@ -34,6 +33,7 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
     private lateinit var viewModel: AnnotationListViewModel
     private lateinit var binding: FragmentAnnotationListBinding
     val scrollState: ScrollState = ScrollState()
+    private lateinit var contentManager: ContentManager
     private val annotationListAdapter: AnnotationLinearListAdapter by lazy {
         AnnotationLinearListAdapter(
             requireContext(),
@@ -46,6 +46,7 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentAnnotationListBinding.inflate(inflater, container, false)
+        contentManager = ContentManager(binding.llContent, binding.includeLlError, R.drawable.ic_annotation)
         initVariables()
         setupRecyclerView()
         setupSearchListListener()
@@ -76,18 +77,6 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         }
     }
 
-    private val listenerGetContentOnScrollOnBottom = object : RecyclerView.OnScrollListener() {
-        override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-            super.onScrollStateChanged(recyclerView, newState)
-            if (!recyclerView.canScrollVertically(1)) {
-                if (!scrollState.scrollOnBottom && !scrollState.isLoadingNewItems) {
-                    scrollState.setAllBooleanAs(true)
-                    getSearchList(viewModel.searchList.searchContent)
-                }
-            }
-        }
-    }
-
     private fun getSearchList(searchContent: String?, newSearchContent: Boolean = false) {
         val prefs = requireContext().getSharedPreferences(
             Constants.Prefs.USER_TOKENS,
@@ -113,17 +102,24 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
             binding.pgLoading.visibility = View.GONE
             when (it) {
                 is Result.Success -> {
+                    if (it.response.isEmpty()) {
+                        contentManager.showErrorContent(getString(R.string.label_annotation_list_is_empty))
+                    } else {
+                        contentManager.showContent()
+                    }
                     annotationListAdapter.differ.submitList(it.response)
                 }
                 is Result.Error -> {
                     val message =
                         if (it.errorBody.code == "reachedOnTheEnd") getString(R.string.label_reached_in_the_end)
                         else it.errorBody.message
-                    showLongSnackBar(message)
+                    contentManager.showErrorContent(message)
                 }
             }
         }
     }
+
+
 
     private fun showLongSnackBar(message: String) {
         Snackbar.make(binding.rvListBook, message, BaseTransientBottomBar.LENGTH_LONG)

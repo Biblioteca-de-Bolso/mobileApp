@@ -22,12 +22,14 @@
         android:visibility="visible" />
 
     <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/pg_loading"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:orientation="vertical"
+        android:visibility="gone"
         >
         <GridLayout
             android:layout_width="match_parent"
@@ -67,6 +69,10 @@
             android:padding="20dp"
             tools:listitem="@layout/item_annotation_full_width" />
     </LinearLayout>
+
+    <include
+        android:id="@+id/include_ll_error"
+        layout="@layout/layout_error_empty_full"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -175,6 +175,7 @@
 
     <string name="label_created_at">Created at\n %1$s</string>
     <string name="label_updated_at">Updated at\n %1$s</string>
+    <string name="label_annotation_list_is_empty">Annotation\'s list is empty</string>
 
 
 

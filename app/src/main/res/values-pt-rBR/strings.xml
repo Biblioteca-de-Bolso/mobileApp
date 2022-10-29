@@ -157,6 +157,7 @@
     <string name="label_are_you_sure_delete_annotation">Você tem certeza que deseja deletar essa anotação?</string>
     <string name="label_created_at">Criado em\n %1$s</string>
     <string name="label_updated_at">Atualizado em\n %1$s</string>
+    <string name="label_annotation_list_is_empty">Lista de anotações está vazia</string>
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
