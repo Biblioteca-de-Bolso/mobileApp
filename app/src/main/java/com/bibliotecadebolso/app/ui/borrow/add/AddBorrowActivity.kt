@@ -20,28 +20,46 @@ import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
 import com.bumptech.glide.Glide
 
+/**
+ * @param bookId: int,
+ *
+ */
 class AddBorrowActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAddBorrowBinding
     private lateinit var viewModel: AddBorrowViewModel
+    private var bookId: Int = -1
+    private var isSelectBookOptionEnabled = true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddBorrowBinding.inflate(layoutInflater)
 
         viewModel = ViewModelProvider(this)[AddBorrowViewModel::class.java]
 
+        bookId = intent.extras?.getInt("bookId",-1) ?: -1
+
         binding.itemBook.apply {
-            tvTitle.text = "No book selected"
-            tvAuthor.text = "No book selected"
+            tvTitle.text = getString(R.string.label_no_book_selected)
+            tvAuthor.text = getString(R.string.label_no_book_selected)
+        }
+
+        if (bookId != -1) {
+            disableBookClickEvent()
+            showBookInfo()
         }
 
         binding.tilContactName.editText?.setText(viewModel.inputs.contactName)
 
-        binding.btnSelectBorrowBook.setOnClickListener {
-            getBookByLaunchingBookListActivity()
-        }
+        if (isSelectBookOptionEnabled) {
+            binding.btnSelectBorrowBook.visibility = View.VISIBLE
+            binding.btnSelectBorrowBook.setOnClickListener {
+                getBookByLaunchingBookListActivity()
+            }
 
-        binding.itemBook.root.setOnClickListener {
-            getBookByLaunchingBookListActivity()
+            binding.itemBook.root.setOnClickListener {
+                getBookByLaunchingBookListActivity()
+            }
+        } else {
+            binding.btnSelectBorrowBook.visibility = View.GONE
         }
 
         viewModel.bookLiveData.observe(this) {
@@ -103,6 +121,23 @@ class AddBorrowActivity : AppCompatActivity() {
         }
 
         setContentView(binding.root)
+    }
+
+    private fun disableBookClickEvent() {
+        isSelectBookOptionEnabled = false
+    }
+
+    private fun showBookInfo() {
+        val accessToken = SharedPreferencesUtils.getAccessToken(
+            getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+        )
+
+        viewModel.lastSelectedBookId.postValue(bookId)
+        binding.pgLoading.visibility = View.VISIBLE
+        viewModel.getBookById(accessToken, bookId)
     }
 
     private fun getBookByLaunchingBookListActivity() {

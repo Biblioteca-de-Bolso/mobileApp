@@ -234,6 +234,10 @@
             </LinearLayout>
         </ScrollView>
 
+        <include
+            android:id="@+id/include_ll_error"
+            layout="@layout/layout_error_empty_full"/>
+
     </com.bibliotecadebolso.app.view.SwipeRefreshLayoutToHorizontalScroll>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

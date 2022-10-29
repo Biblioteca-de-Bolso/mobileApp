@@ -158,6 +158,10 @@
     <string name="label_created_at">Criado em\n %1$s</string>
     <string name="label_updated_at">Atualizado em\n %1$s</string>
     <string name="label_annotation_list_is_empty">Lista de anotações está vazia</string>
+    <string name="label_no_book_selected">Nenhum livro selecionado</string>
+    <string name="label_book_borrowed_and_not_returned">Esse livro está emprestado e não foi devolvido.</string>
+    <string name="label_analyzing_avaliability">Analisando disponibilidade…</string>
+
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
