@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_marginTop="54dp"
     android:orientation="vertical"
     tools:context=".ui.home.ui.profile.ProfileFragment">
@@ -28,95 +28,102 @@
         android:layout_height="match_parent">
 
         <ScrollView
-            android:id="@+id/sv_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:src="@drawable/ic_account_circle_light"
-                    app:tint="?attr/colorPrimary" />
-
-
-                <TextView
-                    android:id="@+id/tv_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    tools:text="Samuel de Lima Capusesera" />
-
-                <TextView
-                    android:id="@+id/tv_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="16dp"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    tools:text="samuel.capusesera@aluno.ifsp.edu.br" />
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:layout_marginTop="8dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" />
-
                 <LinearLayout
+                    android:id="@+id/ll_content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:src="@drawable/ic_account_circle_light"
+                        app:tint="?attr/colorPrimary" />
+
 
                     <TextView
-                        android:id="@+id/tv_created_at"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_username"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="16dp"
-                        android:layout_weight="0.5"
                         android:gravity="center"
-                        android:textSize="14sp"
-                        tools:text="Criado em:\n05/12/2022" />
+                        android:textSize="18sp"
+                        tools:text="Samuel de Lima Capusesera" />
 
                     <TextView
-                        android:id="@+id/tv_last_updated_at"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_email"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_margin="16dp"
-                        android:layout_weight="0.5"
                         android:gravity="center"
-                        android:textSize="14sp"
-                        tools:text="Atualizado em:\n05/12/2022" />
+                        android:textSize="18sp"
+                        tools:text="samuel.capusesera@aluno.ifsp.edu.br" />
 
+                    <com.google.android.material.divider.MaterialDivider
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_created_at"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="16dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:textSize="14sp"
+                            tools:text="Criado em:\n05/12/2022" />
+
+                        <TextView
+                            android:id="@+id/tv_last_updated_at"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="16dp"
+                            android:layout_weight="0.5"
+                            android:gravity="center"
+                            android:textSize="14sp"
+                            tools:text="Atualizado em:\n05/12/2022" />
+
+                    </LinearLayout>
+
+                    <Button
+                        android:id="@+id/btn_delete_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="40dp"
+                        android:backgroundTint="@android:color/holo_red_light"
+                        android:gravity="center"
+                        android:text="@string/title_activity_delete_account" />
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btn_delete_account"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="40dp"
-                    android:backgroundTint="@android:color/holo_red_light"
-                    android:gravity="center"
-                    android:text="@string/title_activity_delete_account" />
+                <include
+                    android:id="@+id/include_ll_error"
+                    layout="@layout/layout_error_empty_full" />
             </LinearLayout>
         </ScrollView>
 
-        <include
-            android:id="@+id/include_ll_error"
-            layout="@layout/layout_error_empty_full"/>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

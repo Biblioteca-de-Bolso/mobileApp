@@ -14,7 +14,7 @@ class ContentManager(
         content.visibility = View.VISIBLE
     }
     private fun hideErrorContent() {
-        errorBinding.llErrorContent.visibility = View.GONE
+        errorBinding.root.visibility = View.GONE
     }
 
     fun showErrorContent(message: String) {

@@ -9,17 +9,22 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swl_refresh_home"
         android:layout_width="match_parent"
+        android:layout_marginTop="54dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
         >
+
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginBottom="60dp"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+
                 tools:visibility="visible"
                 android:id="@+id/ll_content"
                 android:layout_width="match_parent"
@@ -132,11 +137,15 @@
                     layout="@layout/layout_error_half_size"/>
 
             </LinearLayout>
+
+                <include
+                    android:visibility="gone"
+                    android:id="@+id/include_ll_error"
+                    layout="@layout/layout_error_empty_full"
+                    />
+            </LinearLayout>
         </ScrollView>
 
-        <include
-            android:id="@+id/include_ll_error"
-            layout="@layout/layout_error_empty_full"/>
 
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
