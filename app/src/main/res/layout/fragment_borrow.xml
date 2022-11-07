@@ -9,16 +9,24 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swl_refresh_home"
         android:layout_width="match_parent"
+        android:layout_marginTop="54dp"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp"
         >
+
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_marginBottom="60dp"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <LinearLayout
+
+                tools:visibility="visible"
+                android:id="@+id/ll_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -61,6 +69,10 @@
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     tools:itemCount="3"
                     tools:listitem="@layout/item_borrow_pending" />
+
+                <include
+                    android:id="@+id/include_ll_borrowed_error"
+                    layout="@layout/layout_error_half_size"/>
 
                 <TextView
                     android:id="@+id/tv_error_status_rv_pending"
@@ -120,19 +132,22 @@
                     tools:itemCount="3"
                     tools:listitem="@layout/item_borrow" />
 
-                <TextView
-                    android:id="@+id/tv_error_status_rv_returned"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_empty"
-                    android:visibility="gone"
-                    android:gravity="center"
-                    android:textSize="18sp"
-                    android:layout_margin="20dp"
-                    />
+                <include
+                    android:id="@+id/include_ll_returned_error"
+                    layout="@layout/layout_error_half_size"/>
 
             </LinearLayout>
+
+                <include
+                    android:visibility="gone"
+                    android:id="@+id/include_ll_error"
+                    layout="@layout/layout_error_empty_full"
+                    />
+            </LinearLayout>
         </ScrollView>
+
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

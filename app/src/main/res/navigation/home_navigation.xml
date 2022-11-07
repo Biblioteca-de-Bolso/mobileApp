@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/navigation_annotation"
         android:name="com.bibliotecadebolso.app.ui.home.ui.annotation.AnnotationListFragment"
-        android:label="@string/title_notifications"
+        android:label="@string/title_annotations"
         tools:layout="@layout/fragment_annotation_list" />
 
     <fragment
@@ -25,7 +25,7 @@
 
     <fragment
         android:id="@+id/navigation_profile"
-        android:name="com.bibliotecadebolso.app.ui.home.ui.Profile.ProfileFragment"
-        android:label="@string/title_notifications"
+        android:name="com.bibliotecadebolso.app.ui.home.ui.profile.ProfileFragment"
+        android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

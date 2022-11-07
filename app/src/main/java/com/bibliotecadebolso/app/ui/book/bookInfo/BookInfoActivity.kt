@@ -26,6 +26,7 @@ import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.book.bookInfo.annotationList.AnnotationListActivity
 import com.bibliotecadebolso.app.ui.book.edit.EditBookActivity
+import com.bibliotecadebolso.app.ui.borrow.add.AddBorrowActivity
 import com.bibliotecadebolso.app.ui.borrow.list.BorrowListActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
@@ -85,6 +86,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         listenerFillActivityWithBookInfo()
 
         setupFabs()
+        setupBorrowDisponibilityListener()
         setupOnClickRemoveBook()
         setRemoveBookListener()
         setupOnClickEditBook()
@@ -120,13 +122,36 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
 
         binding.fabAddAbstract.setOnClickListener {
-            Toast.makeText(this, "fabAddAbstract clicked", Toast.LENGTH_LONG).show()
+            val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+            val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+            Toast.makeText(this, getString(R.string.label_analyzing_avaliability), Toast.LENGTH_LONG).show()
+            viewModel.checkIfCanBorrowBook(accessToken, getIdFromExtrasOrMinus1())
         }
         binding.fabAddAnnotation.setOnClickListener {
             val intent = Intent(this, AnnotationEditorActivity::class.java)
             intent.putExtra("bookId", getIdFromExtrasOrMinus1())
             intent.putExtra("actionType", AnnotationActionEnum.ADD.toString())
             startActivity(intent)
+        }
+    }
+
+    private fun setupBorrowDisponibilityListener() {
+        viewModel.liveDataPendingBorrowList.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    if (it.response.isNotEmpty()) {
+                        showLongToast(getString(R.string.label_book_borrowed_and_not_returned))
+                    } else {
+                        val intent = Intent(this, AddBorrowActivity::class.java)
+                        intent.putExtra("bookId", getIdFromExtrasOrMinus1())
+                        startActivity(intent)
+                    }
+                }
+                is Result.Error -> {
+                    showLongToast(it.errorBody.message)
+                }
+            }
         }
     }
 

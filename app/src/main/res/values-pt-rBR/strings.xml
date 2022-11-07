@@ -6,7 +6,7 @@
     <string name="prompt_password">Senha</string>
     <string name="action_sign_up">Registrar</string>
     <string name="action_sign_in_short">Logar</string>
-    <string name="welcome">"Bem vindo!"</string>
+    <string name="welcome">"Bem-vindo!"</string>
     <string name="invalid_username">nome de usuário invalido</string>
     <string name="invalid_password">Senha precisa conter mais que 5 caracteres</string>
     <string name="login_failed">Falha ao logar</string>
@@ -24,7 +24,7 @@
     <string name="label_user_logged">Você está logado</string>
     <string name="label_you_dont_have_connection">Você não tem conexão com a internet</string>
     <string name="label_incorrect_credentials">Suas credenciais não são parâmetros válidos</string>
-    <string name="label_loading">Carregando...</string>
+    <string name="label_loading">Carregando…</string>
     <string name="label_server_not_return_correctly">Erro: não foi possível coletar os dados do servidor</string>
     <string name="label_logout">Sair</string>
     <string name="drawer_label_open">Abrir</string>
@@ -71,7 +71,7 @@
     <string name="label_about">Sobre</string>
     <string name="label_account_deleted">Conta deletada com sucesso!</string>
     <string name="label_options">Opções</string>
-    <string name="annotation_placeholder_insert_text_here">Insira o texto aqui...</string>
+    <string name="annotation_placeholder_insert_text_here">Insira o texto aqui…</string>
     <string name="label_save_annotation">Salvar anotação</string>
     <string name="alert_token_expired">Token expirado, por favor logue de novo</string>
     <string name="label_edit_book">Editar livro</string>
@@ -79,7 +79,7 @@
     <string name="label_book_details">Detalhes do livro</string>
     <string name="label_show_more">Mostrar mais</string>
     <string name="error_invalid_token">Token invalido! Faça seu login novamente</string>
-    <string name="label_loading_three_dots">Carregando...</string>
+    <string name="label_loading_three_dots">Carregando…</string>
     <string name="label_Description">Descrição</string>
     <string name="label_annotations">Anotações</string>
     <string name="label_abstracts">Resumos</string>
@@ -150,6 +150,37 @@
     <string name="label_check_email_to_change_password">Verifique seu email para trocar sua senha</string>
     <string name="label_change_password">Trocar senha</string>
     <string name="label_password_changed">Senha trocada!!</string>
+    <string name="title_annotations">Anotações</string>
+    <string name="title_profile">Perfil</string>
+    <string name="label_notes_two_point">Notas:</string>
+    <string name="label_export_to_pdf">Exportar para pdf</string>
+    <string name="label_are_you_sure_delete_annotation">Você tem certeza que deseja deletar essa anotação?</string>
+    <string name="label_created_at">Criado em\n %1$s</string>
+    <string name="label_updated_at">Atualizado em\n %1$s</string>
+    <string name="label_annotation_list_is_empty">Lista de anotações está vazia</string>
+    <string name="label_no_book_selected">Nenhum livro selecionado</string>
+    <string name="label_book_borrowed_and_not_returned">Esse livro está emprestado e não foi devolvido.</string>
+    <string name="label_analyzing_avaliability">Analisando disponibilidade…</string>
+
+    <string name="label_link_app_icon"><![CDATA[https://br.freepik.com/vetores-gratis/bonito-astronauta-lendo-livro-cartoon-ilustracao-icone-do-vetor-conceito-de-icone-de-educacao-cientifica-isolado-vetor-premium-estilo-de-desenho-animado-plano_22750868.htm#&position=3&from_view=detail#&position=3&from_view=detail]]></string>
+    <string name="label_app_icon">Ícone do aplicativo</string>
+    <string name="label_app_font">Fonte do nome \'biblioteca de bolso\'</string>
+    <string name="label_app_link_font">https://fonts.google.com/specimen/Glass+Antiqua</string>
+    <string name="label_splash_screen">Splash screen</string>
+    <string name="label_link_splash_screen">https://br.freepik.com/vetores-gratis/fundo-de-galaxia-de-desenho-animado_14350787.htm?query=space%20cartoon</string>
+    <string name="label_login_screen">Tela de login</string>
+    <string name="label_link_bg_login_screen"><![CDATA[https://www.freepik.com/free-vector/interior-living-room-with-sofa_6993916.htm#query=cartoon%20bookshelf&position=4&from_view=keyword]]></string>
+    <string name="label_book_icon">ícone do livro</string>
+    <string name="label_link_book_icon">https://www.svgrepo.com/svg/79628/book</string>
+    <string name="label_other_icons">Demais ícones</string>
+    <string name="label_link_materialdesignicons">https://materialdesignicons.com/</string>
+    <string name="about_text_1">Biblioteca de bolso é um aplicativo para você gerenciar seus livros\n\nCom ele, você consegue:</string>
+    <string name="about_text_2_item_1">- Gerenciar quais livros você já leu, está lendo, planeja ler ou deixou de lado</string>
+    <string name="about_text_2_item_2">- Concentrar suas anotações dos livros em um único lugar</string>
+    <string name="about_text_2_item_3">- Gerenciar seus livros emprestados</string>
+    <string name="label_utilized_images">Imagens utilizadas</string>
+    <string name="about_utilized_images_label_1">As imagens utilizadas no aplicativo são de uso com atribuição requerida\n</string>
+
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>

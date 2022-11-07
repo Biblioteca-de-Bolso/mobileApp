@@ -15,6 +15,3 @@ data class Borrow(
     val book: BookTitle,
 )
 
-data class BookTitle(
-    val title: String
-)

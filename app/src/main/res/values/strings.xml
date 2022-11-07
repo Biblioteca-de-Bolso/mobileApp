@@ -20,10 +20,10 @@
     <string name="label_app_name">Biblioteca de bolso</string>
     <string name="label_login">Login</string>
     <string name="label_register">Registrar</string>
-    <string name="label_user_logged">Você está logado</string>
+    <string name="label_user_logged">You are logged</string>
     <string name="label_you_dont_have_connection">You don\'t have internet connection</string>
     <string name="label_incorrect_credentials">Your credentials are not valid parameters</string>
-    <string name="label_loading">Loading...</string>
+    <string name="label_loading">Loading…</string>
     <string name="label_server_not_return_correctly">Error: Can\'t collect any data of the server</string>
     <string name="label_logout">Logout</string>
     <string name="drawer_label_open">open</string>
@@ -70,7 +70,7 @@
     <string name="label_about">About</string>
     <string name="label_account_deleted">Account deleted successfully</string>
     <string name="label_options">Options</string>
-    <string name="annotation_placeholder_insert_text_here">Insert text here...</string>
+    <string name="annotation_placeholder_insert_text_here">Insert text here…</string>
     <string name="label_save_annotation">Save annotation</string>
     <string name="alert_token_expired">Token expired, please log in again</string>
     <string name="label_edit_book">Edit book</string>
@@ -78,7 +78,7 @@
     <string name="label_book_details">Book details</string>
     <string name="label_show_more">Show more</string>
     <string name="error_invalid_token">Invalid Token! Please log in again</string>
-    <string name="label_loading_three_dots">loading...</string>
+    <string name="label_loading_three_dots">loading…</string>
     <string name="label_Description">Description</string>
     <string name="label_annotations">Annotations</string>
     <string name="label_abstracts">Abstracts</string>
@@ -115,7 +115,7 @@
     <string name="label_reached_in_the_end">Reached in the end</string>
     <string name="label_annotation_image">annotation image</string>
     <string name="label_more_info">More info</string>
-    <string name="label_lendings">Lendings</string>
+    <string name="label_lendings">Borrows</string>
     <string name="label_no_description">No description</string>
     <string name="title_borrow">Borrows</string>
     <string name="label_returned">Returned</string>
@@ -166,10 +166,45 @@
     <string name="label_check_email_to_change_password">Check your email to change your password</string>
     <string name="label_change_password">Change password</string>
     <string name="label_password_changed">Password changed!!</string>
+    <string name="label_notes_two_point">Notes:</string>
+    <string name="label_export_to_pdf">Export to pdf</string>
+    <string name="label_are_you_sure_delete_annotation">Are you sure you want to delete this annotation?</string>
+
+    <string name="title_annotations">Annotations</string>
+    <string name="title_profile">Profile</string>
+
+    <string name="label_created_at">Created at\n %1$s</string>
+    <string name="label_updated_at">Updated at\n %1$s</string>
+    <string name="label_annotation_list_is_empty">Annotation\'s list is empty</string>
+    <string name="label_no_book_selected">No book selected</string>
+    <string name="label_book_borrowed_and_not_returned">This book has already been borrowed and has not been returned.</string>
+    <string name="label_analyzing_avaliability">Analyzing availability…</string>
+
+    <string name="label_link_app_icon"><![CDATA[https://br.freepik.com/vetores-gratis/bonito-astronauta-lendo-livro-cartoon-ilustracao-icone-do-vetor-conceito-de-icone-de-educacao-cientifica-isolado-vetor-premium-estilo-de-desenho-animado-plano_22750868.htm#&position=3&from_view=detail#&position=3&from_view=detail]]></string>
+    <string name="label_app_icon">App icon</string>
+    <string name="label_app_font">\'biblioteca de bolso\' font family</string>
+    <string name="label_app_link_font">https://fonts.google.com/specimen/Glass+Antiqua</string>
+    <string name="label_splash_screen">Splash screen</string>
+    <string name="label_link_splash_screen">https://br.freepik.com/vetores-gratis/fundo-de-galaxia-de-desenho-animado_14350787.htm?query=space%20cartoon</string>
+    <string name="label_login_screen">Login screen</string>
+    <string name="label_link_bg_login_screen"><![CDATA[https://www.freepik.com/free-vector/interior-living-room-with-sofa_6993916.htm#query=cartoon%20bookshelf&position=4&from_view=keyword]]></string>
+    <string name="label_book_icon">Book icon</string>
+    <string name="label_link_book_icon">https://www.svgrepo.com/svg/79628/book</string>
+    <string name="label_other_icons">Other icons</string>
+    <string name="label_link_materialdesignicons">https://materialdesignicons.com/</string>
+    <string name="about_text_1">Biblioteca de bolso it\'s an application for you to manage your books\n\nWith this app, you can:</string>
+    <string name="about_text_2_item_1">- Manage what books you\'ve read, what books you\'re currently reading, plan to read or dropped</string>
+    <string name="about_text_2_item_2">- Concentrate your book notes in one place</string>
+    <string name="about_text_2_item_3">- Manage your borrowed books</string>
+    <string name="label_utilized_images">Utilized imaegs</string>
+    <string name="about_utilized_images_label_1">The images used in the application are for use with attribution required\n</string>
 
 
     <string name="error_email_not_valid">Email not valid</string>
     <string name="error_password_length_between_8_and_32">Password must have length between 8 and 32</string>
     <string name="error_password_and_confirm_password_not_equals">\'Password\' field must be equals to \'confirm password\' field</string>
     <string name="error_borrow_must_have_between_1_and_64">Contact name length must have between 1 and 64</string>
+
+
+
 </resources>

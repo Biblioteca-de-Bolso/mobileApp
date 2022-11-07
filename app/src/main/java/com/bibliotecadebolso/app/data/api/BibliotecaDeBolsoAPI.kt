@@ -12,6 +12,7 @@ import com.bibliotecadebolso.app.ui.user.requestChangePassword.ChangePasswordFor
 import com.bibliotecadebolso.app.ui.user.requestChangePassword.form.RequestChangePasswordForm
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -117,7 +118,8 @@ interface BibliotecaDeBolsoAPI {
     suspend fun getAnnotationList(
         @Header("Authorization") accessToken: String,
         @Query("page") page: Int = 1,
-        @Query("bookId") bookId: Int,
+        @Query("bookId") bookId: Int? = null,
+        @Query("search") searchContent: String? = null,
     ): Response<APIResponse<ListAnnotationObject>>
 
     @GET("annotation/{id}")
@@ -125,6 +127,12 @@ interface BibliotecaDeBolsoAPI {
         @Header("Authorization") accessToken: String,
         @Path("id") id: Int
     ): Response<APIResponse<AnnotationObject>>
+
+    @DELETE("annotation/{id}")
+    suspend fun deleteAnnotationById(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int,
+    ) : Response<APIResponse<Nothing>>
 
     @POST("borrow")
     suspend fun createBorrow(
@@ -168,6 +176,12 @@ interface BibliotecaDeBolsoAPI {
     suspend fun changePassword(
         @Body changePasswordForm: ChangePasswordForm
     ): Response<APIResponse<Nothing>>
+
+    @GET("user/{id}")
+    suspend fun getProfile(
+        @Header("Authorization") accessToken: String,
+        @Path("id") id: Int
+    ): Response<APIResponse<ProfileObject>>
 
 
 }

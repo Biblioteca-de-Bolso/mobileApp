@@ -1,25 +1,38 @@
 package com.bibliotecadebolso.app.ui.add.annotation
 
+import android.app.DownloadManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Color
+import android.net.Uri
 import android.os.Bundle
-import android.util.Log
+import android.os.Environment
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.ViewModelProvider
 import com.bibliotecadebolso.app.R
-import com.bibliotecadebolso.app.infix.changeHighlight
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
+import com.bibliotecadebolso.app.infix.changeHighlight
+import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.ContextUtils
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import jp.wasabeef.richeditor.RichEditor
+
 
 /**
  * Annotation edition activity.
@@ -37,6 +50,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private var actionType: AnnotationActionEnum? = null
     private var annotationId: Int = -1
     private var isDarkMode = false
+    private var topBarMenu: Menu? = null
 
     private lateinit var viewModel: AnnotationEditorViewModel
 
@@ -60,6 +74,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         setSaveAnnotationListener()
         setUpdateAnnotationListener()
         setGetAnnotationByIdListener()
+        deleteAnnotationObserver()
     }
 
 
@@ -262,5 +277,166 @@ class AnnotationEditorActivity : AppCompatActivity() {
 
     private fun showLongToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        if (actionType == AnnotationActionEnum.ADD) return super.onCreateOptionsMenu(menu)
+        menuInflater.inflate(R.menu.annotation_editor_menu, menu)
+
+        topBarMenu = menu
+
+        val iconExportToPdf = menu?.findItem(R.id.action_export_to_pdf)
+        val iconDelete = menu?.findItem(R.id.action_delete)
+
+        iconExportToPdf?.setOnMenuItemClickListener {
+            requestStoragePermission()
+            true
+        }
+
+        iconDelete?.setOnMenuItemClickListener {
+            confirmToDeleteAnnotation(iconDelete)
+            true
+        }
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun requestExportToPdf(menuItem: MenuItem?) {
+        val accessToken = SharedPreferencesUtils.getAccessToken(
+            getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        )
+        val request =
+            DownloadManager.Request(Uri.parse("https://bibliotecadebolso.herokuapp.com/api/annotation/export/${annotationId}"))
+                .addRequestHeader("Authorization", "Bearer $accessToken")
+
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI or DownloadManager.Request.NETWORK_MOBILE)
+        request.setTitle(viewModel.titleText)
+        request.setDescription(viewModel.referenceText)
+
+        request.allowScanningByMediaScanner()
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        request.setDestinationInExternalPublicDir(
+            Environment.DIRECTORY_DOWNLOADS,
+            "${System.currentTimeMillis()}.pdf"
+        )
+
+        val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+
+        val downloadID = manager.enqueue(request)
+        disableMenuIcon(menuItem)
+
+        val onDownloadComplete: BroadcastReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                val id = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
+                if (downloadID == id) {
+                    enableMenuIcon(menuItem)
+                    unregisterReceiver(this)
+                }
+            }
+        }
+
+        registerReceiver(
+            onDownloadComplete,
+            IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE)
+        );
+    }
+
+    private fun requestStoragePermission() {
+        val permsBelowAndroid11 = arrayOf("android.permission.WRITE_EXTERNAL_STORAGE")
+
+        val perms = arrayOf("android.permission.READ_EXTERNAL_STORAGE")
+
+        val permsRequestCodeBelowAndroid11 = 200
+        val permsRequestCode = 201
+
+        if (android.os.Build.VERSION.SDK_INT <= 29)
+            requestPermissions(permsBelowAndroid11, permsRequestCodeBelowAndroid11)
+        else
+            requestPermissions(perms, permsRequestCode)
+
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (grantResults.isEmpty()) return
+        when (requestCode) {
+            200 -> {
+                val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+                if (!isReadPermissionAccepted) {
+                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val iconExportToPdf = topBarMenu?.findItem(R.id.action_export_to_pdf)
+                requestExportToPdf(iconExportToPdf)
+            }
+            201 -> {
+                val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
+
+                if (!isReadPermissionAccepted) {
+                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    return
+                }
+
+                val iconExportToPdf = topBarMenu?.findItem(R.id.action_export_to_pdf)
+                requestExportToPdf(iconExportToPdf)
+            }
+        }
+    }
+
+    private fun disableMenuIcon(menuItem: MenuItem?) {
+        menuItem?.isEnabled = false
+        menuItem?.iconTintList = ColorStateList.valueOf(Color.GRAY)
+    }
+
+    private fun enableMenuIcon(menuItem: MenuItem?) {
+        menuItem?.isEnabled = true
+        menuItem?.iconTintList = ColorStateList.valueOf(Color.WHITE)
+    }
+
+    private fun confirmToDeleteAnnotation(menuItem: MenuItem?) =
+        MaterialAlertDialogBuilder(this)
+            .setTitle(resources.getString(R.string.label_are_you_sure))
+            .setMessage(getString(R.string.label_are_you_sure_delete_annotation))
+            .setNegativeButton(getString(R.string.label_cancel)) { _, _ -> }
+            .setPositiveButton(resources.getString(R.string.label_delete)) { dialog, which ->
+                disableMenuIcon(menuItem)
+                deleteAnnotation()
+
+            }
+            .show()
+
+    private fun deleteAnnotation() {
+        viewModel.deleteAnnotation(
+            SharedPreferencesUtils.getAccessToken(
+                getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+                ),
+            annotationId
+        )
+    }
+
+    private fun deleteAnnotationObserver() {
+        viewModel.deleteAnnotationResult.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    val returnResult = Intent()
+                    returnResult.putExtra("id", annotationId)
+                    setResult(REMOVE_ANNOTATION, returnResult)
+                    finish()
+                }
+                is Result.Error -> {
+                    enableMenuIcon(topBarMenu?.findItem(R.id.action_delete))
+                }
+            }
+        }
+    }
+
+    companion object {
+        const val REMOVE_ANNOTATION = 21
     }
 }

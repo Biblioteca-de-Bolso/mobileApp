@@ -77,11 +77,13 @@ class InitActivity : AppCompatActivity() {
             var newAccessToken = ""
             var newRefreshToken = ""
             var errorMessage = ""
+            var hasError = false
 
             if (it is Result.Success) {
                 newAccessToken = it.response!!.accessToken
                 newRefreshToken = it.response.refreshToken
             } else if (it is Result.Error) {
+                hasError = true
                 when (it.errorBody.code) {
                     "noInternetConnection" -> errorMessage =
                         getString(R.string.label_no_internet_connection)
@@ -90,14 +92,16 @@ class InitActivity : AppCompatActivity() {
             }
 
             if ((it is Result.Success) ||
-                (it is Result.Error && it.errorBody.code != "noInternetConnection")
+                (it is Result.Error && isNoInternetError(it))
             )
                 SharedPreferencesUtils.putAuthTokens(prefs, newAccessToken, newRefreshToken)
 
             setIsWaitingRequest(false)
-            redirectToHomeActivityIfHasNoPendingRequest(errorMessage, errorMessage.isEmpty())
+            redirectToHomeActivityIfHasNoPendingRequest(errorMessage, hasError)
         }
     }
+
+    private fun isNoInternetError(result: Result.Error) = result.errorBody.code != "noInternetConnection"
 
     private fun redirectToHomeActivityIfHasNoPendingRequest(errorMessage: String, hasError: Boolean) {
         if (isWaitingRequest) return

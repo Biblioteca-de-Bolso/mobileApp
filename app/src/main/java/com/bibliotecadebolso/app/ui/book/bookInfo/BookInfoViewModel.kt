@@ -9,10 +9,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
+import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
 import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
+import com.bibliotecadebolso.app.data.model.request.Borrow
+import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.util.Result
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.format
@@ -30,11 +33,15 @@ class BookInfoViewModel : ViewModel() {
     val liveDataDeleteBook = MutableLiveData<Result<String>>()
     val liveDataUpdateBook = MutableLiveData<Result<UpdatedBook>>()
     val dataSource = BookDataSource
+
+    val borrowDataSource = BorrowDataSource()
+    val liveDataPendingBorrowList = MutableLiveData<Result<List<Borrow>>>()
     val liveDataImageCompressed = MutableLiveData<File>()
     val liveDataUpdateImage = MutableLiveData<Result<String>>()
     val readingStatusValuesKey = HashMap<String, String>()
     var isToShowConfirmationDisplay = false
         private set
+
     fun setDisplayStatusConfirmation(boolean: Boolean) {
         isToShowConfirmationDisplay = boolean
     }
@@ -83,6 +90,20 @@ class BookInfoViewModel : ViewModel() {
             val result = dataSource.updateBookById(accessToken, book)
 
             liveDataUpdateBook.postValue(result)
+        }
+    }
+
+    fun checkIfCanBorrowBook(accessToken: String, bookId: Int) {
+        viewModelScope.launch {
+            val result = borrowDataSource.listBorrow(
+                accessToken,
+                1,
+                bookId = bookId,
+                borrowStatus = BorrowStatus.PENDING
+            )
+
+            liveDataPendingBorrowList.postValue(result)
+
         }
     }
 

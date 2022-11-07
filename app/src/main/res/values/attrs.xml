@@ -3,4 +3,5 @@
     <attr name="readablePrimaryColor" format="reference" />
     <attr name="actionBarColor" format="reference" />
     <attr name="wheatColor" format="reference" />
+    <attr name="progressBarColor" format="reference" />
 </resources>

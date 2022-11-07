@@ -143,6 +143,7 @@
                 app:layout_constraintTop_toBottomOf="@id/cl_top">
 
                 <LinearLayout
+                    android:layout_weight="0.04"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -153,9 +154,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:maxWidth="120dp"
                         android:layout_margin="16dp"
                         android:backgroundTint="@color/gd_blue_purple_1"
-                        android:paddingHorizontal="25dp"
+                        android:paddingHorizontal="18dp"
                         android:text="@string/label_edit_book" />
 
                     <Button
@@ -163,6 +165,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:layout_marginHorizontal="16dp"
+                        android:paddingHorizontal="18dp"
                         android:backgroundTint="@android:color/holo_red_light"
                         android:text="@string/label_delete"
                         app:layout_constraintEnd_toEndOf="@id/fl_book_image"
@@ -172,10 +176,10 @@
 
 
                 <Spinner
-                    android:layout_weight="0.95"
+                    android:layout_weight="0.7"
                     android:id="@+id/spinner_reading_status"
                     android:layout_marginTop="24dp"
-                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginHorizontal="12dp"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:entries="@array/spinner_book_reading_status_value"

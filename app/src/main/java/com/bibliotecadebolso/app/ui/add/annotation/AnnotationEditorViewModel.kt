@@ -9,6 +9,7 @@ import com.bibliotecadebolso.app.data.model.AnnotationObject
 import com.bibliotecadebolso.app.data.model.enum.TransactionOptions
 import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.util.Result
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AnnotationEditorViewModel : ViewModel() {
@@ -17,6 +18,9 @@ class AnnotationEditorViewModel : ViewModel() {
     val resultOfSaveAnnotation = MutableLiveData<Result<AnnotationResponse?>>()
     val updateAnnotationResult = MutableLiveData<Result<AnnotationObject>>()
     val getByIdResult = MutableLiveData<Result<AnnotationObject>>()
+    val deleteAnnotationResult = MutableLiveData<Result<Boolean>>()
+
+    val exportToPdfLiveData = MutableLiveData<Result<Any>>()
     var getByIdAlreadyLoaded = false;
 
 
@@ -35,17 +39,36 @@ class AnnotationEditorViewModel : ViewModel() {
     var titleChanged = false
         private set
 
-    fun saveAnnotation(accessToken: String, bookId: Int, title: String, text: String, reference: String = "") {
+    fun saveAnnotation(
+        accessToken: String,
+        bookId: Int,
+        title: String,
+        text: String,
+        reference: String = ""
+    ) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
+            val result =
+                AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
             resultOfSaveAnnotation.postValue(result)
         }
 
     }
 
-    fun updateAnnotation(accessToken: String, annotationId: Int, title: String, text: String, reference: String = "") {
+    fun updateAnnotation(
+        accessToken: String,
+        annotationId: Int,
+        title: String,
+        text: String,
+        reference: String = ""
+    ) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.updateAnnotation(accessToken, annotationId, title, text, reference)
+            val result = AnnotationDataSource.updateAnnotation(
+                accessToken,
+                annotationId,
+                title,
+                text,
+                reference
+            )
             updateAnnotationResult.postValue(result)
         }
     }
@@ -55,6 +78,13 @@ class AnnotationEditorViewModel : ViewModel() {
             val result = AnnotationDataSource.getById(accessToken, annotationId)
             getByIdResult.postValue(result)
             getByIdAlreadyLoaded = true
+        }
+    }
+
+    fun deleteAnnotation(accessToken: String, annotationId: Int) {
+        viewModelScope.launch {
+            val result = AnnotationDataSource.deleteAnnotation(accessToken, annotationId)
+            deleteAnnotationResult.postValue(result)
         }
     }
 
@@ -72,6 +102,7 @@ class AnnotationEditorViewModel : ViewModel() {
         referenceText = newReference
         referenceChanged = true
     }
+
 
     fun loadAnnotationContent(annotation: Annotation) {
         richEditorHtmlData = annotation.text

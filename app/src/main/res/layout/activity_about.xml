@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/purple_primary"
+    tools:context=".ui.info.AboutActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.MyApplication.AppBarOverlay"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/splash_screen_dark_purple"
+            app:popupTheme="@style/purpleTopBarWithNoOverlay" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/label_about"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="160dp"
+                android:layout_marginBottom="20dp"
+                app:dividerColor="@color/gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="10sp"
+                android:paddingHorizontal="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/about_text_1"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="60dp"
+                android:layout_marginHorizontal="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="10sp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/about_text_2_item_1"
+                    android:textColor="@color/m_editor_wheat"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="10sp"
+                    android:paddingHorizontal="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/about_text_2_item_2"
+                    android:textColor="@color/m_editor_wheat"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:justificationMode="inter_word"
+                    android:lineSpacingExtra="10sp"
+                    android:paddingHorizontal="20dp"
+                    android:text="@string/about_text_2_item_3"
+                    android:textColor="@color/m_editor_wheat"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="16dp"
+                android:text="@string/label_utilized_images"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="100dp"
+                android:layout_marginBottom="20dp"
+                app:dividerColor="@color/gray" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/about_utilized_images_label_1"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_app_icon"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_link_app_icon"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_app_font"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_app_link_font"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_splash_screen"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_link_splash_screen"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_login_screen"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_link_bg_login_screen"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_book_icon"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_link_book_icon"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="20dp"
+                android:text="@string/label_other_icons"
+                android:textColor="@color/m_editor_wheat"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
+                android:autoLink="web"
+                android:justificationMode="inter_word"
+                android:lineSpacingExtra="14sp"
+                android:paddingHorizontal="40dp"
+                android:text="@string/label_link_materialdesignicons"
+                android:textColor="@color/gray"
+                android:textSize="14sp" />
+        </LinearLayout>
+    </ScrollView>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
