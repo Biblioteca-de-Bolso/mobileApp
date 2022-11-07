@@ -162,6 +162,25 @@
     <string name="label_book_borrowed_and_not_returned">Esse livro está emprestado e não foi devolvido.</string>
     <string name="label_analyzing_avaliability">Analisando disponibilidade…</string>
 
+    <string name="label_link_app_icon"><![CDATA[https://br.freepik.com/vetores-gratis/bonito-astronauta-lendo-livro-cartoon-ilustracao-icone-do-vetor-conceito-de-icone-de-educacao-cientifica-isolado-vetor-premium-estilo-de-desenho-animado-plano_22750868.htm#&position=3&from_view=detail#&position=3&from_view=detail]]></string>
+    <string name="label_app_icon">Ícone do aplicativo</string>
+    <string name="label_app_font">Fonte do nome \'biblioteca de bolso\'</string>
+    <string name="label_app_link_font">https://fonts.google.com/specimen/Glass+Antiqua</string>
+    <string name="label_splash_screen">Splash screen</string>
+    <string name="label_link_splash_screen">https://br.freepik.com/vetores-gratis/fundo-de-galaxia-de-desenho-animado_14350787.htm?query=space%20cartoon</string>
+    <string name="label_login_screen">Tela de login</string>
+    <string name="label_link_bg_login_screen"><![CDATA[https://www.freepik.com/free-vector/interior-living-room-with-sofa_6993916.htm#query=cartoon%20bookshelf&position=4&from_view=keyword]]></string>
+    <string name="label_book_icon">ícone do livro</string>
+    <string name="label_link_book_icon">https://www.svgrepo.com/svg/79628/book</string>
+    <string name="label_other_icons">Demais ícones</string>
+    <string name="label_link_materialdesignicons">https://materialdesignicons.com/</string>
+    <string name="about_text_1">Biblioteca de bolso é um aplicativo para você gerenciar seus livros\n\nCom ele, você consegue:</string>
+    <string name="about_text_2_item_1">- Gerenciar quais livros você já leu, está lendo, planeja ler ou deixou de lado</string>
+    <string name="about_text_2_item_2">- Concentrar suas anotações dos livros em um único lugar</string>
+    <string name="about_text_2_item_3">- Gerenciar seus livros emprestados</string>
+    <string name="label_utilized_images">Imagens utilizadas</string>
+    <string name="about_utilized_images_label_1">As imagens utilizadas no aplicativo são de uso com atribuição requerida\n</string>
+
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>

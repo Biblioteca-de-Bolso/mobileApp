@@ -180,6 +180,25 @@
     <string name="label_book_borrowed_and_not_returned">This book has already been borrowed and has not been returned.</string>
     <string name="label_analyzing_avaliability">Analyzing availability…</string>
 
+    <string name="label_link_app_icon"><![CDATA[https://br.freepik.com/vetores-gratis/bonito-astronauta-lendo-livro-cartoon-ilustracao-icone-do-vetor-conceito-de-icone-de-educacao-cientifica-isolado-vetor-premium-estilo-de-desenho-animado-plano_22750868.htm#&position=3&from_view=detail#&position=3&from_view=detail]]></string>
+    <string name="label_app_icon">App icon</string>
+    <string name="label_app_font">\'biblioteca de bolso\' font family</string>
+    <string name="label_app_link_font">https://fonts.google.com/specimen/Glass+Antiqua</string>
+    <string name="label_splash_screen">Splash screen</string>
+    <string name="label_link_splash_screen">https://br.freepik.com/vetores-gratis/fundo-de-galaxia-de-desenho-animado_14350787.htm?query=space%20cartoon</string>
+    <string name="label_login_screen">Login screen</string>
+    <string name="label_link_bg_login_screen"><![CDATA[https://www.freepik.com/free-vector/interior-living-room-with-sofa_6993916.htm#query=cartoon%20bookshelf&position=4&from_view=keyword]]></string>
+    <string name="label_book_icon">Book icon</string>
+    <string name="label_link_book_icon">https://www.svgrepo.com/svg/79628/book</string>
+    <string name="label_other_icons">Other icons</string>
+    <string name="label_link_materialdesignicons">https://materialdesignicons.com/</string>
+    <string name="about_text_1">Biblioteca de bolso it\'s an application for you to manage your books\n\nWith this app, you can:</string>
+    <string name="about_text_2_item_1">- Manage what books you\'ve read, what books you\'re currently reading, plan to read or dropped</string>
+    <string name="about_text_2_item_2">- Concentrate your book notes in one place</string>
+    <string name="about_text_2_item_3">- Manage your borrowed books</string>
+    <string name="label_utilized_images">Utilized imaegs</string>
+    <string name="about_utilized_images_label_1">The images used in the application are for use with attribution required\n</string>
+
 
     <string name="error_email_not_valid">Email not valid</string>
     <string name="error_password_length_between_8_and_32">Password must have length between 8 and 32</string>

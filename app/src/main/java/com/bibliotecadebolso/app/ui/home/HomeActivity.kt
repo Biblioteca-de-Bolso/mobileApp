@@ -16,6 +16,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.databinding.ActivityHomeBinding
 import com.bibliotecadebolso.app.ui.appAccess.AppAccessActivity
 import com.bibliotecadebolso.app.ui.home.nav.DeleteAccountActivity
+import com.bibliotecadebolso.app.ui.info.AboutActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -115,7 +116,12 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(this, DeleteAccountActivity::class.java)
                     startActivity(intent)
                 }
+                R.id.mi_about -> {
+                    val intent = Intent(this, AboutActivity::class.java)
+                    startActivity(intent)
+                }
                 else -> {
+
                 }
             }
             true
