@@ -187,4 +187,15 @@
     <string name="error_password_and_confirm_password_not_equals">Os campos \'Senha\' e \'Confirmar senha\' precisam ser iguais</string>
     <string name="error_borrow_must_have_between_1_and_64">Nome de contato deve ter entre 1 e 64 caracteres</string>
 
+    <string-array name="spinner_book_reading_status_value">
+        <item>Planejo ler</item>
+        <item>Lendo</item>
+        <item>Concluído</item>
+        <item>Parei de ler</item>
+    </string-array>
+
+    <string-array name="spinner_book_borrow_status_value">
+        <item>Pendente</item>
+        <item>Devolvido</item>
+    </string-array>
 </resources>
