@@ -315,6 +315,9 @@ class BookListFragment : Fragment(), RvOnClickListener {
         const val ADD_BOOK = 20
         const val BOOK_ADDED = 21
         const val REMOVE_BOOK = 31
+        const val UPDATED_BOOK = 32
+        const val UPDATED_STATUS = 33
+        const val UPDATED_BOOK_AND_STATUS = 34
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

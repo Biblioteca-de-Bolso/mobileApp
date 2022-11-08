@@ -2,12 +2,9 @@ package com.bibliotecadebolso.app.ui.book.bookInfo
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
 import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
 import com.bibliotecadebolso.app.data.model.Book
@@ -28,23 +25,26 @@ import kotlin.math.pow
 
 class BookInfoViewModel : ViewModel() {
 
-    val liveDataBookInfo = MutableLiveData<Result<Book>>()
-    var isDescriptionShowMoreActive = false
-    val liveDataDeleteBook = MutableLiveData<Result<String>>()
-    val liveDataUpdateBook = MutableLiveData<Result<UpdatedBook>>()
-    val dataSource = BookDataSource
+    class BookResponse {
+        val generalLiveDataInfo = MutableLiveData<Result<Book>>()
+        val deleteLiveData = MutableLiveData<Result<String>>()
+        val updateStatusLiveData = MutableLiveData<Result<UpdatedBook>>()
+        val liveDataUpdateImage = MutableLiveData<Result<String>>()
+    }
+    class State {
+        var isDescriptionShowMoreActive = false
+        var updatedStatus = false
+        var updatedBookImage = false
+    }
 
-    val borrowDataSource = BorrowDataSource()
+    val bookResponses = BookResponse()
+    val states = State()
     val liveDataPendingBorrowList = MutableLiveData<Result<List<Borrow>>>()
     val liveDataImageCompressed = MutableLiveData<File>()
-    val liveDataUpdateImage = MutableLiveData<Result<String>>()
-    val readingStatusValuesKey = HashMap<String, String>()
-    var isToShowConfirmationDisplay = false
-        private set
 
-    fun setDisplayStatusConfirmation(boolean: Boolean) {
-        isToShowConfirmationDisplay = boolean
-    }
+    val dataSource = BookDataSource
+    val borrowDataSource = BorrowDataSource()
+    val readingStatusValuesKey = HashMap<String, String>()
 
     fun setReadStatusValuesKeyMap(
         spinnerReadingStatusKey: Array<String>,
@@ -67,30 +67,31 @@ class BookInfoViewModel : ViewModel() {
     fun getInfoByID(accessToken: String, id: Int) {
         viewModelScope.launch {
             val result = dataSource.getBookById(accessToken, id)
-            liveDataBookInfo.postValue(result)
+            bookResponses.generalLiveDataInfo.postValue(result)
         }
     }
 
     fun deleteBook(accessToken: String, bookId: Int) {
         viewModelScope.launch {
             val result = dataSource.deleteBookById(accessToken, bookId)
-            liveDataDeleteBook.postValue(result)
+            bookResponses.deleteLiveData.postValue(result)
         }
     }
 
     fun updateBookByPatch(accessToken: String, book: UpdateBook) {
         viewModelScope.launch {
             val result = dataSource.updateBookByIdWithPatch(accessToken, book)
-            liveDataUpdateBook.postValue(result)
+            bookResponses.updateStatusLiveData.postValue(result)
         }
     }
 
-    fun updateBook(accessToken: String, book: UpdateBook) {
-        viewModelScope.launch {
-            val result = dataSource.updateBookById(accessToken, book)
+    fun getLastReadStatusEnumOrNull(): ReadStatusEnum? {
+        val lastUpdatedValue = bookResponses.updateStatusLiveData.value
 
-            liveDataUpdateBook.postValue(result)
-        }
+        return if (lastUpdatedValue != null && lastUpdatedValue is Result.Success)
+            (lastUpdatedValue).response.readStatus
+        else
+            (bookResponses.generalLiveDataInfo.value as Result.Success).response.readStatus
     }
 
     fun checkIfCanBorrowBook(accessToken: String, bookId: Int) {
@@ -128,21 +129,12 @@ class BookInfoViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             val response = BookDataSource.updateImageBookById(context, accessToken, bookId, file)
-            liveDataUpdateImage.postValue(response)
+            bookResponses.liveDataUpdateImage.postValue(response)
         }
-    }
-
-    fun getReadableFileSize(size: Long): String {
-        if (size <= 0) {
-            return "0"
-        }
-        val units = arrayOf("B", "KB", "MB", "GB", "TB")
-        val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
-        return DecimalFormat("#,##0.#").format(size / 1024.0.pow(digitGroups.toDouble())) + " " + units[digitGroups]
     }
 
     fun getDescription(description: StringBuilder): String {
-        return if (isDescriptionShowMoreActive)
+        return if (states.isDescriptionShowMoreActive)
             description.toString()
         else {
             if (isAShortDescription(description)) {
@@ -156,5 +148,4 @@ class BookInfoViewModel : ViewModel() {
 
     private fun setShortDescription(description: StringBuilder) =
         description.substring(0, 270) + "..."
-
 }

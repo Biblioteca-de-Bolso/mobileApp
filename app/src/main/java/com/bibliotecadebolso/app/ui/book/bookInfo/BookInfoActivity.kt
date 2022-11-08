@@ -2,12 +2,10 @@ package com.bibliotecadebolso.app.ui.book.bookInfo
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -29,16 +27,18 @@ import com.bibliotecadebolso.app.ui.book.edit.EditBookActivity
 import com.bibliotecadebolso.app.ui.borrow.add.AddBorrowActivity
 import com.bibliotecadebolso.app.ui.borrow.list.BorrowListActivity
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
-import com.bibliotecadebolso.app.util.Constants
-import com.bibliotecadebolso.app.util.Result
-import com.bibliotecadebolso.app.util.SharedPreferencesUtils
-import com.bibliotecadebolso.app.util.WifiService
+import com.bibliotecadebolso.app.util.*
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.transition.MaterialElevationScale
 
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
+    companion object {
+        const val EDIT_BOOK = 21
+    }
 
     private lateinit var binding: ActivityBookInfoBinding
     private lateinit var viewModel: BookInfoViewModel
@@ -125,7 +125,11 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
             val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
 
-            Toast.makeText(this, getString(R.string.label_analyzing_avaliability), Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                this,
+                getString(R.string.label_analyzing_avaliability),
+                Toast.LENGTH_LONG
+            ).show()
             viewModel.checkIfCanBorrowBook(accessToken, getIdFromExtrasOrMinus1())
         }
         binding.fabAddAnnotation.setOnClickListener {
@@ -195,7 +199,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun setRemoveBookListener() {
-        viewModel.liveDataDeleteBook.observe(this) {
+        viewModel.bookResponses.deleteLiveData.observe(this) {
             if (it is Result.Success) {
                 hideLoadingBar()
                 showLongToast(getString(R.string.label_book_removed))
@@ -203,13 +207,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 val returnResult = Intent()
                 returnResult.putExtra("id", getIdFromExtrasOrMinus1())
 
-                val lastReadStatusEnum =
-                    if (viewModel.liveDataUpdateBook.value != null &&
-                        viewModel.liveDataUpdateBook.value is Result.Success
-                    )
-                        (viewModel.liveDataUpdateBook.value as Result.Success).response.readStatus
-                    else (viewModel.liveDataBookInfo.value as Result.Success).response.readStatus
-
+                val lastReadStatusEnum = viewModel.getLastReadStatusEnumOrNull()
                 if (lastReadStatusEnum != null)
                     returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
 
@@ -243,7 +241,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun listenerFillActivityWithBookInfo() {
-        viewModel.liveDataBookInfo.observe(this) {
+        viewModel.bookResponses.generalLiveDataInfo.observe(this) {
             if (it is Result.Success)
                 loadActivityWithBookInfo(it.response)
             else {
@@ -277,9 +275,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         setTvDescriptionShowMore(description)
 
         binding.tvDescriptionShowMore.setOnClickListener {
-            viewModel.isDescriptionShowMoreActive = !viewModel.isDescriptionShowMoreActive
+            viewModel.states.isDescriptionShowMoreActive =
+                !viewModel.states.isDescriptionShowMoreActive
             binding.tvDescription.text = viewModel.getDescription(description)
-            changeTvDescriptionShowMore(viewModel.isDescriptionShowMoreActive)
+            changeTvDescriptionShowMore(viewModel.states.isDescriptionShowMoreActive)
 
         }
     }
@@ -290,7 +289,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             if (description.isEmpty())
                 binding.tvDescription.text = getString(R.string.label_no_description)
         } else {
-            changeTvDescriptionShowMore(viewModel.isDescriptionShowMoreActive)
+            changeTvDescriptionShowMore(viewModel.states.isDescriptionShowMoreActive)
         }
     }
 
@@ -317,10 +316,15 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             val intent = Intent(this, EditBookActivity::class.java)
             intent.putExtra("bookId", getIdFromExtrasOrMinus1().toLong())
 
-            startActivity(intent)
+            editBookActivityResult.launch(intent)
         }
     }
 
+    private val editBookActivityResult = registerForActivityResult(
+        StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == EDIT_BOOK) getBookById(getIdFromExtrasOrMinus1())
+    }
 
     private fun setOnClickEditImage() {
         binding.ivBtnEditImage.setOnClickListener {
@@ -357,7 +361,11 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 val isReadPermissionAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED
 
                 if (!isReadPermissionAccepted) {
-                    Toast.makeText(this, getString(R.string.label_permission_not_granted), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this,
+                        getString(R.string.label_permission_not_granted),
+                        Toast.LENGTH_LONG
+                    ).show()
                     return
                 }
                 launchImagePickerIntent()
@@ -373,31 +381,12 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         if (result != null) {
             val imageUri: Uri? = result.data?.data
             if (imageUri != null) {
-                val realURI = getRealPathFromURIForGallery(imageUri)
+                val realURI = URIUtils.getRealPathFromURIForGallery(imageUri, this)
                 realURI?.let { viewModel.compressImage(this, it) }
                 showLongToast(getString(R.string.label_compressing_image))
                 showLoadingBar()
             }
         }
-    }
-
-    private fun getRealPathFromURIForGallery(uri: Uri?): String? {
-        if (uri == null) {
-            return null
-        }
-        val projection = arrayOf(MediaStore.Images.Media.DATA)
-        val cursor: Cursor? = this.contentResolver.query(
-            uri, projection, null,
-            null, null
-        )
-        if (cursor != null) {
-            val columnIndex: Int = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            return cursor.getString(columnIndex)
-        }
-        assert(false)
-        cursor?.close()
-        return uri.path
     }
 
     private fun setupOnImageCompressedListener() {
@@ -438,13 +427,15 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun setOnImageUpdatedListener() {
-        viewModel.liveDataUpdateImage.observe(this) {
+        viewModel.bookResponses.liveDataUpdateImage.observe(this) {
             hideLoadingBar()
             if (it is Result.Error) {
                 showLongToast(it.errorBody.message)
                 binding.ivBtnSaveImage.visibility = View.VISIBLE
-            } else
+            } else {
                 showLongToast((it as Result.Success).response)
+                viewModel.states.updatedBookImage = true
+            }
         }
     }
 
@@ -516,10 +507,11 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     private fun updateStatusListener() {
-        viewModel.liveDataUpdateBook.observe(this) {
+        viewModel.bookResponses.updateStatusLiveData.observe(this) {
             binding.spinnerReadingStatus.isClickable = true
             hideLoadingBar()
             if (it is Result.Success) {
+                viewModel.states.updatedStatus = true
                 Snackbar.make(
                     binding.root,
                     getString(R.string.label_book_status_updated),
@@ -554,6 +546,28 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     override fun onBackPressed() {
         super.onBackPressed()
         Glide.with(this).clear(binding.ivBookPreview)
+
+        val returnResult = Intent()
+        val returnStatus =
+            if (viewModel.states.updatedBookImage && viewModel.states.updatedStatus)
+                BookListFragment.UPDATED_BOOK_AND_STATUS
+            else if (viewModel.states.updatedStatus) BookListFragment.UPDATED_STATUS
+            else if (viewModel.states.updatedBookImage) BookListFragment.UPDATED_BOOK
+            else null
+
+        returnResult.putExtra("id", getIdFromExtrasOrMinus1())
+
+        if (returnStatus == BookListFragment.UPDATED_STATUS || returnStatus == BookListFragment.UPDATED_BOOK_AND_STATUS) {
+            returnResult.putExtra("newStatus", viewModel.getLastReadStatusEnumOrNull())
+        }
+
+
+        val lastReadStatusEnum = viewModel.getLastReadStatusEnumOrNull()
+        if (lastReadStatusEnum != null)
+            returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
+
+        setResult(BookListFragment.REMOVE_BOOK, returnResult)
+        finish()
     }
 
     override fun onUserInteraction() {
