@@ -11,7 +11,7 @@ data class CreatedBook(
     val description: String,
     val thumbnail: String,
     val readStatus: String,
-    val borrowStatus: String,
+    val borrowStatus: String? = null,
     val createdAt: String,
     val updatedAt: String,
     val currentlyBorrowed: Boolean,

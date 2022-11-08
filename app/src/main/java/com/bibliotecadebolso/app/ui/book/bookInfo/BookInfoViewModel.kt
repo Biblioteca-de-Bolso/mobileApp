@@ -19,8 +19,6 @@ import id.zelory.compressor.constraint.format
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
 import java.io.File
-import java.text.DecimalFormat
-import kotlin.math.pow
 
 
 class BookInfoViewModel : ViewModel() {
@@ -35,6 +33,7 @@ class BookInfoViewModel : ViewModel() {
         var isDescriptionShowMoreActive = false
         var updatedStatus = false
         var updatedBookImage = false
+        var updatedBookInfo = false
     }
 
     val bookResponses = BookResponse()

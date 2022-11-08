@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
@@ -21,6 +22,7 @@ import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityBookInfoBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.book.bookInfo.annotationList.AnnotationListActivity
 import com.bibliotecadebolso.app.ui.book.edit.EditBookActivity
@@ -31,7 +33,6 @@ import com.bibliotecadebolso.app.util.*
 import com.bumptech.glide.Glide
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.transition.MaterialElevationScale
 
 
 class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
@@ -211,7 +212,7 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 if (lastReadStatusEnum != null)
                     returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
 
-                setResult(BookListFragment.REMOVE_BOOK, returnResult)
+                setResult(ResultCodes.BOOK_REMOVED, returnResult)
                 finish()
             } else if (it is Result.Error) {
                 showLongToast(it.errorBody.message)
@@ -323,7 +324,10 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     private val editBookActivityResult = registerForActivityResult(
         StartActivityForResult()
     ) { result ->
-        if (result.resultCode == EDIT_BOOK) getBookById(getIdFromExtrasOrMinus1())
+        if (result.resultCode == ResultCodes.BOOK_EDITED) {
+            getBookById(getIdFromExtrasOrMinus1())
+            viewModel.states.updatedBookInfo = true
+        }
     }
 
     private fun setOnClickEditImage() {
@@ -544,29 +548,27 @@ class BookInfoActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
         Glide.with(this).clear(binding.ivBookPreview)
 
         val returnResult = Intent()
         val returnStatus =
             if (viewModel.states.updatedBookImage && viewModel.states.updatedStatus)
-                BookListFragment.UPDATED_BOOK_AND_STATUS
-            else if (viewModel.states.updatedStatus) BookListFragment.UPDATED_STATUS
-            else if (viewModel.states.updatedBookImage) BookListFragment.UPDATED_BOOK
+                ResultCodes.BOOK_EDITED_AND_UPDATED_STATUS
+            else if (viewModel.states.updatedStatus) ResultCodes.BOOK_UPDATED_STATUS
+            else if (viewModel.states.updatedBookImage || viewModel.states.updatedBookInfo) ResultCodes.BOOK_EDITED
             else null
 
         returnResult.putExtra("id", getIdFromExtrasOrMinus1())
 
         if (returnStatus == BookListFragment.UPDATED_STATUS || returnStatus == BookListFragment.UPDATED_BOOK_AND_STATUS) {
-            returnResult.putExtra("newStatus", viewModel.getLastReadStatusEnumOrNull())
+            val lastReadStatusEnum = viewModel.getLastReadStatusEnumOrNull()
+            if (lastReadStatusEnum != null)
+                returnResult.putExtra("readStatusEnum", lastReadStatusEnum)
         }
+        if (returnStatus != null)
+            setResult(returnStatus, returnResult)
 
-
-        val lastReadStatusEnum = viewModel.getLastReadStatusEnumOrNull()
-        if (lastReadStatusEnum != null)
-            returnResult.putExtra("readStatusEnum", lastReadStatusEnum.toString())
-
-        setResult(BookListFragment.REMOVE_BOOK, returnResult)
+        Log.e("BookInfoActivity", "isEdited ${returnStatus == ResultCodes.BOOK_EDITED}")
         finish()
     }
 

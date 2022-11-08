@@ -18,6 +18,7 @@ import com.bibliotecadebolso.app.data.model.ContentManager
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.databinding.FragmentBookListBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.BookListAdapter
 import com.bibliotecadebolso.app.ui.add.book.AddBookActivity
 import com.bibliotecadebolso.app.ui.book.linearList.BookListActivity
@@ -323,7 +324,13 @@ class BookListFragment : Fragment(), RvOnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == VIEW_DETAIL_BOOK && resultCode == REMOVE_BOOK)
+        if (requestCode == VIEW_DETAIL_BOOK && setOf(
+                ResultCodes.BOOK_EDITED,
+                ResultCodes.BOOK_REMOVED,
+                ResultCodes.BOOK_UPDATED_STATUS,
+                ResultCodes.BOOK_EDITED_AND_UPDATED_STATUS,
+            ).contains(resultCode)
+        )
             getList()
         else if (requestCode == ADD_BOOK && resultCode == BOOK_ADDED)
             getList()

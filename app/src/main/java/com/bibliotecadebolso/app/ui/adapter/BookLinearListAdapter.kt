@@ -32,7 +32,7 @@ class BookLinearListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: CreatedBook, newItem: CreatedBook): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.equals(newItem)
         }
     }
 
