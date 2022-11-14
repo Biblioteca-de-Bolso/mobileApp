@@ -7,6 +7,7 @@ import com.bibliotecadebolso.app.data.dataSource.LoginDataSource
 import com.bibliotecadebolso.app.data.model.DeleteForm
 import com.bibliotecadebolso.app.data.model.response.DeleteAccountResponse
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class DeleteAccountViewModel : ViewModel() {
@@ -17,8 +18,9 @@ class DeleteAccountViewModel : ViewModel() {
     fun deleteAccount(accessToken: String, id: Int, email: String, password: String) {
         val deleteForm = DeleteForm(id, email, password)
         viewModelScope.launch {
-            val result = dataSource.deleteAccount(accessToken, deleteForm)
-            deleteAccountResult.postValue(result)
+            connectivityScope(deleteAccountResult) {
+                dataSource.deleteAccount(accessToken, deleteForm)
+            }
         }
 
     }

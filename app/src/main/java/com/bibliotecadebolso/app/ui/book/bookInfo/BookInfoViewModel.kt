@@ -13,12 +13,16 @@ import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
+import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.format
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.io.File
+import java.net.SocketTimeoutException
 
 
 class BookInfoViewModel : ViewModel() {
@@ -29,6 +33,7 @@ class BookInfoViewModel : ViewModel() {
         val updateStatusLiveData = MutableLiveData<Result<UpdatedBook>>()
         val liveDataUpdateImage = MutableLiveData<Result<String>>()
     }
+
     class State {
         var isDescriptionShowMoreActive = false
         var updatedStatus = false
@@ -65,15 +70,18 @@ class BookInfoViewModel : ViewModel() {
 
     fun getInfoByID(accessToken: String, id: Int) {
         viewModelScope.launch {
-            val result = dataSource.getBookById(accessToken, id)
-            bookResponses.generalLiveDataInfo.postValue(result)
+            connectivityScope(bookResponses.generalLiveDataInfo) {
+                dataSource.getBookById(accessToken, id)
+            }
         }
+
     }
 
     fun deleteBook(accessToken: String, bookId: Int) {
         viewModelScope.launch {
-            val result = dataSource.deleteBookById(accessToken, bookId)
-            bookResponses.deleteLiveData.postValue(result)
+            connectivityScope(bookResponses.deleteLiveData) {
+                dataSource.deleteBookById(accessToken, bookId)
+            }
         }
     }
 
@@ -127,8 +135,9 @@ class BookInfoViewModel : ViewModel() {
         file: File
     ) {
         viewModelScope.launch {
-            val response = BookDataSource.updateImageBookById(context, accessToken, bookId, file)
-            bookResponses.liveDataUpdateImage.postValue(response)
+            connectivityScope(bookResponses.liveDataUpdateImage) {
+                BookDataSource.updateImageBookById(context, accessToken, bookId, file)
+            }
         }
     }
 

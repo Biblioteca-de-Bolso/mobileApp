@@ -6,11 +6,14 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.MutableLiveData
 import com.bibliotecadebolso.app.data.model.AuthTokens
 import com.bibliotecadebolso.app.data.model.exceptions.NoInternetException
 import com.bibliotecadebolso.app.data.model.response.APIResponse
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
+import kotlinx.coroutines.supervisorScope
 import retrofit2.Response
+import java.net.SocketTimeoutException
 
 
 object RequestUtils {
@@ -24,7 +27,7 @@ object RequestUtils {
 
         if (networkCapabilities != null) {
             return when {
-                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) ->  true
+                networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
                 networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
                 else -> false
@@ -34,7 +37,7 @@ object RequestUtils {
         return false
     }
 
-    fun <T: Any> convertAPIResponseToResultClass(response: Response<APIResponse<T>>): Result<T> {
+    fun <T : Any> convertAPIResponseToResultClass(response: Response<APIResponse<T>>): Result<T> {
         return if (response.isSuccessful) {
             resultBasedOnStatusBody(response)
         } else {
@@ -43,7 +46,7 @@ object RequestUtils {
 
     }
 
-    fun <T: Any> returnResponseTransformedIntoResult(response: Response<APIResponse<T>>): Result<T> {
+    fun <T : Any> returnResponseTransformedIntoResult(response: Response<APIResponse<T>>): Result<T> {
         val validationResponse = convertAPIResponseToResultClass(response)
 
         return if (validationResponse is Result.Success) Result.Success(validationResponse.response)
@@ -58,11 +61,18 @@ object RequestUtils {
         else validationResponse as Result.Error
     }
 
-    private fun <T: Any> resultBasedOnStatusBody(response: Response<APIResponse<T>>): Result<T> {
+    private fun <T : Any> resultBasedOnStatusBody(response: Response<APIResponse<T>>): Result<T> {
         return if (response.body()?.status.equals("ok"))
             Result.Success(response.body()!!.response)
         else
-            Result.Error(response.code(), ErrorResponse(response.body()!!.status!!, response.body()!!.code!!, response.body()!!.message!!))
+            Result.Error(
+                response.code(),
+                ErrorResponse(
+                    response.body()!!.status!!,
+                    response.body()!!.code!!,
+                    response.body()!!.message!!
+                )
+            )
     }
 
     private fun errorResponseTransformed(response: Response<*>): Result.Error {
@@ -80,5 +90,28 @@ object RequestUtils {
         }
 
         return result
+    }
+
+    suspend fun <T> connectivityScope(liveData: MutableLiveData<Result<T>>, function: suspend() -> Result<T>) {
+        supervisorScope {
+            try {
+                val result = function()
+                liveData.postValue(result)
+            } catch (e: SocketTimeoutException) {
+                liveData.postValue(returnTooLongRequestResult())
+            }
+
+        }
+    }
+
+    fun returnTooLongRequestResult(): Result.Error {
+        return Result.Error(
+            null,
+            ErrorResponse(
+                "error",
+                "tooLongRequest",
+                "Internet muito lenta"
+            )
+        )
     }
 }

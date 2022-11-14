@@ -24,21 +24,22 @@ object BibliotecaDeBolsoRepository {
         setLevel(HttpLoggingInterceptor.Level.BODY)
     }
 
-    private val gson = com.google.gson.GsonBuilder().registerTypeAdapter(
-        LocalDateTime::class.java,
-        object : JsonDeserializer<LocalDateTime?> {
-            @Throws(JsonParseException::class)
-            override fun deserialize(
-                json: JsonElement,
-                type: Type?,
-                jsonDeserializationContext: JsonDeserializationContext?
-            ): LocalDateTime? {
-                return LocalDateTime.parse(
-                    json.asJsonPrimitive.asString,
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.[SSS][SS]'Z'")
-                )
-            }
-        })
+    private val gson = com.google.gson.GsonBuilder()
+        .registerTypeAdapter(
+            LocalDateTime::class.java,
+            object : JsonDeserializer<LocalDateTime?> {
+                @Throws(JsonParseException::class)
+                override fun deserialize(
+                    json: JsonElement,
+                    type: Type?,
+                    jsonDeserializationContext: JsonDeserializationContext?
+                ): LocalDateTime? {
+                    return LocalDateTime.parse(
+                        json.asJsonPrimitive.asString,
+                        DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.[SSS][SS]'Z'")
+                    )
+                }
+            })
         .setLenient()
         .create()
 

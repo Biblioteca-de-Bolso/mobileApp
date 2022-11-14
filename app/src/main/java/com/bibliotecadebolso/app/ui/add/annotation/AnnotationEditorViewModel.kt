@@ -9,6 +9,7 @@ import com.bibliotecadebolso.app.data.model.AnnotationObject
 import com.bibliotecadebolso.app.data.model.enum.TransactionOptions
 import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -47,9 +48,9 @@ class AnnotationEditorViewModel : ViewModel() {
         reference: String = ""
     ) {
         viewModelScope.launch {
-            val result =
+            connectivityScope(resultOfSaveAnnotation) {
                 AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
-            resultOfSaveAnnotation.postValue(result)
+            }
         }
 
     }
@@ -62,29 +63,33 @@ class AnnotationEditorViewModel : ViewModel() {
         reference: String = ""
     ) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.updateAnnotation(
-                accessToken,
-                annotationId,
-                title,
-                text,
-                reference
-            )
-            updateAnnotationResult.postValue(result)
+            connectivityScope(updateAnnotationResult) {
+                AnnotationDataSource.updateAnnotation(
+                    accessToken,
+                    annotationId,
+                    title,
+                    text,
+                    reference
+                )
+            }
         }
     }
 
     fun getAnnotationById(accessToken: String, annotationId: Int) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.getById(accessToken, annotationId)
-            getByIdResult.postValue(result)
+            connectivityScope(getByIdResult) {
+                AnnotationDataSource.getById(accessToken, annotationId)
+            }
             getByIdAlreadyLoaded = true
+
         }
     }
 
     fun deleteAnnotation(accessToken: String, annotationId: Int) {
         viewModelScope.launch {
-            val result = AnnotationDataSource.deleteAnnotation(accessToken, annotationId)
-            deleteAnnotationResult.postValue(result)
+            connectivityScope(deleteAnnotationResult) {
+                AnnotationDataSource.deleteAnnotation(accessToken, annotationId)
+            }
         }
     }
 
