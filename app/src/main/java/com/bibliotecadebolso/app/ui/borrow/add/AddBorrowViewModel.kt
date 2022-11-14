@@ -9,6 +9,7 @@ import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class AddBorrowViewModel: ViewModel() {
@@ -22,17 +23,18 @@ class AddBorrowViewModel: ViewModel() {
     val inputs = Inputs()
     fun getBookById(accessToken: String, bookId: Int) {
         viewModelScope.launch {
-            val result = BookDataSource.getBookById(accessToken, bookId)
-            bookLiveData.postValue(result)
+            connectivityScope(bookLiveData) {
+                BookDataSource.getBookById(accessToken, bookId)
+            }
         }
     }
 
 
     fun addBorrow(accessToken: String, borrow: CreateBorrow) {
         viewModelScope.launch {
-            val result  = borrowDataSource.createBorrow(accessToken, borrow)
-
-            createBorrowLiveData.postValue(result)
+            connectivityScope(createBorrowLiveData) {
+                borrowDataSource.createBorrow(accessToken, borrow)
+            }
         }
     }
 

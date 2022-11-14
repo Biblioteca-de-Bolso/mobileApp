@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.LoginDataSource
 import com.bibliotecadebolso.app.ui.user.requestChangePassword.form.RequestChangePasswordForm
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class RequestChangePasswordViewModel : ViewModel() {
@@ -17,15 +18,17 @@ class RequestChangePasswordViewModel : ViewModel() {
 
     fun requestChangePassword(requestChangePasswordForm: RequestChangePasswordForm) {
         viewModelScope.launch {
-            val result = dataSource.requestChangePassword(requestChangePasswordForm)
-            requestChangePasswordLiveData.postValue(result)
+            connectivityScope(requestChangePasswordLiveData) {
+                dataSource.requestChangePassword(requestChangePasswordForm)
+            }
         }
     }
 
     fun changePassword(email: String, recoverCode: String, newPassword: String) {
         viewModelScope.launch {
-            val result = dataSource.changePassword(ChangePasswordForm(email, recoverCode, newPassword))
-            changePasswordLiveData.postValue(result)
+            connectivityScope(changePasswordLiveData) {
+                dataSource.changePassword(ChangePasswordForm(email, recoverCode, newPassword))
+            }
         }
     }
 }

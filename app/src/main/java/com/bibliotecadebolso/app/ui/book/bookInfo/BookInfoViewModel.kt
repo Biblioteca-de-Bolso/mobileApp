@@ -13,16 +13,13 @@ import com.bibliotecadebolso.app.data.model.UpdateBook
 import com.bibliotecadebolso.app.data.model.UpdatedBook
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
-import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.connectivityScope
 import id.zelory.compressor.Compressor
 import id.zelory.compressor.constraint.format
 import id.zelory.compressor.constraint.size
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import java.io.File
-import java.net.SocketTimeoutException
 
 
 class BookInfoViewModel : ViewModel() {
@@ -87,8 +84,9 @@ class BookInfoViewModel : ViewModel() {
 
     fun updateBookByPatch(accessToken: String, book: UpdateBook) {
         viewModelScope.launch {
-            val result = dataSource.updateBookByIdWithPatch(accessToken, book)
-            bookResponses.updateStatusLiveData.postValue(result)
+            connectivityScope(bookResponses.updateStatusLiveData) {
+                dataSource.updateBookByIdWithPatch(accessToken, book)
+            }
         }
     }
 
@@ -103,15 +101,14 @@ class BookInfoViewModel : ViewModel() {
 
     fun checkIfCanBorrowBook(accessToken: String, bookId: Int) {
         viewModelScope.launch {
-            val result = borrowDataSource.listBorrow(
-                accessToken,
-                1,
-                bookId = bookId,
-                borrowStatus = BorrowStatus.PENDING
-            )
-
-            liveDataPendingBorrowList.postValue(result)
-
+            connectivityScope(liveDataPendingBorrowList) {
+                borrowDataSource.listBorrow(
+                    accessToken,
+                    1,
+                    bookId = bookId,
+                    borrowStatus = BorrowStatus.PENDING
+                )
+            }
         }
     }
 

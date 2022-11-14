@@ -4,10 +4,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
-import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.search.BookSearch
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class AddBookViewModel : ViewModel() {
@@ -32,8 +32,9 @@ class AddBookViewModel : ViewModel() {
 
     fun apiListBook(accessToken: String, searchFilter: String) {
         viewModelScope.launch {
-            val response = BookDataSource.searchOnline(accessToken, searchFilter)
-            booksSearchContent.postValue(response)
+            connectivityScope(booksSearchContent) {
+                BookDataSource.searchOnline(accessToken, searchFilter)
+            }
         }
     }
 

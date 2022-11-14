@@ -81,8 +81,6 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         viewModel = ViewModelProvider(this)[BorrowListViewModel::class.java]
         val actionBarCustomView = supportActionBar?.customView
         searchViewName = actionBarCustomView?.findViewById(R.id.search1)
-
-        setupMockContent(actionBarCustomView)
     }
 
     private fun setupMockContent(actionBarCustomView: View?) {
