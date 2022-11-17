@@ -180,12 +180,13 @@
     <string name="about_text_2_item_3">- Gerenciar seus livros emprestados</string>
     <string name="label_utilized_images">Imagens utilizadas</string>
     <string name="about_utilized_images_label_1">As imagens utilizadas no aplicativo são de uso com atribuição requerida\n</string>
-
+    <string name="label_deleted_successfully">Deletado com sucesso</string>
 
     <string name="error_email_not_valid">Email não é válido</string>
     <string name="error_password_length_between_8_and_32">Senha precisa ter entre 8  32 caracteres</string>
     <string name="error_password_and_confirm_password_not_equals">Os campos \'Senha\' e \'Confirmar senha\' precisam ser iguais</string>
     <string name="error_borrow_must_have_between_1_and_64">Nome de contato deve ter entre 1 e 64 caracteres</string>
     <string name="label_too_long_time_request">Requisição muito longa</string>
+
 
 </resources>

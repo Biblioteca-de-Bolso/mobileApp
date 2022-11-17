@@ -7,19 +7,21 @@ import com.bibliotecadebolso.app.data.dataSource.AnnotationDataSource
 import com.bibliotecadebolso.app.data.model.Annotation
 import com.bibliotecadebolso.app.data.model.AnnotationObject
 import com.bibliotecadebolso.app.data.model.enum.TransactionOptions
-import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.connectivityScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AnnotationEditorViewModel : ViewModel() {
 
     val transactionOptionSelected = MutableLiveData<TransactionOptions>()
-    val resultOfSaveAnnotation = MutableLiveData<Result<AnnotationResponse?>>()
+    val resultOfSaveAnnotation = MutableLiveData<Result<AnnotationObject>>()
+    var annotationSaved = false
+
     val updateAnnotationResult = MutableLiveData<Result<AnnotationObject>>()
+    var annotationUpdated = false
     val getByIdResult = MutableLiveData<Result<AnnotationObject>>()
     val deleteAnnotationResult = MutableLiveData<Result<Boolean>>()
+    var annotationDeleted = false
 
     val exportToPdfLiveData = MutableLiveData<Result<Any>>()
     var getByIdAlreadyLoaded = false;
@@ -40,6 +42,7 @@ class AnnotationEditorViewModel : ViewModel() {
     var titleChanged = false
         private set
 
+
     fun saveAnnotation(
         accessToken: String,
         bookId: Int,
@@ -49,7 +52,9 @@ class AnnotationEditorViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             connectivityScope(resultOfSaveAnnotation) {
-                AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
+                val result = AnnotationDataSource.saveAnnotation(accessToken, bookId, title, text, reference)
+                if (result is Result.Success) annotationSaved = true
+                result
             }
         }
 
@@ -64,13 +69,16 @@ class AnnotationEditorViewModel : ViewModel() {
     ) {
         viewModelScope.launch {
             connectivityScope(updateAnnotationResult) {
-                AnnotationDataSource.updateAnnotation(
+                val result = AnnotationDataSource.updateAnnotation(
                     accessToken,
                     annotationId,
                     title,
                     text,
                     reference
                 )
+
+                if (result is Result.Success) annotationUpdated = true
+                result
             }
         }
     }
@@ -88,7 +96,10 @@ class AnnotationEditorViewModel : ViewModel() {
     fun deleteAnnotation(accessToken: String, annotationId: Int) {
         viewModelScope.launch {
             connectivityScope(deleteAnnotationResult) {
-                AnnotationDataSource.deleteAnnotation(accessToken, annotationId)
+                val result = AnnotationDataSource.deleteAnnotation(accessToken, annotationId)
+
+                if (result is Result.Success) annotationDeleted = true
+                result
             }
         }
     }

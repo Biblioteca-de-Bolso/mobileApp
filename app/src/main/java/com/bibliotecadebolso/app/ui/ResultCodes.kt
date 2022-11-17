@@ -7,4 +7,8 @@ object ResultCodes {
     const val BOOK_ADDED = 98
     const val BOOK_UPDATED_STATUS = 97
     const val BOOK_EDITED_AND_UPDATED_STATUS = 96
+
+    const val ANNOTATION_CREATED = 95
+    const val ANNOTATION_UPDATED = 94
+    const val ANNOTATION_DELETED = 93
 }

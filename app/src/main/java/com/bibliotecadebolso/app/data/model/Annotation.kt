@@ -11,5 +11,5 @@ data class Annotation(
     val reference: String,
     val createdAt: String,
     val updatedAt: String,
-    val book: BookTitle
+    val book: BookTitle?
 )

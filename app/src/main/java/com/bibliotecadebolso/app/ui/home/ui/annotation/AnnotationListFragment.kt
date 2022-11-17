@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -15,6 +16,7 @@ import com.bibliotecadebolso.app.data.model.ContentManager
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.FragmentAnnotationListBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.AnnotationLinearListAdapter
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.annotation.AnnotationLinearListActivity
@@ -50,13 +52,9 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         initVariables()
         setupRecyclerView()
         setupSearchListListener()
+        setupViewMoreListener()
+        getAnnotationByIdObserver()
 
-
-        binding.ivViewMoreNotes.setOnClickListener {
-            val intent = Intent(requireContext(), AnnotationLinearListActivity::class.java)
-            startActivity(intent)
-
-        }
         lifecycleScope.launch {
             delay(500L)
             getSearchList(null,true)
@@ -119,6 +117,22 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         }
     }
 
+    private fun setupViewMoreListener() {
+        binding.ivViewMoreNotes.setOnClickListener {
+            val intent = Intent(requireContext(), AnnotationLinearListActivity::class.java)
+            annotationListActivityResult.launch(intent)
+        }
+    }
+
+    private val annotationListActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) {
+        lifecycleScope.launch {
+            delay(500L)
+            getSearchList(null,true)
+        }
+    }
+
 
 
     private fun showLongSnackBar(message: String) {
@@ -131,7 +145,56 @@ class AnnotationListFragment : Fragment(), RvOnClickListener {
         val intent = Intent(requireContext(), AnnotationEditorActivity::class.java)
         intent.putExtra("annotationId", position)
         intent.putExtra("actionType", AnnotationActionEnum.EDIT.toString())
-        startActivity(intent)
+        openAnnotationActivityResult.launch(intent)
+    }
+
+    private val openAnnotationActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == ResultCodes.ANNOTATION_CREATED ||
+            result.resultCode == ResultCodes.ANNOTATION_UPDATED) {
+            val prefs = requireActivity().getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                AppCompatActivity.MODE_PRIVATE
+            )
+            val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+            val id = result.data!!.extras!!.getInt("id")
+            viewModel.getAnnotationById(accessToken, id)
+        }
+
+        if (result.resultCode == ResultCodes.ANNOTATION_DELETED) {
+            val id = result.data!!.extras!!.getInt("id")
+            val indexAnnotation = annotationListAdapter.differ.currentList.indexOfFirst { it.id == id }
+            if (indexAnnotation != -1) {
+                val newList = annotationListAdapter.differ.currentList.toMutableList()
+                newList.removeAt(indexAnnotation)
+                annotationListAdapter.differ.submitList(newList)
+            }
+        }
+    }
+
+    private fun getAnnotationByIdObserver() {
+        viewModel.liveDataAnnotationById.observe(viewLifecycleOwner) {
+            when (it) {
+                is Result.Success -> {
+                    val annotation = it.response.annotation
+                    val annotationIndex = annotationListAdapter.differ.currentList.indexOfFirst { item -> item.id == annotation.id }
+
+                    val updatedList = annotationListAdapter.differ.currentList.toMutableList()
+                    if (annotationIndex == -1) {
+
+                        updatedList.add(annotation)
+
+                    } else {
+                        updatedList[annotationIndex] = annotation
+                    }
+
+                    annotationListAdapter.differ.submitList(updatedList)
+                }
+                is Result.Error -> { }
+            }
+        }
     }
 
 

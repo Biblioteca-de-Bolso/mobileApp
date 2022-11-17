@@ -1,14 +1,10 @@
 package com.bibliotecadebolso.app.data.dataSource
 
-import com.bibliotecadebolso.app.data.model.AnnotationObject
-import com.bibliotecadebolso.app.data.model.ListAnnotationObject
-import com.bibliotecadebolso.app.data.model.SaveAnnotation
-import com.bibliotecadebolso.app.data.model.UpdateAnnotation
-import com.bibliotecadebolso.app.data.model.response.AnnotationResponse
+import com.bibliotecadebolso.app.data.model.*
+import com.bibliotecadebolso.app.data.model.Annotation
 import com.bibliotecadebolso.app.data.repository.BibliotecaDeBolsoRepository
 import com.bibliotecadebolso.app.util.RequestUtils
 import com.bibliotecadebolso.app.util.Result
-import com.bibliotecadebolso.app.data.model.Annotation
 
 object AnnotationDataSource {
 
@@ -20,8 +16,8 @@ object AnnotationDataSource {
         title: String,
         text: String,
         reference: String
-    ): Result<AnnotationResponse> {
-        val result: Result<AnnotationResponse> = RequestUtils.returnOrThrowIfHasConnectionError {
+    ): Result<AnnotationObject> {
+        val result: Result<AnnotationObject> = RequestUtils.returnOrThrowIfHasConnectionError {
             val annotation = SaveAnnotation(bookId, title, text, reference)
             val response = api.saveAnnotation("Bearer $accessToken", annotation)
             val returnedResult = RequestUtils.convertAPIResponseToResultClass(response)

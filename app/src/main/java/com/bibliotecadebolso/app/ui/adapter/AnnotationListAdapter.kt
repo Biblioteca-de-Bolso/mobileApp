@@ -6,19 +6,17 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.Annotation
 import com.bibliotecadebolso.app.databinding.ItemAnnotationBinding
-import com.bibliotecadebolso.app.databinding.ItemBookBinding
 import com.bibliotecadebolso.app.util.RvOnClickListener
-import com.bumptech.glide.Glide
 
 class AnnotationListAdapter(
     private var context: Context,
     private var rvOnClickListener: RvOnClickListener
 ) : RecyclerView.Adapter<AnnotationListAdapter.AnnotationViewHolder>() {
 
-    inner class AnnotationViewHolder(val binding: ItemAnnotationBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class AnnotationViewHolder(val binding: ItemAnnotationBinding) :
+        RecyclerView.ViewHolder(binding.root)
 
     private val differCallBack = object : DiffUtil.ItemCallback<Annotation>() {
         override fun areItemsTheSame(oldItem: Annotation, newItem: Annotation): Boolean {
@@ -26,7 +24,9 @@ class AnnotationListAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Annotation, newItem: Annotation): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id &&
+                    oldItem.title == newItem.title &&
+                    oldItem.reference == newItem.reference
         }
     }
 
@@ -42,7 +42,10 @@ class AnnotationListAdapter(
         return AnnotationViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: AnnotationListAdapter.AnnotationViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: AnnotationListAdapter.AnnotationViewHolder,
+        position: Int
+    ) {
         val annotation: Annotation = differ.currentList[position]
         holder.binding.tvTitle.text = annotation.title
         holder.binding.tvReference.text = annotation.reference

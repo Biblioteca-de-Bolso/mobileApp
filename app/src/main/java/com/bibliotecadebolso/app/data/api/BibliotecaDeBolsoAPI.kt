@@ -1,9 +1,7 @@
 package com.bibliotecadebolso.app.data.api
 
 import com.bibliotecadebolso.app.data.model.*
-import com.bibliotecadebolso.app.data.model.SaveAnnotation
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
-import com.bibliotecadebolso.app.data.model.response.BorrowObject
 import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
 import com.bibliotecadebolso.app.data.model.request.EditBorrow
@@ -12,7 +10,6 @@ import com.bibliotecadebolso.app.ui.user.requestChangePassword.ChangePasswordFor
 import com.bibliotecadebolso.app.ui.user.requestChangePassword.form.RequestChangePasswordForm
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -106,7 +103,7 @@ interface BibliotecaDeBolsoAPI {
     suspend fun saveAnnotation(
         @Header("Authorization") accessToken: String,
         @Body annotation: SaveAnnotation,
-    ): Response<APIResponse<AnnotationResponse>>
+    ): Response<APIResponse<AnnotationObject>>
 
     @PUT("annotation")
     suspend fun updateAnnotation(
