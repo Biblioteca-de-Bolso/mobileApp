@@ -339,7 +339,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_DOWNLOADS,
-            "${System.currentTimeMillis()}.pdf"
+            "${viewModel.titleText}-${System.currentTimeMillis()}.pdf"
         )
 
         val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
