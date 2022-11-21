@@ -14,6 +14,7 @@ import com.bibliotecadebolso.app.data.model.request.CreateBorrow
 import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
 import com.bibliotecadebolso.app.data.validator.validations.ContactNameValidator
 import com.bibliotecadebolso.app.databinding.ActivityAddBorrowBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.book.linearList.BookListActivity
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -113,8 +114,12 @@ class AddBorrowActivity : AppCompatActivity() {
             binding.pgLoading.visibility = View.GONE
 
             when (it) {
-                is Result.Success ->
+                is Result.Success -> {
+                    val returnResult = Intent()
+                    returnResult.putExtra("id", it.response.id)
+                    setResult(ResultCodes.BORROW_CREATED, returnResult)
                     finish()
+                }
                 is Result.Error ->
                     Toast.makeText(this, it.errorBody.message, Toast.LENGTH_LONG).show()
             }

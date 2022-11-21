@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.borrow.edit
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ import com.bibliotecadebolso.app.data.model.request.EditBorrow
 import com.bibliotecadebolso.app.data.validator.ValidationResultUtils
 import com.bibliotecadebolso.app.data.validator.validations.ContactNameValidator
 import com.bibliotecadebolso.app.databinding.ActivityEditBorrowBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
@@ -167,6 +169,8 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
             binding.spinnerBorrowStatus.setSelection(
                 borrowStatusAdapter.getPosition(readingStatusKey)
             )
+
+            viewModel.inputs.borrowStatusSelected = borrowStatus
         }
     }
 
@@ -174,7 +178,12 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
         binding.pgLoading.visibility = View.GONE
         viewModel.editBorrowLiveData.observe(this) {
             when (it) {
-                is Result.Success -> finish()
+                is Result.Success -> {
+                    val returnResult = Intent()
+                    returnResult.putExtra("id", it.response.id)
+                    setResult(ResultCodes.BORROW_UPDATED, returnResult)
+                    finish()
+                }
                 is Result.Error -> {
                     Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT).show()
                     finish()
@@ -187,7 +196,12 @@ class EditBorrowActivity : AppCompatActivity(), AdapterView.OnItemSelectedListen
         binding.pgLoading.visibility = View.GONE
         viewModel.removeBorrowLiveData.observe(this) {
             when (it) {
-                is Result.Success -> finish()
+                is Result.Success -> {
+                    val returnResult = Intent()
+                    returnResult.putExtra("id", borrowId)
+                    setResult(ResultCodes.BORROW_DELETED, returnResult)
+                    finish()
+                }
                 is Result.Error -> {
                     Toast.makeText(this, it.errorBody.message, Toast.LENGTH_SHORT).show()
                     finish()

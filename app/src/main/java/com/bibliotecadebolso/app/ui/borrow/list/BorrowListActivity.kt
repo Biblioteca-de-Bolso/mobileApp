@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.SearchView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +19,7 @@ import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.ActivityBorrowListBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.BorrowAdapter
 import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
 import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
@@ -53,6 +55,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
 
         setToolBarCustomSearchListener()
         searchListListener()
+        getBorrowByIdObserver()
         setContentView(binding.root)
 
         lifecycleScope.launch {
@@ -207,7 +210,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         val intent = Intent(this, EditBorrowActivity::class.java)
         intent.putExtra("borrowId", position)
 
-        startActivity(intent)
+        openBorrowActivityResult.launch(intent)
         this.overridePendingTransition(
             androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
             androidx.transition.R.anim.abc_popup_exit
@@ -222,6 +225,57 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
                     scrollState.setAllBooleanAs(true)
                     getSearchList(viewModel.searchList.searchContent, false)
                 }
+            }
+        }
+    }
+
+    private val openBorrowActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == ResultCodes.BORROW_CREATED ||
+            result.resultCode == ResultCodes.BORROW_UPDATED) {
+            val prefs = getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+            val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+            val id = result.data!!.extras!!.getInt("id")
+            viewModel.getBorrowById(accessToken, id)
+        }
+
+        if (result.resultCode == ResultCodes.BORROW_DELETED) {
+            val id = result.data!!.extras!!.getInt("id")
+            val indexAnnotation = borrowListAdapter.differ.currentList.indexOfFirst { it.id == id }
+            if (indexAnnotation != -1) {
+                val newList = borrowListAdapter.differ.currentList.toMutableList()
+                newList.removeAt(indexAnnotation)
+                borrowListAdapter.differ.submitList(newList)
+            }
+        }
+    }
+
+    private fun getBorrowByIdObserver() {
+        viewModel.liveDataBorrowById.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    val borrow = it.response
+                    val borrowIndex = borrowListAdapter.differ.currentList.indexOfFirst { item -> item.id == borrow.id }
+
+                    val updatedList = borrowListAdapter.differ.currentList.toMutableList()
+                    if (borrowIndex == -1) {
+                        updatedList.add(borrow)
+
+                    } else {
+                        if (borrowStatus != null && borrow.borrowStatus != borrowStatus)
+                            updatedList.removeAt(borrowIndex)
+                        else
+                            updatedList[borrowIndex] = borrow
+                    }
+
+                    borrowListAdapter.differ.submitList(updatedList)
+                }
+                is Result.Error -> { }
             }
         }
     }

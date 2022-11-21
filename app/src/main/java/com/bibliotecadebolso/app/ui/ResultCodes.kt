@@ -11,4 +11,8 @@ object ResultCodes {
     const val ANNOTATION_CREATED = 95
     const val ANNOTATION_UPDATED = 94
     const val ANNOTATION_DELETED = 93
+
+    const val BORROW_CREATED = 92
+    const val BORROW_DELETED = 91
+    const val BORROW_UPDATED = 90
 }

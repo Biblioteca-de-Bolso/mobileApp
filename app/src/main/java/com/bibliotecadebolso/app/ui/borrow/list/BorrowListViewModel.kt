@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.borrow.list
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
@@ -14,9 +15,21 @@ import kotlinx.coroutines.launch
 
 class BorrowListViewModel: ViewModel() {
 
+    val borrowDataSource = BorrowDataSource()
+
     val searchList = SearchListContent<Borrow>()
 
-    val borrowDataSource = BorrowDataSource()
+    val liveDataBorrowById = MutableLiveData<Result<Borrow>>()
+
+    fun getBorrowById(accessToken: String, borrowId: Int) {
+        viewModelScope.launch {
+            connectivityScope(liveDataBorrowById) {
+                borrowDataSource.getBorrowById(accessToken, borrowId)
+            }
+        }
+    }
+
+
 
     fun searchListBorrow(
         accessToken: String,
