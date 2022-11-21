@@ -1,19 +1,16 @@
 package com.bibliotecadebolso.app.ui.appAccess
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.LoginDataSource
-import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.data.model.AuthTokens
-import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.data.model.response.UserObject
 import com.bibliotecadebolso.app.data.validator.validations.EmailValidation
 import com.bibliotecadebolso.app.data.validator.validations.PasswordValidator
-
+import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
-import java.net.SocketTimeoutException
 
 class AppAccessViewModel : ViewModel() {
 
@@ -26,16 +23,18 @@ class AppAccessViewModel : ViewModel() {
 
     fun login(email: String, password: String): Boolean {
         viewModelScope.launch {
-            val response = loginDataSource.login(email, password)
-            loginResponse.postValue(response)
+            connectivityScope(loginResponse) {
+                loginDataSource.login(email, password)
+            }
         }
         return true
     }
 
     fun register(username: String, email: String, password: String) {
         viewModelScope.launch {
-            val response = loginDataSource.register(username, email, password)
-            registerResponse.postValue(response)
+            connectivityScope(registerResponse) {
+                loginDataSource.register(username, email, password)
+            }
         }
     }
 

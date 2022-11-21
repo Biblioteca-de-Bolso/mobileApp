@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import android.widget.SearchView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +15,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.ActivityAnnotationList2Binding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.AnnotationLinearListAdapter
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
@@ -44,6 +46,7 @@ class AnnotationLinearListActivity : AppCompatActivity(), RvOnClickListener {
 
         setupRecyclerView()
         setupSearchListListener()
+        getAnnotationByIdObserver()
 
         lifecycleScope.launch {
             delay(500L)
@@ -160,6 +163,55 @@ class AnnotationLinearListActivity : AppCompatActivity(), RvOnClickListener {
         val intent = Intent(this, AnnotationEditorActivity::class.java)
         intent.putExtra("annotationId", position)
         intent.putExtra("actionType", AnnotationActionEnum.EDIT.toString())
-        startActivity(intent)
+        openAnnotationActivityResult.launch(intent)
+    }
+
+    private val openAnnotationActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == ResultCodes.ANNOTATION_CREATED ||
+                result.resultCode == ResultCodes.ANNOTATION_UPDATED) {
+            val prefs = getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+            val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+            val id = result.data!!.extras!!.getInt("id")
+            annotationViewModel.getAnnotationById(accessToken, id)
+        }
+
+        if (result.resultCode == ResultCodes.ANNOTATION_DELETED) {
+            val id = result.data!!.extras!!.getInt("id")
+            val indexAnnotation = annotationListAdapter.differ.currentList.indexOfFirst { it.id == id }
+            if (indexAnnotation != -1) {
+                val newList = annotationListAdapter.differ.currentList.toMutableList()
+                newList.removeAt(indexAnnotation)
+                annotationListAdapter.differ.submitList(newList)
+            }
+        }
+    }
+
+    private fun getAnnotationByIdObserver() {
+        annotationViewModel.liveDataAnnotationById.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    val annotation = it.response.annotation
+                    val annotationIndex = annotationListAdapter.differ.currentList.indexOfFirst { item -> item.id == annotation.id }
+
+                    val updatedList = annotationListAdapter.differ.currentList.toMutableList()
+                    if (annotationIndex == -1) {
+
+                        updatedList.add(annotation)
+
+                    } else {
+                        updatedList[annotationIndex] = annotation
+                    }
+
+                    annotationListAdapter.differ.submitList(updatedList)
+                }
+                is Result.Error -> { }
+            }
+        }
     }
 }

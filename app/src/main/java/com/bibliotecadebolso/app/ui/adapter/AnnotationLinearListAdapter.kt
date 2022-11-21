@@ -30,6 +30,9 @@ class AnnotationLinearListAdapter(
 
         override fun areContentsTheSame(oldItem: Annotation, newItem: Annotation) =
             oldItem.id == newItem.id
+                    && oldItem.title == newItem.title
+                    && oldItem.reference == newItem.reference
+
     }
 
     val differ: AsyncListDiffer<Annotation> = AsyncListDiffer(this, differCallBack)
@@ -46,7 +49,7 @@ class AnnotationLinearListAdapter(
 
         holder.binding.apply {
             val bookLabel = context.getString(R.string.label_book_unique)
-            tvBookTitle.text = "$bookLabel : ${annotation.book.title}"
+            tvBookTitle.text = "$bookLabel : ${annotation.book!!.title}"
             tvAnnotationTitle.text = annotation.title
             tvReference.text = annotation.reference
 

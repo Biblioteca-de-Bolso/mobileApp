@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.book.edit
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -13,6 +14,7 @@ import com.bibliotecadebolso.app.data.validator.Validation
 import com.bibliotecadebolso.app.data.validator.ValidationError
 import com.bibliotecadebolso.app.data.validator.validations.BookValidation
 import com.bibliotecadebolso.app.databinding.ActivityEditBookBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.SharedPreferencesUtils
@@ -173,6 +175,10 @@ class EditBookActivity : AppCompatActivity() {
                     getString(R.string.label_book_updated_sucessfully),
                     Toast.LENGTH_LONG
                 ).show()
+
+                val returnResult = Intent()
+                intent.putExtra("id", bookId)
+                setResult(ResultCodes.BOOK_EDITED, returnResult)
                 finish()
             } else if (it is Result.Error) {
                 Snackbar.make(binding.root, it.errorBody.message, Snackbar.LENGTH_LONG).show()

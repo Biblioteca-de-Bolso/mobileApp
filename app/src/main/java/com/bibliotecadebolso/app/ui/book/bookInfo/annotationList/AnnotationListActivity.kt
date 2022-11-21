@@ -2,8 +2,9 @@ package com.bibliotecadebolso.app.ui.book.bookInfo.annotationList
 
 import BookListDividerDecoration
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -11,6 +12,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.ActivityAnnotationListBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.AnnotationListAdapter
 import com.bibliotecadebolso.app.ui.add.annotation.AnnotationEditorActivity
 import com.bibliotecadebolso.app.util.*
@@ -31,6 +33,7 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
         getSearchList()
         setupRecyclerView()
         setFabAddAnnotation()
+        getAnnotationByIdObserver()
         setContentView(binding.root)
     }
 
@@ -109,7 +112,7 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
             val intent = Intent(this, AnnotationEditorActivity::class.java)
             intent.putExtra("actionType", AnnotationActionEnum.ADD.toString())
             intent.putExtra("bookId", bookId)
-            startActivity(intent)
+            openAnnotationActivityResult.launch(intent)
         }
     }
 
@@ -118,7 +121,55 @@ class AnnotationListActivity : AppCompatActivity(), RvOnClickListener {
         val intent = Intent(this, AnnotationEditorActivity::class.java)
         intent.putExtra("annotationId", position)
         intent.putExtra("actionType", AnnotationActionEnum.EDIT.toString())
-        startActivity(intent)
-        // TODO("Not yet implemented")
+        openAnnotationActivityResult.launch(intent)
+    }
+
+    private val openAnnotationActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == ResultCodes.ANNOTATION_CREATED ||
+            result.resultCode == ResultCodes.ANNOTATION_UPDATED) {
+            val prefs = getSharedPreferences(
+                Constants.Prefs.USER_TOKENS,
+                MODE_PRIVATE
+            )
+            val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+
+            val id = result.data!!.extras!!.getInt("id")
+            viewModel.getAnnotationById(accessToken, id)
+        }
+
+        if (result.resultCode == ResultCodes.ANNOTATION_DELETED) {
+            val id = result.data!!.extras!!.getInt("id")
+            val indexAnnotation = fragmentAdapter.differ.currentList.indexOfFirst { it.id == id }
+            if (indexAnnotation != -1) {
+                val newList = fragmentAdapter.differ.currentList.toMutableList()
+                newList.removeAt(indexAnnotation)
+                fragmentAdapter.differ.submitList(newList)
+            }
+        }
+    }
+
+    private fun getAnnotationByIdObserver() {
+        viewModel.liveDataAnnotationById.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    val annotation = it.response.annotation
+                    val annotationIndex = fragmentAdapter.differ.currentList.indexOfFirst { item -> item.id == annotation.id }
+
+                    val updatedList = fragmentAdapter.differ.currentList.toMutableList()
+                    if (annotationIndex == -1) {
+
+                        updatedList.add(annotation)
+
+                    } else {
+                        updatedList[annotationIndex] = annotation
+                    }
+
+                    fragmentAdapter.differ.submitList(updatedList)
+                }
+                is Result.Error -> { }
+            }
+        }
     }
 }

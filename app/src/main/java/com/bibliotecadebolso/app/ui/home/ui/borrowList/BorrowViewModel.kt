@@ -7,6 +7,7 @@ import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class BorrowViewModel : ViewModel() {
@@ -17,15 +18,17 @@ class BorrowViewModel : ViewModel() {
 
     fun getPendingBorrowList(accessToken: String) {
         viewModelScope.launch {
-            val result = borrowDataSource.listBorrow(accessToken, page = 1,borrowStatus = BorrowStatus.PENDING)
-            pendingBorrowListLiveData.postValue(result)
+            connectivityScope(pendingBorrowListLiveData) {
+                borrowDataSource.listBorrow(accessToken, page = 1,borrowStatus = BorrowStatus.PENDING)
+            }
         }
     }
 
     fun getReturnedBorrowList(accessToken: String) {
         viewModelScope.launch {
-            val result = borrowDataSource.listBorrow(accessToken, page = 1, borrowStatus = BorrowStatus.RETURNED)
-            returnedBorrowListLiveData.postValue(result)
+            connectivityScope(returnedBorrowListLiveData) {
+                borrowDataSource.listBorrow(accessToken, page = 1, borrowStatus = BorrowStatus.RETURNED)
+            }
         }
     }
 

@@ -204,7 +204,8 @@
     <string name="error_password_length_between_8_and_32">Password must have length between 8 and 32</string>
     <string name="error_password_and_confirm_password_not_equals">\'Password\' field must be equals to \'confirm password\' field</string>
     <string name="error_borrow_must_have_between_1_and_64">Contact name length must have between 1 and 64</string>
-
+    <string name="label_too_long_time_request">Too long time request</string>
+    <string name="label_deleted_successfully">Deleted successfully</string>
 
 
 </resources>

@@ -1,26 +1,24 @@
 package com.bibliotecadebolso.app.ui.home.ui.borrowList
 
-import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityOptionsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.ContentManager
 import com.bibliotecadebolso.app.data.model.app.RecyclerViewContentManager
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.databinding.FragmentBorrowBinding
-import com.bibliotecadebolso.app.databinding.LayoutErrorHalfSizeBinding
 import com.bibliotecadebolso.app.ui.adapter.BorrowAdapter
 import com.bibliotecadebolso.app.ui.borrow.add.AddBorrowActivity
 import com.bibliotecadebolso.app.ui.borrow.edit.EditBorrowActivity
@@ -156,9 +154,9 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         binding.ivViewMoreBorrowed.setOnClickListener {
             val intent = Intent(this.requireContext(), BorrowListActivity::class.java)
             intent.putExtra("borrowStatus", BorrowStatus.PENDING)
-            startActivity(
+            openBorrowOrOpenBorrowList.launch(
                 intent,
-                ActivityOptions.makeSceneTransitionAnimation(this.requireActivity()).toBundle()
+                ActivityOptionsCompat.makeSceneTransitionAnimation(this.requireActivity())
             )
             this.requireActivity()
                 .overridePendingTransition(
@@ -173,14 +171,14 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         binding.ivViewMoreReturned.setOnClickListener {
             val intent = Intent(this.requireContext(), BorrowListActivity::class.java)
             intent.putExtra("borrowStatus", BorrowStatus.RETURNED)
-            startActivity(intent)
+            openBorrowOrOpenBorrowList.launch(intent)
         }
     }
 
     private fun setFabAddBorrowClickListener() {
         binding.fabAddBorrow.setOnClickListener {
             val intent = Intent(this.requireContext(), AddBorrowActivity::class.java)
-            startActivity(intent)
+            openBorrowOrOpenBorrowList.launch(intent)
             this.requireActivity().overridePendingTransition(
                 androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
                 com.google.android.material.R.anim.abc_fade_out
@@ -204,10 +202,16 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         val intent = Intent(requireActivity(), EditBorrowActivity::class.java)
         intent.putExtra("borrowId", position)
 
-        startActivity(intent)
+        openBorrowOrOpenBorrowList.launch(intent)
         this.requireActivity().overridePendingTransition(
             androidx.transition.R.anim.abc_grow_fade_in_from_bottom,
             androidx.transition.R.anim.abc_fade_out
         )
+    }
+
+    private val openBorrowOrOpenBorrowList = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        getBorrowPendingAndReturnedList()
     }
 }

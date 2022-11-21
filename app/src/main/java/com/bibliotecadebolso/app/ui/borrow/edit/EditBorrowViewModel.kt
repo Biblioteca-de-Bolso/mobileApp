@@ -11,6 +11,7 @@ import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.data.model.request.DeleteBorrow
 import com.bibliotecadebolso.app.data.model.request.EditBorrow
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class EditBorrowViewModel : ViewModel() {
@@ -27,17 +28,17 @@ class EditBorrowViewModel : ViewModel() {
 
     fun editBorrow(accessToken: String, editBorrow: EditBorrow) {
         viewModelScope.launch {
-            val result = borrowDataSource.editBorrow(accessToken, editBorrow)
-
-            editBorrowLiveData.postValue(result)
+            connectivityScope(editBorrowLiveData) {
+                borrowDataSource.editBorrow(accessToken, editBorrow)
+            }
         }
     }
 
     fun removeBorrow(accessToken: String, borrowId: Int) {
         viewModelScope.launch {
-            val result = borrowDataSource.deleteBorrow(accessToken, DeleteBorrow(borrowId))
-
-            removeBorrowLiveData.postValue(result)
+            connectivityScope(removeBorrowLiveData) {
+                borrowDataSource.deleteBorrow(accessToken, DeleteBorrow(borrowId))
+            }
         }
     }
 

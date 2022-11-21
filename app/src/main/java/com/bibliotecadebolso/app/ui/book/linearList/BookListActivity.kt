@@ -15,9 +15,9 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.app.scroll.ScrollState
 import com.bibliotecadebolso.app.databinding.ActivityBookListBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.adapter.BookLinearListAdapter
 import com.bibliotecadebolso.app.ui.book.bookInfo.BookInfoActivity
-import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.*
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -53,6 +53,7 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
         initVariables()
         setupRecyclerView()
         setupSearchListListener()
+        updateBookInfoObserve()
 
         if (viewModel.searchList.listLiveData.value == null) getSearchList(null, true)
 
@@ -218,10 +219,72 @@ class BookListActivity : AppCompatActivity(), RvOnClickListener {
     private val bookInfoActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == BookListFragment.REMOVE_BOOK) {
-            val list = viewModel.searchList.listLastSucessfullyResponse!!.toMutableList()
-            list.remove(list.find { it.id == result.data!!.extras!!.getInt("id") })
-            bookListAdapter.differ.submitList(list)
+
+        when (result.resultCode) {
+            ResultCodes.BOOK_REMOVED -> {
+                removeBookFromList(result.data!!.extras!!.getInt("id"))
+            }
+            ResultCodes.BOOK_UPDATED_STATUS -> {
+                if (statusDifferentFromEnumChoosed(result.data!!.extras!!.get("readStatusEnum") as ReadStatusEnum)) {
+                    removeBookFromList(result.data!!.extras!!.getInt("id"))
+                }
+            }
+            ResultCodes.BOOK_EDITED -> {
+                updateBookInfo(result.data!!.extras!!.getInt("id"))
+            }
+
+            ResultCodes.BOOK_EDITED_AND_UPDATED_STATUS -> {
+                if (statusDifferentFromEnumChoosed(result.data!!.extras!!.get("readStatusEnum") as ReadStatusEnum)) {
+                    removeBookFromList(result.data!!.extras!!.getInt("id"))
+                } else {
+                    updateBookInfo(result.data!!.extras!!.getInt("id"))
+                }
+            }
+        }
+    }
+
+    private fun statusDifferentFromEnumChoosed(readStatusEnum: ReadStatusEnum) =
+        enumChoosed != null && readStatusEnum != enumChoosed
+
+    private fun removeBookFromList(id: Int) {
+        val list = viewModel.searchList.listLastSucessfullyResponse!!
+        val index = list.indexOfFirst { it.id == id }
+        list.remove(list.find { it.id == id })
+        bookListAdapter.differ.submitList(list)
+        bookListAdapter.notifyItemRemoved(index)
+    }
+
+    private fun updateBookInfo(id: Int) {
+        val prefs = getSharedPreferences(Constants.Prefs.USER_TOKENS, MODE_PRIVATE)
+        val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
+        viewModel.getInfoByID(accessToken, id)
+    }
+
+    private fun updateBookInfoObserve() {
+        viewModel.generalLiveDataInfo.observe(this) {
+            when (it) {
+                is Result.Success -> {
+                    val book = it.response
+                    val list = viewModel.searchList.listLastSucessfullyResponse!!
+                    val bookOnList = list.find { bookList -> bookList.id == book.id!! }
+                    val index = list.indexOfFirst { bookList -> bookList.id == book.id!! }
+
+                    bookOnList?.let {
+                        list[index] = bookOnList.copy(
+                            author = book.author,
+                            title = book.title,
+                            isbn10 = book.isbn10,
+                            isbn13 = book.isbn13,
+                        )
+
+                    }
+
+
+
+                    bookListAdapter.differ.submitList(list)
+                }
+                else -> {}
+            }
         }
     }
 

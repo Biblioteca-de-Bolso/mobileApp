@@ -1,5 +1,6 @@
 package com.bibliotecadebolso.app.ui.borrow.list
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BorrowDataSource
@@ -9,13 +10,26 @@ import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class BorrowListViewModel: ViewModel() {
 
+    val borrowDataSource = BorrowDataSource()
+
     val searchList = SearchListContent<Borrow>()
 
-    val borrowDataSource = BorrowDataSource()
+    val liveDataBorrowById = MutableLiveData<Result<Borrow>>()
+
+    fun getBorrowById(accessToken: String, borrowId: Int) {
+        viewModelScope.launch {
+            connectivityScope(liveDataBorrowById) {
+                borrowDataSource.getBorrowById(accessToken, borrowId)
+            }
+        }
+    }
+
+
 
     fun searchListBorrow(
         accessToken: String,
@@ -54,9 +68,9 @@ class BorrowListViewModel: ViewModel() {
             val page = if (isInvalidPage(pageNum)) listContent.page else pageNum
             val response = borrowDataSource.listBorrow(accessToken, page, bookId, searchContent, borrowStatusEnum)
 
-            listContent.listLiveData.postValue(
+            connectivityScope(listContent.listLiveData) {
                 listContent.handleBookListResponse(response, isNewSearchContent)
-            )
+            }
 
             if (isInvalidPage(pageNum) && !listContent.reachedOnTheEnd) listContent.page++
         } catch (e: ListReachedOnTheEndException) {

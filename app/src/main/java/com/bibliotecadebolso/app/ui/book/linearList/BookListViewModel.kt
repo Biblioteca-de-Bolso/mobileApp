@@ -1,8 +1,10 @@
 package com.bibliotecadebolso.app.ui.book.linearList
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.bibliotecadebolso.app.data.dataSource.BookDataSource
+import com.bibliotecadebolso.app.data.model.Book
 import com.bibliotecadebolso.app.data.model.CreatedBook
 import com.bibliotecadebolso.app.data.model.ReadStatusEnum
 import com.bibliotecadebolso.app.data.model.app.list.SearchListContent
@@ -14,6 +16,15 @@ import kotlinx.coroutines.launch
 class BookListViewModel : ViewModel() {
 
     val searchList = SearchListContent<CreatedBook>()
+
+    val generalLiveDataInfo = MutableLiveData<Result<Book>>()
+
+    fun getInfoByID(accessToken: String, id: Int) {
+        viewModelScope.launch {
+            val result = BookDataSource.getBookById(accessToken, id)
+            generalLiveDataInfo.postValue(result)
+        }
+    }
 
     fun searchBook(
         accessToken: String,

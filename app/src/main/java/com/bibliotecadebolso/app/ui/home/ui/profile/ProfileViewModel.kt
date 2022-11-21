@@ -9,6 +9,7 @@ import com.auth0.android.jwt.JWT
 import com.bibliotecadebolso.app.data.dataSource.LoginDataSource
 import com.bibliotecadebolso.app.data.model.response.ProfileResponse
 import com.bibliotecadebolso.app.util.Result
+import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
 
 class ProfileViewModel : ViewModel() {
@@ -23,8 +24,9 @@ class ProfileViewModel : ViewModel() {
         Log.e("ProfileViewModel", "userId: $userId")
 
         viewModelScope.launch {
-            val response = datasource.viewProfile(accessToken, userId!!.toInt())
-            profileLiveData.postValue(response)
+            connectivityScope(profileLiveData) {
+                datasource.viewProfile(accessToken, userId!!.toInt())
+            }
         }
     }
 }

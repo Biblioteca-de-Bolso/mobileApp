@@ -1,6 +1,7 @@
 package com.bibliotecadebolso.app.application
 
 import android.app.Application
+import android.content.Context
 import com.bibliotecadebolso.app.util.WifiService
 
 class MainApplication : Application() {
@@ -11,7 +12,6 @@ class MainApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
-
         setupService()
     }
 

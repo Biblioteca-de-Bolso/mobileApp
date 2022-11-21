@@ -23,7 +23,7 @@ import com.bibliotecadebolso.app.R
 import com.bibliotecadebolso.app.data.model.app.AnnotationActionEnum
 import com.bibliotecadebolso.app.databinding.ActivityAddAnnotationBinding
 import com.bibliotecadebolso.app.infix.changeHighlight
-import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.ContextUtils
 import com.bibliotecadebolso.app.util.Result
@@ -241,7 +241,8 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private fun setSaveAnnotationListener() {
         viewModel.resultOfSaveAnnotation.observe(this) {
             if (it is Result.Success) {
-                showSuccessfullyToastAndFinishActivity()
+                annotationId = it.response.annotation.id
+                showSuccessfullyToastAndFinishActivity(FinishType.ANNOTATION_CREATED)
             } else if (it is Result.Error) {
                 showSnackBar(it.errorBody.message)
             }
@@ -253,7 +254,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
     private fun setUpdateAnnotationListener() {
         viewModel.updateAnnotationResult.observe(this) {
             if (it is Result.Success) {
-                showSuccessfullyToastAndFinishActivity()
+                showSuccessfullyToastAndFinishActivity(FinishType.ANNOTATION_UPDATED)
             } else if (it is Result.Error) {
                 showSnackBar(it.errorBody.message)
             }
@@ -266,12 +267,33 @@ class AnnotationEditorActivity : AppCompatActivity() {
         Snackbar.make(binding.root, message, BaseTransientBottomBar.LENGTH_LONG).show()
     }
 
-    private fun showSuccessfullyToastAndFinishActivity() {
+    private fun showSuccessfullyToastAndFinishActivity(finishType: FinishType) {
+        var idString = 0
+        var resultCode = -1
+
+        when (finishType) {
+            FinishType.ANNOTATION_CREATED -> {
+                idString = R.string.label_annotation_saved_successfully
+                resultCode = ResultCodes.ANNOTATION_CREATED
+            }
+            FinishType.ANNOTATION_UPDATED -> {
+                idString = R.string.label_updated_successfully
+                resultCode = ResultCodes.ANNOTATION_UPDATED
+            }
+            FinishType.ANNOTATION_DELETED -> {
+                idString = R.string.label_deleted_successfully
+                resultCode = ResultCodes.ANNOTATION_DELETED
+            }
+        }
+
         Toast.makeText(
             this,
-            getString(R.string.label_annotation_saved_successfully),
+            getString(idString),
             Toast.LENGTH_SHORT
         ).show()
+        val returnResult = Intent()
+        returnResult.putExtra("id", annotationId)
+        setResult(resultCode, returnResult)
         finish()
     }
 
@@ -317,7 +339,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
         request.setDestinationInExternalPublicDir(
             Environment.DIRECTORY_DOWNLOADS,
-            "${System.currentTimeMillis()}.pdf"
+            "${viewModel.titleText}-${System.currentTimeMillis()}.pdf"
         )
 
         val manager = getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
@@ -424,10 +446,7 @@ class AnnotationEditorActivity : AppCompatActivity() {
         viewModel.deleteAnnotationResult.observe(this) {
             when (it) {
                 is Result.Success -> {
-                    val returnResult = Intent()
-                    returnResult.putExtra("id", annotationId)
-                    setResult(REMOVE_ANNOTATION, returnResult)
-                    finish()
+                    showSuccessfullyToastAndFinishActivity(FinishType.ANNOTATION_DELETED)
                 }
                 is Result.Error -> {
                     enableMenuIcon(topBarMenu?.findItem(R.id.action_delete))
@@ -436,7 +455,28 @@ class AnnotationEditorActivity : AppCompatActivity() {
         }
     }
 
+    override fun onBackPressed() {
+
+        var resultCode = -1
+        if (viewModel.annotationSaved) resultCode = ResultCodes.ANNOTATION_CREATED
+        if (viewModel.annotationUpdated) resultCode = ResultCodes.ANNOTATION_UPDATED
+
+        if (resultCode !=1) {
+            val returnResult = Intent()
+            returnResult.putExtra("id", annotationId)
+            setResult(resultCode, returnResult)
+            finish()
+        }
+        super.onBackPressed()
+    }
+
     companion object {
-        const val REMOVE_ANNOTATION = 21
+        const val REMOVE_ANNOTATION = ResultCodes.ANNOTATION_DELETED
+    }
+
+    enum class FinishType {
+        ANNOTATION_CREATED,
+        ANNOTATION_UPDATED,
+        ANNOTATION_DELETED
     }
 }

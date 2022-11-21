@@ -1,7 +1,6 @@
 package com.bibliotecadebolso.app.ui.adapter
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
@@ -38,7 +37,9 @@ class BorrowAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Borrow, newItem: Borrow): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id &&
+                    oldItem.borrowStatus == newItem.borrowStatus &&
+                    oldItem.contactName == newItem.contactName
         }
     }
 
