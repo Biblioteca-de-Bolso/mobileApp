@@ -157,7 +157,7 @@ class BorrowListActivity : AppCompatActivity(), RvOnClickListener {
         val accessToken = SharedPreferencesUtils.getAccessToken(prefs)
 
         if (!newContent && viewModel.searchList.bookListReachedOnTheEnd()) {
-            showLongSnackBar(BookListViewModel.reachedOnTheEndErrorResponse().message)
+            showLongSnackBar(getString(R.string.label_reached_in_the_end))
         } else {
             binding.pgLoading.visibility = View.VISIBLE
             viewModel.searchListBorrow(

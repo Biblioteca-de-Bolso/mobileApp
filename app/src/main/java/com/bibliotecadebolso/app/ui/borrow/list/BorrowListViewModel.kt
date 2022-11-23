@@ -9,6 +9,7 @@ import com.bibliotecadebolso.app.data.model.exceptions.ListReachedOnTheEndExcept
 import com.bibliotecadebolso.app.data.model.request.Borrow
 import com.bibliotecadebolso.app.data.model.request.BorrowStatus
 import com.bibliotecadebolso.app.data.model.response.ErrorResponse
+import com.bibliotecadebolso.app.ui.book.linearList.BookListViewModel
 import com.bibliotecadebolso.app.util.Result
 import com.bibliotecadebolso.app.util.connectivityScope
 import kotlinx.coroutines.launch
@@ -95,6 +96,6 @@ class BorrowListViewModel: ViewModel() {
 
     companion object {
         fun reachedOnTheEndErrorResponse() =
-            ErrorResponse("error", "reachedOnTheEnd", "list reached on the end")
+            BookListViewModel.reachedOnTheEndErrorResponse()
     }
 }
