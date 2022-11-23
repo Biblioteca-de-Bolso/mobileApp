@@ -76,7 +76,7 @@ class BorrowFragment : Fragment(), RvOnClickListener {
         returnedContentManager = RecyclerViewContentManager(
             binding.rvListBorrowReturned,
             binding.ivViewMoreReturned,
-            binding.includeLlBorrowedError
+            binding.includeLlReturnedError
         )
 
         contentManager = ContentManager(

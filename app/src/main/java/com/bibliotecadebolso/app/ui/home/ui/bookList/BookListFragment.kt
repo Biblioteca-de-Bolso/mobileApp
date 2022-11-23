@@ -2,6 +2,7 @@ package com.bibliotecadebolso.app.ui.home.ui.bookList
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -175,34 +176,26 @@ class BookListFragment : Fragment(), RvOnClickListener {
 
         when (readStatusEnum) {
             ReadStatusEnum.PLANNING -> {
-                if (list.isEmpty()) {
-                    rvListBook = binding.rvListBookPlanning
-                    labelError = binding.labelErrorPlanningToRead
-                }
+                labelError = binding.labelErrorPlanningToRead
+                rvListBook = binding.rvListBookPlanning
                 showMoreArrow = binding.ivViewMorePlanning
                 fragmentAdapter = fragmentAdapterPlanning
             }
             ReadStatusEnum.READING -> {
-                if (list.isEmpty()) {
-                    rvListBook = binding.rvListBookReading
-                    labelError = binding.labelErrorReading
-                }
+                labelError = binding.labelErrorReading
+                rvListBook = binding.rvListBookReading
                 showMoreArrow = binding.ivViewMoreReading
                 fragmentAdapter = fragmentAdapterReading
             }
             ReadStatusEnum.DROPPED -> {
-                if (list.isEmpty()) {
-                    rvListBook = binding.rvListBookDropped
-                    labelError = binding.labelErrorDropped
-                }
+                labelError = binding.labelErrorDropped
+                rvListBook = binding.rvListBookDropped
                 showMoreArrow = binding.ivViewMoreDropped
                 fragmentAdapter = fragmentAdapterDropped
             }
             ReadStatusEnum.CONCLUDED -> {
-                if (list.isEmpty()) {
-                    rvListBook = binding.rvListBookConcluded
-                    labelError = binding.labelErrorConcluded
-                }
+                labelError = binding.labelErrorConcluded
+                rvListBook = binding.rvListBookConcluded
                 showMoreArrow = binding.ivViewMoreConcluded
                 fragmentAdapter = fragmentAdapterConcluded
             }
@@ -226,6 +219,9 @@ class BookListFragment : Fragment(), RvOnClickListener {
         if (list.isEmpty()) {
             rvListBook?.visibility = View.GONE
             labelError?.visibility = View.VISIBLE
+        } else {
+            rvListBook?.visibility = View.VISIBLE
+            labelError?.visibility = View.GONE
         }
     }
 
@@ -244,8 +240,21 @@ class BookListFragment : Fragment(), RvOnClickListener {
     private fun setupFabButtonListener() {
         binding.fabAddBook.setOnClickListener {
             val intent = Intent(requireContext(), AddBookActivity::class.java)
-            startActivityForResult(intent, ADD_BOOK)
 
+            addBookActivityResult.launch(intent)
+
+        }
+    }
+
+    private val addBookActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        Log.e("BookListFragment", "Entrou no addBookActivityResult")
+        if (result.resultCode == ResultCodes.BOOK_ADDED) {
+            Log.e("BookListFragment", "ResultCode == ResultCodes.BOOK_ADDED")
+            getList()
+        } else {
+            Log.e("BookListFragment", "${result.resultCode == ResultCodes.BOOK_ADDED}")
         }
     }
 
@@ -287,7 +296,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     private val bookInfoActivityResult = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == REMOVE_BOOK) {
+        if (result.resultCode == ResultCodes.BOOK_REMOVED) {
 
             val readStatusEnum = ReadStatusEnum.valueOf(
                 result.data!!.extras!!.getString(
@@ -302,12 +311,19 @@ class BookListFragment : Fragment(), RvOnClickListener {
                 ReadStatusEnum.DROPPED -> fragmentAdapterDropped
             }
             val list = adapter.differ.currentList.toMutableList()
-            list.forEach {
-            }
+
             val book = list.find { it.id == result.data!!.extras!!.getInt("id") }
-            if (book != null) list.remove(book)
-            adapter.differ.submitList(list)
-        } else if (result.resultCode == BOOK_ADDED)
+            val index = list.indexOfFirst { it.id == result.data!!.extras!!.getInt("id") }
+
+            Log.e("BookListFragment", "book != null : ${index!=-1}")
+            if (index != -1) list.removeAt(index)
+            showBookListOnCorrectCategory(readStatusEnum, list)
+        } else if (setOf(
+            ResultCodes.BOOK_EDITED,
+            ResultCodes.BOOK_REMOVED,
+            ResultCodes.BOOK_UPDATED_STATUS,
+            ResultCodes.BOOK_EDITED_AND_UPDATED_STATUS,
+        ).contains(result.resultCode))
             getList()
     }
 
@@ -324,7 +340,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == VIEW_DETAIL_BOOK && setOf(
+        if (setOf(
                 ResultCodes.BOOK_EDITED,
                 ResultCodes.BOOK_REMOVED,
                 ResultCodes.BOOK_UPDATED_STATUS,
@@ -332,7 +348,7 @@ class BookListFragment : Fragment(), RvOnClickListener {
             ).contains(resultCode)
         )
             getList()
-        else if (requestCode == ADD_BOOK && resultCode == BOOK_ADDED)
+        else if (resultCode == BOOK_ADDED)
             getList()
 
     }

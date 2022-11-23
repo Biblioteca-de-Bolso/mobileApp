@@ -33,7 +33,9 @@ class BookListAdapter(private var context: Context, private var rvOnClickListene
         }
 
         override fun areContentsTheSame(oldItem: CreatedBook, newItem: CreatedBook): Boolean {
-            return oldItem.id == newItem.id
+            return oldItem.id == newItem.id &&
+                    oldItem.title == newItem.title &&
+                    oldItem.thumbnail == newItem.thumbnail
         }
     }
 

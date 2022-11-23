@@ -19,6 +19,7 @@ import com.bibliotecadebolso.app.data.validator.Validation
 import com.bibliotecadebolso.app.data.validator.ValidationError
 import com.bibliotecadebolso.app.data.validator.validations.BookValidation
 import com.bibliotecadebolso.app.databinding.FragmentAddBookOfflineInputBinding
+import com.bibliotecadebolso.app.ui.ResultCodes
 import com.bibliotecadebolso.app.ui.home.ui.bookList.BookListFragment
 import com.bibliotecadebolso.app.util.Constants
 import com.bibliotecadebolso.app.util.Result
@@ -88,8 +89,8 @@ class AddOfflineBookFragment : Fragment() {
             if (it is Result.Success) {
                 Toast.makeText(requireContext(), getString(R.string.label_book_created), Toast.LENGTH_LONG).show()
                 val resultIntent = Intent()
-                activity?.setResult(BookListFragment.BOOK_ADDED, resultIntent)
-                requireActivity().finish()
+                activity?.setResult(ResultCodes.BOOK_ADDED, resultIntent)
+                activity?.finish()
             } else {
                 val errorMessage = (it as Result.Error).errorBody.message
                 Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_LONG).show()
